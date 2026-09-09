@@ -1,0 +1,32 @@
+{
+  "name": "@vigor/core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json",
+    "./*": "./src/*.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --max-warnings=0",
+    "test": "vitest run --passWithNoTests",
+    "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "uuidv7": "1.2.1",
+    "zod": "4.6.0"
+  },
+  "devDependencies": {
+    "@vigor/eslint-config": "workspace:*",
+    "@vigor/tsconfig": "workspace:*",
+    "@vitest/coverage-v8": "5.0.0",
+    "eslint": "10.10.0",
+    "typescript": "6.0.3",
+    "vitest": "5.0.0"
+  }
+}
