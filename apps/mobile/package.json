@@ -8,8 +8,11 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "typecheck": "tsc --noEmit",
+    "typecheck:test": "tsc -p tsconfig.test.json --noEmit",
     "lint": "eslint . --max-warnings=0",
-    "test": "echo \"mobile: component tests land with the app-shell agent\""
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:components": "vitest run --config vitest.components.config.ts"
   },
   "dependencies": {
     "@tanstack/react-query": "5.102.8",
@@ -46,10 +49,14 @@
   },
   "devDependencies": {
     "@babel/core": "7.29.7",
+    "@testing-library/react-native": "14.0.1",
     "@types/react": "19.2.18",
     "@vigor/eslint-config": "workspace:*",
     "@vigor/tsconfig": "workspace:*",
+    "babel-preset-expo": "57.0.11",
     "eslint": "10.10.0",
-    "typescript": "6.0.3"
+    "react-test-renderer": "19.2.3",
+    "typescript": "6.0.3",
+    "vitest": "5.0.0"
   }
 }

@@ -17,6 +17,9 @@ web-build/
 ios/
 android/
 
+# Local agent scratch space (worktrees, session settings) — never part of the repo.
+.claude/
+
 # Playwright run artefacts (DESIGN.md §10 web smoke test).
 test-results/
 playwright-report/

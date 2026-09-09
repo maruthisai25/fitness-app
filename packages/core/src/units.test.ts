@@ -6,10 +6,13 @@ import {
   DEFAULT_LOAD_INCREMENT_KG,
   KETTLEBELL_LADDER_KG,
   KG_PER_LB,
+  displayLoggedLoad,
   formatBodyWeight,
   formatLoad,
+  formatLoggedLoad,
   formatNumber,
   fromInput,
+  loggedLoadStepKg,
   nextLadderStep,
   previousLadderStep,
   resolveLoadIncrementKg,
@@ -172,5 +175,34 @@ describe('formatting', () => {
     expect(formatLoad(LB(25), 'imperial', LB(5))).toBe('25 lb');
     expect(formatLoad(60, 'metric', 2.5)).toBe('60 kg');
     expect(formatBodyWeight(80.44, 'metric')).toBe('80.4 kg');
+  });
+});
+
+describe('a logged load round-trips — DESIGN.md §5.10', () => {
+  it('reads back exactly what an imperial user typed, not the progression step', () => {
+    for (const typed of [22.5, 27.5, 52.5, 137.5, 45, 12.5]) {
+      const stored = fromInput(typed, 'load', 'imperial');
+      expect(displayLoggedLoad(stored, 'imperial')).toBe(typed);
+      // The 5 lb progression increment would have snapped these to 20/25/50/135.
+      expect(formatLoggedLoad(stored, 'imperial')).toBe(`${formatNumber(typed)} lb`);
+    }
+  });
+
+  it('reads back exactly what a metric user typed', () => {
+    for (const typed of [61, 62.5, 22.5, 100.1]) {
+      const stored = fromInput(typed, 'load', 'metric');
+      expect(displayLoggedLoad(stored, 'metric')).toBe(typed);
+    }
+  });
+
+  it('still snaps a prescribed load to something loadable', () => {
+    // The engines' own output keeps the §5.10 plate rounding.
+    expect(toDisplay(LB(22.5), 'load', 'imperial', { incrementKg: LB(5) })).toBe(25);
+    expect(displayLoggedLoad(LB(22.5), 'imperial')).toBe(22.5);
+  });
+
+  it('uses a finer step than the plate default', () => {
+    expect(loggedLoadStepKg('metric')).toBe(0.1);
+    expect(loggedLoadStepKg('imperial')).toBeCloseTo(0.5 * KG_PER_LB, 6);
   });
 });

@@ -28,6 +28,18 @@ export const DEFAULT_METRIC_LOAD_STEP_KG = 0.5;
 /** Smallest sensible imperial display step for a load, in pounds. */
 export const DEFAULT_IMPERIAL_LOAD_STEP_LB = 2.5;
 
+/**
+ * Display steps for a load the user actually logged, as opposed to one the
+ * engines prescribed.
+ *
+ * DESIGN.md §5.10 rounds a *prescribed* load to "the nearest achievable plate
+ * increment" — that is advice about what to load. A number the user typed is a
+ * record of what happened and must read back unchanged, so it is snapped only
+ * far enough to hide float noise from the kg conversion.
+ */
+export const LOGGED_METRIC_LOAD_STEP_KG = 0.1;
+export const LOGGED_IMPERIAL_LOAD_STEP_LB = 0.5;
+
 /** DESIGN.md §5.1 — default metric increments per equipment category. */
 export const DEFAULT_LOAD_INCREMENT_KG: Record<EquipmentCategory, number | null> = {
   barbell: 2.5,
@@ -226,6 +238,30 @@ export function formatLoad(
     'load',
     unitSystem,
   )}`;
+}
+
+/**
+ * The display step for a load the user logged themselves, canonical kg.
+ * Pass it wherever a stored `actualLoadKg` is rendered.
+ */
+export function loggedLoadStepKg(unitSystem: UnitSystem): number {
+  return unitSystem === 'imperial'
+    ? roundTo(LOGGED_IMPERIAL_LOAD_STEP_LB * KG_PER_LB, 6)
+    : LOGGED_METRIC_LOAD_STEP_KG;
+}
+
+/**
+ * A load exactly as it was logged — DESIGN.md §5.10's round trip. An imperial
+ * user who typed 22.5 reads back 22.5, never the 20 a 5 lb progression step
+ * would snap it to.
+ */
+export function displayLoggedLoad(valueKg: number, unitSystem: UnitSystem): number {
+  return toDisplay(valueKg, 'load', unitSystem, { incrementKg: loggedLoadStepKg(unitSystem) });
+}
+
+/** `"22.5 lb"` — {@link displayLoggedLoad} with its unit. */
+export function formatLoggedLoad(valueKg: number, unitSystem: UnitSystem): string {
+  return `${formatNumber(displayLoggedLoad(valueKg, unitSystem))} ${unitLabel('load', unitSystem)}`;
 }
 
 /** `"72.4 kg"` — body weight, always one decimal of precision. */

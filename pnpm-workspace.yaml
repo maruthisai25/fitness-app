@@ -13,3 +13,10 @@ allowBuilds:
 minimumReleaseAgeExclude:
   - '@types/node@22.20.2'
   - zod@4.6.0
+
+# Every VigorEngine boundary is zod 4 (DESIGN.md §11). `@expo/cli` still asks for
+# zod 3, and two majors in one tree means two `ZodError` classes and two
+# `instanceof` identities — so the whole workspace resolves to the one version
+# the packages are written against.
+overrides:
+  zod: 4.6.0
