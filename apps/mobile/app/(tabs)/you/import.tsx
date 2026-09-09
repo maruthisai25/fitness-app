@@ -1,0 +1,155 @@
+import type { ExportBundle } from '@vigor/core';
+import { UnsupportedBundleError } from '@vigor/db';
+import type { EncryptedPayload, StoredFile } from '@vigor/platform';
+import { color, fontSize, space } from '../../../src/ui/tokens';
+import { useEffect, useState } from 'react';
+import { Pressable, Text, View } from 'react-native';
+
+import { useRepos, usePlatform } from '../../../src/db/AppDataProvider';
+import { base64ToUtf8 } from '../../../src/platform/base64';
+import {
+  Button,
+  ChoiceRow,
+  ErrorBanner,
+  FieldHint,
+  FieldLabel,
+  Screen,
+  ScreenBlurb,
+  ScreenTitle,
+  Section,
+  TextField,
+} from '../../../src/ui/components';
+
+/** DESIGN.md §8: "Import validates schema version and offers merge or replace." */
+type RestoreMode = 'merge' | 'replace';
+
+const MODE_OPTIONS: readonly { value: RestoreMode; label: string }[] = [
+  { value: 'merge', label: 'Merge' },
+  { value: 'replace', label: 'Replace' },
+];
+
+export default function ImportScreen() {
+  const { export: exportRepo } = useRepos();
+  const { fileStore, crypto } = usePlatform();
+  const [files, setFiles] = useState<StoredFile[]>([]);
+  const [selectedRef, setSelectedRef] = useState<string | null>(null);
+  const [passphrase, setPassphrase] = useState('');
+  const [mode, setMode] = useState<RestoreMode>('merge');
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [done, setDone] = useState<number | null>(null);
+
+  useEffect(() => {
+    void fileStore
+      .list('exports')
+      .then(setFiles)
+      .catch(() => undefined);
+  }, [fileStore]);
+
+  async function run() {
+    if (!selectedRef) {
+      setError('Choose a backup file first.');
+      return;
+    }
+    setBusy(true);
+    setError(null);
+    setDone(null);
+    try {
+      const base64 = await fileStore.readBase64(selectedRef);
+      if (!base64) {
+        throw new Error('That backup file could not be read.');
+      }
+      const payload = JSON.parse(base64ToUtf8(base64)) as EncryptedPayload;
+      const bundle = await crypto.decryptJson<ExportBundle>(payload, passphrase.trim());
+      // `restore` validates the schema version and the whole bundle before it
+      // writes anything, and writes in one transaction (DESIGN.md §8).
+      const result = await exportRepo.restore(bundle, { mode });
+      setDone(Object.values(result.inserted).reduce((sum, count) => sum + count, 0));
+    } catch (cause) {
+      setError(
+        cause instanceof UnsupportedBundleError
+          ? cause.message
+          : 'Could not restore that backup — check the passphrase and try again.',
+      );
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <Screen>
+      <ScreenTitle>Import data</ScreenTitle>
+      <ScreenBlurb>
+        Restores every table from an encrypted backup made with Export data (DESIGN.md §8). Merge
+        keeps what is already on this device and adds only what is missing; replace wipes your
+        current data first.
+      </ScreenBlurb>
+
+      <Section title="Backup files on this device">
+        <View>
+          {files.length === 0 ? (
+            <View style={{ padding: 16 }}>
+              <ScreenBlurb>No backups found yet — use Export data to make one.</ScreenBlurb>
+            </View>
+          ) : (
+            files.map((file, index) => {
+              const active = file.ref === selectedRef;
+              return (
+                <Pressable
+                  key={file.ref}
+                  onPress={() => setSelectedRef(file.ref)}
+                  style={{
+                    padding: space.lg,
+                    borderBottomWidth: index === files.length - 1 ? 0 : 1,
+                    borderBottomColor: color.border,
+                    backgroundColor: active ? color.accentSoft : 'transparent',
+                  }}
+                >
+                  <Text
+                    style={{ color: active ? color.accent : color.text, fontSize: fontSize.body }}
+                  >
+                    {file.ref}
+                  </Text>
+                </Pressable>
+              );
+            })
+          )}
+        </View>
+      </Section>
+
+      <Section title="Passphrase">
+        <View style={{ padding: 16 }}>
+          <TextField
+            label="Passphrase"
+            value={passphrase}
+            onChangeText={setPassphrase}
+            secureTextEntry
+            autoCapitalize="none"
+          />
+          <FieldLabel>How to apply it</FieldLabel>
+          <View style={{ marginBottom: 8 }}>
+            <ChoiceRow value={mode} options={MODE_OPTIONS} onChange={setMode} />
+          </View>
+          <FieldHint>
+            {mode === 'merge'
+              ? 'Rows already on this device are kept; only ids this device does not have are added.'
+              : 'Every table is cleared before the backup is written.'}
+          </FieldHint>
+          <Button label="Restore" onPress={run} loading={busy} disabled={!selectedRef} />
+        </View>
+      </Section>
+
+      {done !== null ? (
+        <Section title="Done">
+          <View style={{ padding: 16 }}>
+            <ScreenBlurb>
+              Your backup was restored — {done} {done === 1 ? 'row' : 'rows'} written.
+            </ScreenBlurb>
+          </View>
+        </Section>
+      ) : null}
+
+      {error ? <ErrorBanner message={error} /> : null}
+    </Screen>
+  );
+}

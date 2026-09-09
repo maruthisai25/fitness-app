@@ -1,0 +1,36 @@
+{
+  "expo": {
+    "name": "VigorEngine",
+    "slug": "vigorengine",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "vigorengine",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "backgroundColor": "#0B1210",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.vigorengine.app"
+    },
+    "android": {
+      "package": "com.vigorengine.app",
+      "edgeToEdgeEnabled": true
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-sqlite",
+      "expo-secure-store",
+      "expo-notifications",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "VigorEngine uses your photos only to store progress photos on this device."
+        }
+      ]
+    ]
+  }
+}
