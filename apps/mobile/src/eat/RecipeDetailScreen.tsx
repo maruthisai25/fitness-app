@@ -13,6 +13,7 @@ import { queryKeys, type Id, type MealSlot } from '@vigor/core';
 
 import { useInvalidator } from '../data/queries';
 import { usePlatform, useRepos } from '../db/AppDataProvider';
+import { useReminderResync } from '../progress/useProgressForeground';
 import {
   Button,
   ErrorBanner,
@@ -42,6 +43,7 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: Id }) {
   const repos = useRepos();
   const { clock } = usePlatform();
   const invalidate = useInvalidator();
+  const resyncReminders = useReminderResync();
 
   const [slot, setSlot] = useState<MealSlot>('dinner');
   const [offerLog, setOfferLog] = useState(false);
@@ -161,6 +163,7 @@ export function RecipeDetailScreen({ recipeId }: { recipeId: Id }) {
                       ],
                     });
                     invalidate('logFood');
+                    resyncReminders();
                     setOfferLog(false);
                     setStatus(`Logged one serving to ${MEAL_SLOT_LABEL[slot].toLowerCase()}.`);
                   })

@@ -15,6 +15,7 @@ import { isAiUnavailable, type AiGateway } from '../ai/gateway';
 import { useAiGateway } from '../ai/useAiGateway';
 import { useInvalidator } from '../data/queries';
 import { usePlatform, useRepos } from '../db/AppDataProvider';
+import { useReminderResync } from '../progress/useProgressForeground';
 import {
   Button,
   ErrorBanner,
@@ -54,6 +55,7 @@ export function MealPlansScreen({
   const installed = useAiGateway();
   const gateway = gatewayOverride ?? installed;
   const invalidate = useInvalidator();
+  const resyncReminders = useReminderResync();
   const today = clock.today();
 
   const [days, setDays] = useState<number>(3);
@@ -123,6 +125,7 @@ export function MealPlansScreen({
         items: meal.items.map((item) => ({ ...item, savedMealId: meal.savedMealId })),
       });
       invalidate('logFood');
+      resyncReminders();
       setStatus(`Logged ${meal.title} to ${day.date}.`);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : String(caught));

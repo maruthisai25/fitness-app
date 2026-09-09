@@ -8,8 +8,11 @@
  * never re-implements a rule.
  */
 import {
+  MEAL_LOG_QUIET_MINUTES,
+  addDays,
   buildDayNutrition,
   decideReminders,
+  minutesOfDay,
   startOfWeek,
   weekdayOf,
   type LocalDate,
@@ -44,13 +47,26 @@ const BODIES: Record<ReminderKind, string> = {
 };
 
 /**
- * Reasons a reminder is quiet that will still be true when today's slot comes
- * round, so today's occurrence is skipped and the next one is scheduled
- * instead. `NOT_YET_DUE` is deliberately absent: that one still fires today.
+ * Quiet reasons that cannot stop being true before today's slot arrives.
+ *
+ * A local notification is scheduled once and fires whether or not the rule
+ * still holds, so a skip decided at sync time is only safe when the condition
+ * provably still holds at the slot:
+ *
+ *  - `WORKOUT_ALREADY_COMPLETED` — a finished session cannot un-finish today.
+ *  - `PROTEIN_ON_TRACK` — remaining protein only falls as the day goes on, so
+ *    a gap already inside the threshold stays inside it.
+ *  - `NO_PROTEIN_TARGET` — nothing to chase; a target created later today is
+ *    picked up by the next sync, which reschedules. Scheduling anyway would
+ *    deliver "protein is behind" against a target that does not exist.
+ *  - `REVIEW_ALREADY_GENERATED` — a stored review does not disappear.
+ *
+ * `MEAL_LOGGED_RECENTLY` is deliberately absent: it expires with the clock, so
+ * it is checked against the slot time in {@link skipsTodaysSlot}. `NOT_YET_DUE`
+ * is absent too — that one still fires today.
  */
-const SKIP_TODAY_CODES = new Set([
+const STABLE_SKIP_CODES = new Set([
   'WORKOUT_ALREADY_COMPLETED',
-  'MEAL_LOGGED_RECENTLY',
   'PROTEIN_ON_TRACK',
   'NO_PROTEIN_TARGET',
   'REVIEW_ALREADY_GENERATED',
@@ -98,6 +114,34 @@ export function nextOccurrence(options: {
   return candidate.toISOString();
 }
 
+/**
+ * Whether today's slot should be skipped for a reminder the rules silenced.
+ *
+ * The rule was evaluated now; the notification fires at the slot. Today is only
+ * given up when the reason will still hold then — otherwise the notification is
+ * scheduled and the next sync cancels it if the rule has since gone quiet.
+ */
+export function skipsTodaysSlot(
+  decision: ReminderDecision,
+  state: ReminderState,
+  now: Date,
+): boolean {
+  if (decision.fires || decision.scheduledFor == null) return false;
+  const { codes } = decision.rationale;
+  if (codes.some((code) => STABLE_SKIP_CODES.has(code))) return true;
+
+  if (codes.includes('MEAL_LOGGED_RECENTLY')) {
+    const sinceLastLog = state.minutesSinceLastMealLog;
+    if (sinceLastLog == null) return false;
+    const minutesToSlot = minutesOfDay(decision.scheduledFor) - minutesOfDay(localTimeNow(now));
+    // Today's slot has already gone; `nextOccurrence` rolls it forward anyway.
+    if (minutesToSlot <= 0) return false;
+    return sinceLastLog + minutesToSlot < MEAL_LOG_QUIET_MINUTES;
+  }
+
+  return false;
+}
+
 function sameDay(a: Date, b: Date): boolean {
   return (
     a.getFullYear() === b.getFullYear() &&
@@ -124,7 +168,11 @@ export async function readReminderState(
 
   const day = buildDayNutrition({ date: today, logs, targets });
   const weeklyReviewDay: WeekDay = settings.weekStartsOn;
-  const currentWeekStart = startOfWeek(today, settings.weekStartsOn);
+  // The review that is due is for the week that just *ended* (DESIGN.md §5.9),
+  // which is the week starting seven days back — the current week has not
+  // happened yet, so a row for it would never exist and the reminder would
+  // nag forever.
+  const dueWeekStart = startOfWeek(addDays(today, -7), settings.weekStartsOn);
 
   const lastLoggedAt = logs.reduce<number | null>((latest, log) => {
     const at = Date.parse(log.loggedAt);
@@ -147,7 +195,7 @@ export async function readReminderState(
         : Math.max(0, Math.round((now.getTime() - lastLoggedAt) / 60_000)),
     remainingProteinG: targets ? day.remaining.proteinG : null,
     weeklyReviewDay,
-    weeklyReviewGenerated: (latestReview[0]?.weekStart ?? '') >= currentWeekStart,
+    weeklyReviewGenerated: (latestReview[0]?.weekStart ?? '') >= dueWeekStart,
   };
 }
 
@@ -182,8 +230,7 @@ export async function syncReminders(
       continue;
     }
 
-    const skipToday =
-      !decision.fires && decision.rationale.codes.some((code) => SKIP_TODAY_CODES.has(code));
+    const skipToday = skipsTodaysSlot(decision, state, now);
     const fireAt = nextOccurrence({
       now,
       time: decision.scheduledFor,

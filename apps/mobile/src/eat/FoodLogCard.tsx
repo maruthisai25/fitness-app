@@ -14,6 +14,7 @@ import type { FoodItem, FoodLogWithItems, MacroTotals } from '@vigor/core';
 
 import { useInvalidator } from '../data/queries';
 import type { AppRepos } from '../db/AppDataProvider';
+import { useReminderResync } from '../progress/useProgressForeground';
 import { Button, ErrorBanner, TextField } from '../ui/components';
 import { ActionRow, Caption, InlineAction, ItemRow, Note, NumberField } from '../ui/primitives';
 import { itemQuantityLabel, macroBreakdown } from './model';
@@ -153,6 +154,7 @@ export function FoodLogCard({
   onSaveAsMeal: (log: FoodLogWithItems) => void;
 }) {
   const invalidate = useInvalidator();
+  const resyncReminders = useReminderResync();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [draft, setDraft] = useState<ItemDraft>(() => emptyDraft());
   const [rescuing, setRescuing] = useState(false);
@@ -165,6 +167,9 @@ export function FoodLogCard({
     try {
       await action();
       invalidate('logFood');
+      // Editing or removing items moves today's totals, so the meal-log and
+      // protein reminders have to be rebuilt from the new state.
+      resyncReminders();
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : String(caught));
     } finally {

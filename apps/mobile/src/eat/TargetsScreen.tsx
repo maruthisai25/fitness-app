@@ -67,6 +67,14 @@ function toNumber(value: string): number {
   return Number.isFinite(parsed) && parsed >= 0 ? parsed : 0;
 }
 
+interface TargetValues {
+  kcal: number;
+  proteinG: number;
+  carbsG: number;
+  fatG: number;
+  fiberG: number;
+}
+
 export function TargetsScreen({ onNavigate }: { onNavigate: (path: string) => void }) {
   const repos = useRepos();
   const { clock } = usePlatform();
@@ -91,6 +99,29 @@ export function TargetsScreen({ onNavigate }: { onNavigate: (path: string) => vo
     },
   });
 
+  /**
+   * History is effective-dated, never overwritten — but a second change on the
+   * same day is not history, it is the same decision being corrected. Writing a
+   * new row for today would leave two rows sharing one `effectiveFrom`, and
+   * `getActive` would pick between them arbitrarily, so today's row is updated
+   * in place and any earlier day keeps the numbers it was judged against.
+   */
+  async function writeTargets(input: TargetValues, source: 'user' | 'computed'): Promise<void> {
+    const values: TargetValues = {
+      kcal: input.kcal,
+      proteinG: input.proteinG,
+      carbsG: input.carbsG,
+      fatG: input.fatG,
+      fiberG: input.fiberG,
+    };
+    const current = await repos.targets.getActive(today);
+    if (current && current.effectiveFrom === today) {
+      await repos.targets.update(current.id, { ...values, source });
+      return;
+    }
+    await repos.targets.create({ ...values, effectiveFrom: today, source });
+  }
+
   async function useRecommended(): Promise<void> {
     if (!state.data?.profile) {
       setError('Fill in your profile first — the recommendation is built from it.');
@@ -107,7 +138,7 @@ export function TargetsScreen({ onNavigate }: { onNavigate: (path: string) => vo
     setBusy(true);
     setError(null);
     try {
-      await repos.targets.create({ ...result.targets, effectiveFrom: today, source: 'computed' });
+      await writeTargets(result.targets, 'computed');
       invalidate('saveNutritionTargets');
       setDraft(null);
     } catch (caught) {
@@ -133,7 +164,7 @@ export function TargetsScreen({ onNavigate }: { onNavigate: (path: string) => vo
     setBusy(true);
     setError(null);
     try {
-      await repos.targets.create({ ...values, effectiveFrom: today, source: 'user' });
+      await writeTargets(values, 'user');
       invalidate('saveNutritionTargets');
       setDraft(null);
       setRecommendation(null);

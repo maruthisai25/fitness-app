@@ -98,13 +98,13 @@ export function BodyMetricForm({
   async function save(): Promise<void> {
     const weight = parse(fields.weight);
     const waist = parse(fields.waist);
-    const measurements: Record<string, number> = {};
+    const entered = new Map<string, number>();
     for (const key of KNOWN_MEASUREMENT_KEYS) {
       const value = parse(fields[key]);
-      if (value != null) measurements[key] = fromInput(value, 'length', unitSystem);
+      if (value != null) entered.set(key, fromInput(value, 'length', unitSystem));
     }
 
-    if (weight == null && waist == null && Object.keys(measurements).length === 0) {
+    if (weight == null && waist == null && entered.size === 0) {
       setError('Fill in at least one number before saving.');
       return;
     }
@@ -112,6 +112,18 @@ export function BodyMetricForm({
     setBusy(true);
     setError(null);
     try {
+      // `measurements` is one JSON blob, so a save replaces the whole map.
+      // Seed it from what is already stored — the coach, an import or a future
+      // custom field can put keys in there that this form does not render —
+      // and only overwrite (or clear) the keys that are on screen.
+      const stored = await repos.body.getMetricByDate(date);
+      const measurements: Record<string, number> = { ...(stored?.measurements ?? {}) };
+      for (const key of KNOWN_MEASUREMENT_KEYS) {
+        const value = entered.get(key);
+        if (value == null) delete measurements[key];
+        else measurements[key] = value;
+      }
+
       const saved = await repos.body.upsertMetric({
         date,
         weightKg: weight == null ? null : fromInput(weight, 'weight', unitSystem),

@@ -11,6 +11,7 @@ import { queryKeys, type MealSlot } from '@vigor/core';
 
 import { useInvalidator } from '../data/queries';
 import { usePlatform, useRepos } from '../db/AppDataProvider';
+import { useReminderResync } from '../progress/useProgressForeground';
 import { ErrorBanner, LoadingScreen, Screen, ScreenBlurb, ScreenTitle } from '../ui/components';
 import {
   ActionRow,
@@ -31,6 +32,7 @@ export function SavedMealsScreen() {
   const repos = useRepos();
   const { clock } = usePlatform();
   const invalidate = useInvalidator();
+  const resyncReminders = useReminderResync();
 
   const [slot, setSlot] = useState<MealSlot>('lunch');
   const [openId, setOpenId] = useState<string | null>(null);
@@ -126,6 +128,7 @@ export function SavedMealsScreen() {
                     });
                     await repos.savedMeals.markLogged(meal.id);
                     invalidate('logFood', 'saveMeal');
+                    resyncReminders();
                     setStatus(`Logged ${meal.name} to ${MEAL_SLOT_LABEL[slot].toLowerCase()}.`);
                   })
                 }

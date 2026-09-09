@@ -13,7 +13,7 @@ import { View } from 'react-native';
 import { queryKeys, type Insight, type InsightSeverity } from '@vigor/core';
 
 import { useInvalidator } from '../data/queries';
-import { useRepos } from '../db/AppDataProvider';
+import { usePlatform, useRepos } from '../db/AppDataProvider';
 import { ErrorBanner, LoadingScreen, Screen, ScreenBlurb, ScreenTitle } from '../ui/components';
 import { formatShortDate } from '../ui/DateStepper';
 import {
@@ -28,6 +28,8 @@ import {
   type ToneName,
   ErrorScreen,
 } from '../ui/primitives';
+import { dismissInsight } from './foreground';
+import { visibleEvidence } from './insightIdentity';
 import { useProgressForeground } from './useProgressForeground';
 
 const SEVERITY_TONE: Record<InsightSeverity, ToneName> = {
@@ -50,6 +52,7 @@ const DETECTOR_LABEL: Record<string, string> = {
 
 export function InsightsScreen() {
   const repos = useRepos();
+  const { clock } = usePlatform();
   const invalidate = useInvalidator();
   const foreground = useProgressForeground();
   const [showEvidence, setShowEvidence] = useState<string | null>(null);
@@ -64,7 +67,9 @@ export function InsightsScreen() {
   async function dismiss(insight: Insight): Promise<void> {
     setBusy(true);
     try {
-      await repos.insights.dismiss(insight.id);
+      // Stamps the local day, so the detectors know how long this has been
+      // dismissed for and stop re-raising it.
+      await dismissInsight(repos, insight, clock.today());
       invalidate('dismissInsight');
     } finally {
       setBusy(false);
@@ -102,45 +107,50 @@ export function InsightsScreen() {
           detail="Detectors need a few weeks of sessions and meals before they have anything worth saying. They run once a day when you open the app."
         />
       ) : (
-        rows.map((insight) => (
-          <Card key={insight.id}>
-            <CardTitle>{insight.headline}</CardTitle>
-            <Caption tone={SEVERITY_TONE[insight.severity]}>
-              {`${DETECTOR_LABEL[insight.detector] ?? insight.detector} · ${formatShortDate(
-                insight.period.from,
-              )} to ${formatShortDate(insight.period.to)}${insight.dismissed ? ' · dismissed' : ''}`}
-            </Caption>
-            <Body>{insight.detail}</Body>
+        rows.map((insight) => {
+          const evidence = visibleEvidence(insight.evidence);
+          return (
+            <Card key={insight.id}>
+              <CardTitle>{insight.headline}</CardTitle>
+              <Caption tone={SEVERITY_TONE[insight.severity]}>
+                {`${DETECTOR_LABEL[insight.detector] ?? insight.detector} · ${formatShortDate(
+                  insight.period.from,
+                )} to ${formatShortDate(insight.period.to)}${
+                  insight.dismissed ? ' · dismissed' : ''
+                }`}
+              </Caption>
+              <Body>{insight.detail}</Body>
 
-            {showEvidence === insight.id ? (
-              <View>
-                <Caption>{`${insight.evidence.length} row${
-                  insight.evidence.length === 1 ? '' : 's'
-                } behind this:`}</Caption>
-                {insight.evidence.slice(0, 12).map((ref, index) => (
-                  <Caption key={`${ref.table}-${ref.id}-${index}`}>
-                    {`${ref.table} · ${ref.id}${ref.note ? ` · ${ref.note}` : ''}`}
-                  </Caption>
-                ))}
-              </View>
-            ) : null}
+              {showEvidence === insight.id ? (
+                <View>
+                  <Caption>{`${evidence.length} row${
+                    evidence.length === 1 ? '' : 's'
+                  } behind this:`}</Caption>
+                  {evidence.slice(0, 12).map((ref, index) => (
+                    <Caption key={`${ref.table}-${ref.id}-${index}`}>
+                      {`${ref.table} · ${ref.id}${ref.note ? ` · ${ref.note}` : ''}`}
+                    </Caption>
+                  ))}
+                </View>
+              ) : null}
 
-            <ActionRow>
-              <InlineAction
-                label={showEvidence === insight.id ? 'Hide evidence' : 'Show evidence'}
-                onPress={() => setShowEvidence(showEvidence === insight.id ? null : insight.id)}
-              />
-              {insight.dismissed ? null : (
+              <ActionRow>
                 <InlineAction
-                  label="Dismiss"
-                  tone="bad"
-                  disabled={busy}
-                  onPress={() => void dismiss(insight)}
+                  label={showEvidence === insight.id ? 'Hide evidence' : 'Show evidence'}
+                  onPress={() => setShowEvidence(showEvidence === insight.id ? null : insight.id)}
                 />
-              )}
-            </ActionRow>
-          </Card>
-        ))
+                {insight.dismissed ? null : (
+                  <InlineAction
+                    label="Dismiss"
+                    tone="bad"
+                    disabled={busy}
+                    onPress={() => void dismiss(insight)}
+                  />
+                )}
+              </ActionRow>
+            </Card>
+          );
+        })
       )}
     </Screen>
   );

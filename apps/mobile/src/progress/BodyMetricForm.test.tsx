@@ -80,6 +80,37 @@ describe('BodyMetricForm', () => {
     expect(screen.getByLabelText('Weight').props.value).toBe('200');
   });
 
+  it('keeps measurements it does not render and clears the ones it does', async () => {
+    // `measurements` is one JSON blob: a save rewrites all of it. Keys this
+    // form knows nothing about — written by the coach, an import, a later
+    // version — must survive editing the weight.
+    await db.repos.body.upsertMetric({
+      date: DATE,
+      weightKg: 80,
+      measurements: { armCm: 39, forearmCm: 29.5, ankleCm: 22 },
+    });
+    const existing = await db.repos.body.getMetricByDate(DATE);
+
+    await renderWithProviders(
+      <BodyMetricForm repos={db.repos} date={DATE} unitSystem="metric" initial={existing} />,
+    );
+
+    expect(screen.getByLabelText('Arm').props.value).toBe('39');
+    await fireEvent.changeText(screen.getByLabelText('Weight'), '81');
+    // Clearing a rendered field is an instruction to drop that measurement.
+    await fireEvent.changeText(screen.getByLabelText('Arm'), '');
+    await fireEvent.press(screen.getByText('Save measurements'));
+
+    await waitFor(async () => {
+      expect((await db.repos.body.getMetricByDate(DATE))?.weightKg).toBe(81);
+    });
+
+    const stored = await db.repos.body.getMetricByDate(DATE);
+    expect(stored?.measurements.forearmCm).toBe(29.5);
+    expect(stored?.measurements.ankleCm).toBe(22);
+    expect(stored?.measurements.armCm).toBeUndefined();
+  });
+
   it('refuses an empty save rather than writing a blank row', async () => {
     await renderWithProviders(<BodyMetricForm repos={db.repos} date={DATE} unitSystem="metric" />);
 

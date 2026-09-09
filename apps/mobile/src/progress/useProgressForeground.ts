@@ -1,17 +1,15 @@
 /**
- * Runs the Progress tab's background work when the app comes to the front:
- * the insight detectors, last week's review, and rescheduling the reminders.
+ * Reading the app's one foreground runner.
  *
- * All three are idempotent, so re-running on every foreground is safe; the
- * once-a-day guard lives in `foreground.ts`.
+ * The runner itself is `ProgressForegroundProvider`, mounted once above the
+ * tabs. This module is only the context around it, and holds no imports of the
+ * database or the platform adapters on purpose: any component — a food-log
+ * card deep in the Eat tab — can ask for a resync without dragging the Expo
+ * modules into its own module graph.
  */
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { AppState } from 'react-native';
+import { createContext, useContext } from 'react';
 
-import { useInvalidator } from '../data/queries';
-import { usePlatform, useRepos } from '../db/AppDataProvider';
-import { ensureWeeklyReview, runDailyInsights } from './foreground';
-import { readReminderState, syncReminders, type ReminderSyncResult } from './reminders';
+import type { ReminderSyncResult } from './reminders';
 
 export interface ForegroundStatus {
   running: boolean;
@@ -24,67 +22,36 @@ export interface ForegroundStatus {
   refresh: () => void;
 }
 
+/** What a component sees when no runner is mounted above it. */
+export const IDLE_FOREGROUND: ForegroundStatus = {
+  running: false,
+  lastRunAt: null,
+  insights: null,
+  review: null,
+  reminders: null,
+  error: null,
+  refresh: () => undefined,
+};
+
+export const ForegroundContext = createContext<ForegroundStatus | null>(null);
+
+/**
+ * The runner's status. Outside the provider — a component rendered on its own
+ * in a test, say — this reports an idle runner rather than starting a second
+ * one, because exactly one runner exists and it lives at app level.
+ */
 export function useProgressForeground(): ForegroundStatus {
-  const repos = useRepos();
-  const { clock, notifications } = usePlatform();
-  const invalidate = useInvalidator();
+  return useContext(ForegroundContext) ?? IDLE_FOREGROUND;
+}
 
-  const [running, setRunning] = useState(false);
-  const [lastRunAt, setLastRunAt] = useState<string | null>(null);
-  const [insights, setInsights] = useState<string | null>(null);
-  const [review, setReview] = useState<string | null>(null);
-  const [reminders, setReminders] = useState<ReminderSyncResult | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const busy = useRef(false);
-
-  const run = useCallback(async () => {
-    if (busy.current) return;
-    busy.current = true;
-    setRunning(true);
-    setError(null);
-    try {
-      const today = clock.today();
-      const settings = await repos.settings.getAll();
-
-      const insightOutcome = await runDailyInsights(repos, today);
-      setInsights(insightOutcome.reason);
-      if (insightOutcome.created > 0) invalidate('dismissInsight');
-
-      const reviewOutcome = await ensureWeeklyReview(repos, today, settings.weekStartsOn);
-      setReview(reviewOutcome.reason);
-      if (reviewOutcome.weekStart) invalidate('saveWeeklyReview', 'enqueueAiJob');
-
-      if (settings.notificationsEnabled) {
-        const state = await readReminderState(repos, { today });
-        setReminders(await syncReminders(notifications, state));
-      } else {
-        setReminders(null);
-      }
-
-      setLastRunAt(clock.now());
-    } catch (caught) {
-      setError(caught instanceof Error ? caught.message : String(caught));
-    } finally {
-      busy.current = false;
-      setRunning(false);
-    }
-  }, [clock, invalidate, notifications, repos]);
-
-  useEffect(() => {
-    void run();
-    const subscription = AppState.addEventListener('change', (next) => {
-      if (next === 'active') void run();
-    });
-    return () => subscription.remove();
-  }, [run]);
-
-  return {
-    running,
-    lastRunAt,
-    insights,
-    review,
-    reminders,
-    error,
-    refresh: () => void run(),
-  };
+/**
+ * The resync a successful mutation calls: run it after the write lands, so the
+ * reminder rules are re-evaluated against the state the user just created
+ * instead of waiting for the next visit to the Progress tab.
+ *
+ * Outside the provider it is a no-op, so components stay renderable alone.
+ */
+export function useReminderResync(): () => void {
+  const foreground = useContext(ForegroundContext);
+  return foreground?.refresh ?? IDLE_FOREGROUND.refresh;
 }

@@ -145,6 +145,35 @@ describe('syncReminders', () => {
     expect(new Date(workout?.fireAt ?? '').getDate()).toBe(11);
   });
 
+  it('still schedules today when the quiet reason expires before the slot', async () => {
+    const notifications = recorder();
+    // 09:00 now, meal-log slot at 13:00: the three-hour quiet window from the
+    // 08:00 log is long over by then, so today's slot must survive.
+    const now = new Date(2026, 8, 10, 9, 0, 0);
+
+    await syncReminders(notifications, stateAt(now, { minutesSinceLastMealLog: 60 }), now);
+
+    const mealLog = notifications.scheduled.find(
+      (entry) => entry.id === notificationIdFor('meal_log'),
+    );
+    expect(new Date(mealLog?.fireAt ?? '').getDate()).toBe(10);
+    expect(new Date(mealLog?.fireAt ?? '').getHours()).toBe(13);
+  });
+
+  it('skips today when the quiet reason still holds at the slot', async () => {
+    const notifications = recorder();
+    // 12:00 now, slot at 13:00, logged 30 minutes ago: still inside the quiet
+    // window when the notification would fire, so today is given up.
+    const now = new Date(2026, 8, 10, 12, 0, 0);
+
+    await syncReminders(notifications, stateAt(now, { minutesSinceLastMealLog: 30 }), now);
+
+    const mealLog = notifications.scheduled.find(
+      (entry) => entry.id === notificationIdFor('meal_log'),
+    );
+    expect(new Date(mealLog?.fireAt ?? '').getDate()).toBe(11);
+  });
+
   it('cancels everything when the user turns notifications off', async () => {
     const notifications = recorder();
     await cancelAllReminders(notifications);
@@ -202,5 +231,44 @@ describe('readReminderState', () => {
     expect(state.minutesSinceLastMealLog).toBe(360);
     expect(state.workoutCompletedToday).toBe(false);
     expect(state.weeklyReviewGenerated).toBe(false);
+  });
+
+  it('counts the review of the week that just ended, not the current one', async () => {
+    // 10 Sep 2026 is a Thursday; with weeks starting on Monday the week that
+    // just ended began on 31 Aug. A review for it means the reminder has
+    // nothing left to nag about — waiting for a review of the week still in
+    // progress would keep it firing forever.
+    await db.repos.reviews.upsert({
+      weekStart: '2026-08-31',
+      training: {
+        workoutsCompleted: 0,
+        workoutsPlanned: 0,
+        completionRate: 0,
+        totalSets: 0,
+        totalVolumeKg: 0,
+        volumeByMuscleGroup: [],
+        personalRecords: [],
+        missedSessions: 0,
+        averageRpe: null,
+        averageDurationMin: null,
+      },
+      nutrition: {
+        daysLogged: 0,
+        averageKcal: 0,
+        averageProteinG: 0,
+        averageCarbsG: 0,
+        averageFatG: 0,
+        averageFiberG: 0,
+        targetHitRate: { kcal: 0, proteinG: 0, carbsG: 0, fatG: 0, fiberG: 0 },
+        missedTargets: [],
+      },
+    });
+
+    const state = await readReminderState(db.repos, {
+      today: '2026-09-10',
+      now: new Date('2026-09-10T10:00:00.000Z'),
+    });
+
+    expect(state.weeklyReviewGenerated).toBe(true);
   });
 });

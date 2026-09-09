@@ -12,6 +12,7 @@ export default defineConfig({
       'packages/platform',
       'packages/ui-tokens',
       'apps/web',
+      'apps/mobile',
     ],
   },
 });

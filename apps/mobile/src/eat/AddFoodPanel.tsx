@@ -30,6 +30,7 @@ import { isAiUnavailable, type AiGateway } from '../ai/gateway';
 import { useAiGateway } from '../ai/useAiGateway';
 import { useInvalidator } from '../data/queries';
 import type { AppRepos } from '../db/AppDataProvider';
+import { useReminderResync } from '../progress/useProgressForeground';
 import { Button, ErrorBanner, TextField } from '../ui/components';
 import {
   ActionRow,
@@ -106,6 +107,7 @@ export function AddFoodPanel({
   const installedGateway = useAiGateway();
   const gateway = gatewayOverride ?? installedGateway;
   const invalidate = useInvalidator();
+  const resyncReminders = useReminderResync();
 
   const [mode, setMode] = useState<Mode>('describe');
   const [slot, setSlot] = useState<MealSlot>(initialSlot);
@@ -139,6 +141,9 @@ export function AddFoodPanel({
       items: input.items,
     });
     invalidate('logFood');
+    // The meal-log and protein rules just changed — reschedule from the new
+    // state instead of waiting for the next visit to the Progress tab.
+    resyncReminders();
     onLogged?.(log);
     return log;
   }
