@@ -44,12 +44,18 @@ importers:
       '@tanstack/react-query':
         specifier: 5.102.8
         version: 5.102.8(react@19.2.3)
+      '@vigor/ai':
+        specifier: workspace:*
+        version: link:../../packages/ai
       '@vigor/core':
         specifier: workspace:*
         version: link:../../packages/core
       '@vigor/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@vigor/library':
+        specifier: workspace:*
+        version: link:../../packages/library
       '@vigor/platform':
         specifier: workspace:*
         version: link:../../packages/platform
@@ -156,12 +162,18 @@ importers:
       '@tanstack/react-query':
         specifier: 5.102.8
         version: 5.102.8(react@19.2.8)
+      '@vigor/ai':
+        specifier: workspace:*
+        version: link:../../packages/ai
       '@vigor/core':
         specifier: workspace:*
         version: link:../../packages/core
       '@vigor/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@vigor/library':
+        specifier: workspace:*
+        version: link:../../packages/library
       '@vigor/platform':
         specifier: workspace:*
         version: link:../../packages/platform

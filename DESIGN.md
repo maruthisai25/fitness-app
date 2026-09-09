@@ -131,6 +131,9 @@ All IDs are UUID v7 strings. All timestamps are ISO 8601 UTC strings. All dates 
 **Safety**
 - `safety_events` — `id`, `date`, `kind` (pain|injury|dizziness|symptom|excessive_fatigue), `text`, `source` (readiness|chat|session), `resolvedAt`, `note`
 
+**Audit**
+- `memory_forgets` — `id`, `memoryId`, `reason`, `forgottenAt`. Written by `memories.forget`; not part of the export bundle. (Added in Phase 1 so the forget reason has a home; total table count is 28.)
+
 ### 4.2 Repositories
 
 One repository module per aggregate, exposing typed async functions. No SQL leaks outside `packages/db`. Every write returns the row. Examples of required signatures:
@@ -169,7 +172,7 @@ Rules, evaluated in order:
 2. Readiness modifier is `reduce` → hold load, volume −30 %, code `READINESS_REDUCE`.
 3. Readiness modifier is `hold` → hold load, code `READINESS_HOLD`.
 4. All working sets hit the top of the rep range and mean RPE ≤ 8.5 → increase load by one increment, target reps reset to bottom of range, code `PROGRESS_LOAD`.
-5. Bodyweight/time/distance load types → progress by reps (+1–2), time (+10 %) or harder variation via `exercise_relations.progression`, code `PROGRESS_REPS` / `PROGRESS_VARIATION`.
+5. Bodyweight/time/distance load types → progress by reps (+1–2), time or distance (+10 %) or harder variation via `exercise_relations.progression`, codes `PROGRESS_REPS` / `PROGRESS_TIME` / `PROGRESS_VARIATION`. For `time` and `distance` load types the `targetReps`/`actualReps` fields hold seconds or metres; UI must label them accordingly, never as "reps".
 6. Any set below the bottom of the range and mean RPE ≥ 9.5 on two consecutive sessions → decrease load one increment, code `REGRESS_LOAD`.
 7. Otherwise hold load and target the next rep milestone, code `HOLD_BUILD_REPS`.
 
@@ -198,7 +201,7 @@ Daily state from `food_items` for the date versus the active `nutrition_targets`
 
 ### 5.7 PR & streak engine
 
-After every completed set: compute e1RM with Epley (`load × (1 + reps/30)`, only for reps ≤ 12), compare to `personal_records`. Streaks count planned-day completions; a rest day never breaks a streak.
+After every completed set: compute e1RM with Epley (`load × (1 + reps/30)`, only for reps ≤ 12), compare to `personal_records`. Streaks count planned-day completions; a rest day never breaks a streak. The `max_reps_at_load` kind records the first session at any new load, so the UI celebrates `e1rm` and `max_load` records loudly and lists the other kinds quietly.
 
 ### 5.8 Insight detectors (run on app open, at most once per day)
 

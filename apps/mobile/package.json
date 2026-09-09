@@ -13,8 +13,10 @@
   },
   "dependencies": {
     "@tanstack/react-query": "5.102.8",
+    "@vigor/ai": "workspace:*",
     "@vigor/core": "workspace:*",
     "@vigor/db": "workspace:*",
+    "@vigor/library": "workspace:*",
     "@vigor/platform": "workspace:*",
     "@vigor/ui-tokens": "workspace:*",
     "expo": "57.0.21",
