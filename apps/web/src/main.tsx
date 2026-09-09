@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router';
 
 import { App } from './App';
 import { DbProvider } from './db/provider';
+import { PwaLayer } from './pwa';
 import './index.css';
 
 // TanStack Query over the repositories in both apps — DESIGN.md §7.2.
@@ -37,5 +38,13 @@ createRoot(container).render(
         </BrowserRouter>
       </DbProvider>
     </QueryClientProvider>
+    {/*
+      Shell chrome — install prompt, "update available" toast, offline
+      indicator. Mounted here rather than inside `App` because none of it
+      belongs to a route, and because it must survive whatever `DbProvider`
+      is doing: the offline indicator has to be able to paint before SQLite
+      has opened. Each surface renders `null` until it has something to say.
+    */}
+    <PwaLayer />
   </StrictMode>,
 );
