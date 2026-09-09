@@ -208,6 +208,7 @@ describe('buildTodayView — DESIGN.md §7.2', () => {
             evidence: [],
             severity: 'notice',
             dismissed: false,
+            dismissedAt: null,
           },
           {
             detector: 'FREQUENT_FOODS',
@@ -217,6 +218,7 @@ describe('buildTodayView — DESIGN.md §7.2', () => {
             evidence: [],
             severity: 'info',
             dismissed: true,
+            dismissedAt: '2026-09-10T08:00:00.000Z',
           },
         ],
         streak: computeStreak({

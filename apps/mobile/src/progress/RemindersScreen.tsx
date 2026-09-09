@@ -79,7 +79,7 @@ const REMINDER_FIELDS: {
     key: 'weeklyReview',
     kind: 'weekly_review',
     label: 'Weekly review',
-    hint: 'Fires on the day your week starts, once the previous week is ready.',
+    hint: 'Fires on your review day, once the previous week is ready and unread.',
   },
 ];
 
@@ -189,6 +189,20 @@ export function RemindersScreen() {
     }
   }
 
+  /** `null` puts the review back on the day the week starts. */
+  async function setReviewDay(day: WeekDay | null): Promise<void> {
+    setBusy(true);
+    try {
+      await repos.settings.set('weeklyReviewDay', day);
+      invalidate('saveSettings');
+      const reminderState = await readReminderState(repos, { today });
+      await syncReminders(notifications, reminderState);
+      await state.refetch();
+    } finally {
+      setBusy(false);
+    }
+  }
+
   if (state.isPending) return <LoadingScreen label="Loading reminders…" />;
   if (state.error)
     return <ErrorScreen message={`Could not load reminders: ${state.error.message}`} />;
@@ -243,8 +257,8 @@ export function RemindersScreen() {
       <Card>
         <CardTitle>Week starts on</CardTitle>
         <Caption>
-          This is also the day the weekly review lands, because that is the moment the previous week
-          is complete.
+          Where every week boundary falls: the weekly review covers the week that ends here, and the
+          Progress charts are grouped by it.
         </Caption>
         <ChipRow>
           {WEEKDAY_NAMES.map((name, index) => (
@@ -253,6 +267,29 @@ export function RemindersScreen() {
               label={name.slice(0, 3)}
               selected={settings.weekStartsOn === index}
               onPress={() => void setWeekStart(index as WeekDay)}
+            />
+          ))}
+        </ChipRow>
+      </Card>
+
+      <Card>
+        <CardTitle>Weekly review day</CardTitle>
+        <Caption>
+          The day the review is built and the reminder fires. Left on &ldquo;week start&rdquo; it
+          follows the day above, which is the moment the previous week is complete.
+        </Caption>
+        <ChipRow>
+          <Chip
+            label="Week start"
+            selected={settings.weeklyReviewDay == null}
+            onPress={() => void setReviewDay(null)}
+          />
+          {WEEKDAY_NAMES.map((name, index) => (
+            <Chip
+              key={name}
+              label={name.slice(0, 3)}
+              selected={settings.weeklyReviewDay === index}
+              onPress={() => void setReviewDay(index as WeekDay)}
             />
           ))}
         </ChipRow>

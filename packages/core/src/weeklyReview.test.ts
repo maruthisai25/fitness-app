@@ -191,6 +191,7 @@ describe('buildWeeklyReview — DESIGN.md §5.9', () => {
       evidence: [],
       severity,
       dismissed: false,
+      dismissedAt: null,
     });
 
     const review = buildWeeklyReview({

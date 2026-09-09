@@ -184,6 +184,7 @@ export const weeklyReviewHandler: AiJobHandler = async ({ job, deps, client, sig
       evidence: insight.evidence,
       severity: insight.severity,
       dismissed: insight.dismissed,
+      dismissedAt: insight.dismissedAt,
     })),
     rationale: makeRationale(
       ['WEEKLY_REVIEW_STORED'],

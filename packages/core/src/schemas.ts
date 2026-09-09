@@ -429,6 +429,11 @@ export const settingsSchema = z.object({
   weekStartsOn: weekDaySchema,
   onboardingComplete: z.boolean(),
   disclaimerAcceptedAt: isoTimestampSchema.nullable(),
+  insightsLastRunOn: localDateSchema.nullable(),
+  /** `null` = follow `weekStartsOn` (DESIGN.md §7.3). */
+  weeklyReviewDay: weekDaySchema.nullable(),
+  lastReviewViewedWeek: localDateSchema.nullable(),
+  serverSideFallback: z.boolean(),
 });
 
 // ---------------------------------------------------------------------------
@@ -693,6 +698,8 @@ export const insightSchema = z.object({
   evidence: z.array(evidenceRefSchema),
   severity: insightSeveritySchema,
   dismissed: z.boolean(),
+  /** When the user dismissed it; `null` while `dismissed` is false. */
+  dismissedAt: isoTimestampSchema.nullable(),
   createdAt: isoTimestampSchema,
 });
 

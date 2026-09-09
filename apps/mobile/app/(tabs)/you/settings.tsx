@@ -7,7 +7,6 @@ import { View } from 'react-native';
 import { useRepos, usePlatform } from '../../../src/db/AppDataProvider';
 import { useInvalidate } from '../../../src/data/queries';
 import { AI_API_KEY_QUERY_KEY, useAiClient } from '../../../src/ai/useAiClient';
-import { useAiPreferences, useSetAiPreferences } from '../../../src/ai/preferences';
 import {
   Button,
   ChoiceRow,
@@ -46,8 +45,6 @@ export default function SettingsScreen() {
   const queryClient = useQueryClient();
   const invalidate = useInvalidate();
   const { client: aiClient } = useAiClient();
-  const preferences = useAiPreferences();
-  const setPreferences = useSetAiPreferences();
 
   const [settings, setSettings] = useState<Settings | null>(null);
   const [unitSystem, setUnitSystem] = useState<UnitSystem | null>(null);
@@ -213,8 +210,8 @@ export default function SettingsScreen() {
         <ToggleRow
           label="Server-side fallback"
           hint="On by default (DESIGN.md §6.1). A policy decline on Opus 5 is re-run on Anthropic's fallback model inside the same request."
-          value={preferences.data?.serverSideFallback ?? true}
-          onValueChange={(value) => setPreferences.mutate({ serverSideFallback: value })}
+          value={settings.serverSideFallback}
+          onValueChange={(value) => void updateSettings({ serverSideFallback: value })}
         />
         <View style={{ padding: 16 }}>
           <Button

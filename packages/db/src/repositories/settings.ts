@@ -18,6 +18,13 @@ export const DEFAULT_SETTINGS: Settings = {
   weekStartsOn: 1,
   onboardingComplete: false,
   disclaimerAcceptedAt: null,
+  insightsLastRunOn: null,
+  // null = follow `weekStartsOn` (DESIGN.md §7.3).
+  weeklyReviewDay: null,
+  lastReviewViewedWeek: null,
+  // DESIGN.md §6.1: the `fallbacks: "default"` beta is on unless the user
+  // turns it off, and the settings screen says so.
+  serverSideFallback: true,
 };
 
 /** The keys the `settings` table is allowed to hold (DESIGN.md §4.1). */

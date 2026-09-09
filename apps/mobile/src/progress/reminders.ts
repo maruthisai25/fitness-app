@@ -13,6 +13,7 @@ import {
   buildDayNutrition,
   decideReminders,
   minutesOfDay,
+  resolveWeeklyReviewDay,
   startOfWeek,
   weekdayOf,
   type LocalDate,
@@ -59,7 +60,7 @@ const BODIES: Record<ReminderKind, string> = {
  *  - `NO_PROTEIN_TARGET` — nothing to chase; a target created later today is
  *    picked up by the next sync, which reschedules. Scheduling anyway would
  *    deliver "protein is behind" against a target that does not exist.
- *  - `REVIEW_ALREADY_GENERATED` — a stored review does not disappear.
+ *  - `REVIEW_ALREADY_VIEWED` — a week the user has read stays read.
  *
  * `MEAL_LOGGED_RECENTLY` is deliberately absent: it expires with the clock, so
  * it is checked against the slot time in {@link skipsTodaysSlot}. `NOT_YET_DUE`
@@ -69,7 +70,7 @@ const STABLE_SKIP_CODES = new Set([
   'WORKOUT_ALREADY_COMPLETED',
   'PROTEIN_ON_TRACK',
   'NO_PROTEIN_TARGET',
-  'REVIEW_ALREADY_GENERATED',
+  'REVIEW_ALREADY_VIEWED',
 ]);
 
 function pad2(value: number): string {
@@ -167,7 +168,8 @@ export async function readReminderState(
   ]);
 
   const day = buildDayNutrition({ date: today, logs, targets });
-  const weeklyReviewDay: WeekDay = settings.weekStartsOn;
+  // The user's chosen day, defaulting to the first day of their week.
+  const weeklyReviewDay: WeekDay = resolveWeeklyReviewDay(settings);
   // The review that is due is for the week that just *ended* (DESIGN.md §5.9),
   // which is the week starting seven days back — the current week has not
   // happened yet, so a row for it would never exist and the reminder would
@@ -196,6 +198,9 @@ export async function readReminderState(
     remainingProteinG: targets ? day.remaining.proteinG : null,
     weeklyReviewDay,
     weeklyReviewGenerated: (latestReview[0]?.weekStart ?? '') >= dueWeekStart,
+    // Set when the user opens a review (`ReviewsScreen`): once they have read
+    // the week that is due, the nudge has nothing left to say.
+    reviewWeekViewed: (settings.lastReviewViewedWeek ?? '') >= dueWeekStart,
   };
 }
 
@@ -260,5 +265,5 @@ export async function cancelAllReminders(notifications: Notifications): Promise<
 /** The settings shape the reminder screen edits. */
 export type ReminderSettings = Pick<
   Settings,
-  'notificationsEnabled' | 'reminderTimes' | 'weekStartsOn'
+  'notificationsEnabled' | 'reminderTimes' | 'weekStartsOn' | 'weeklyReviewDay'
 >;

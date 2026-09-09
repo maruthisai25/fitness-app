@@ -13,7 +13,6 @@ import type { Settings } from '@vigor/core';
 import { useEffect, useState } from 'react';
 
 import { webSecureStore } from '../platform/secureStore';
-import { getServerSideFallbackPref } from './fallbackPref';
 
 export interface AiClientState {
   /** Null until a key is loaded — render the offline/no-key state until then. */
@@ -43,7 +42,9 @@ export function useAiClient(settings: Settings, reloadToken = 0): AiClientState 
         models: {
           coachModel: settings.coachModel,
           fastModel: settings.fastModel,
-          serverSideFallback: getServerSideFallbackPref(),
+          // A stored settings row (DESIGN.md §4.1), so the choice travels with
+          // the export and is the same on every screen.
+          serverSideFallback: settings.serverSideFallback,
         },
       }).catch(() => null);
       if (cancelled) return;
@@ -52,7 +53,13 @@ export function useAiClient(settings: Settings, reloadToken = 0): AiClientState 
     return () => {
       cancelled = true;
     };
-  }, [settings.apiKeyRef, settings.coachModel, settings.fastModel, reloadToken]);
+  }, [
+    settings.apiKeyRef,
+    settings.coachModel,
+    settings.fastModel,
+    settings.serverSideFallback,
+    reloadToken,
+  ]);
 
   return state;
 }

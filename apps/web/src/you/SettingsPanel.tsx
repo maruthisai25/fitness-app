@@ -2,7 +2,7 @@ import { radius, space } from '@vigor/ui-tokens';
 import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 
-import { getServerSideFallbackPref, setServerSideFallbackPref, useCoach } from '../coach/CoachProvider';
+import { useCoach } from '../coach/CoachProvider';
 import { Field, PrimaryButton, SecondaryButton, TextInput } from '../components/form';
 import { useInvalidate } from '../data/hooks';
 import { useDb } from '../db/provider';
@@ -22,7 +22,6 @@ export function SettingsPanel(): ReactNode {
   const [keyInput, setKeyInput] = useState('');
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
-  const [fallbackOn, setFallbackOn] = useState(true);
   const [testResult, setTestResult] = useState<
     { ok: true } | { ok: false; message: string } | null
   >(null);
@@ -31,10 +30,6 @@ export function SettingsPanel(): ReactNode {
   useEffect(() => {
     void webSecureStore.get(ANTHROPIC_API_KEY_REF).then((v) => setHasKey(Boolean(v)));
   }, [settings.apiKeyRef]);
-
-  useEffect(() => {
-    setFallbackOn(getServerSideFallbackPref());
-  }, []);
 
   async function saveKey(): Promise<void> {
     const trimmed = keyInput.trim();
@@ -79,9 +74,11 @@ export function SettingsPanel(): ReactNode {
     setTestResult(null);
   }
 
-  function toggleFallback(next: boolean): void {
-    setFallbackOn(next);
-    setServerSideFallbackPref(next);
+  /** A stored settings row now, so the choice travels with the export bundle. */
+  async function toggleFallback(next: boolean): Promise<void> {
+    await repos.settings.set('serverSideFallback', next);
+    await refreshSettings();
+    await invalidate('saveSettings');
     reloadKey();
   }
 
@@ -163,14 +160,15 @@ export function SettingsPanel(): ReactNode {
         <label style={{ display: 'flex', gap: space.sm, alignItems: 'flex-start', cursor: 'pointer' }}>
           <input
             type="checkbox"
-            checked={fallbackOn}
-            onChange={(event) => toggleFallback(event.target.checked)}
+            checked={settings.serverSideFallback}
+            onChange={(event) => void toggleFallback(event.target.checked)}
             style={{ marginTop: 3 }}
           />
           <span style={{ color: themeColor.text }}>
-            Server-side refusal fallback is <strong>on</strong>. If Opus declines a request for
-            policy reasons, Anthropic automatically re-runs it on a fallback model in the same
-            call. Turn it off to always get Opus's own answer, refusal included.
+            Server-side refusal fallback is{' '}
+            <strong>{settings.serverSideFallback ? 'on' : 'off'}</strong>. If Opus declines a
+            request for policy reasons, Anthropic automatically re-runs it on a fallback model in
+            the same call. Turn it off to always get Opus&apos;s own answer, refusal included.
           </span>
         </label>
 

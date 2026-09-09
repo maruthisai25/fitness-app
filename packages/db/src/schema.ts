@@ -498,6 +498,11 @@ export const insights = sqliteTable(
     evidence: text('evidence', { mode: 'json' }).$type<EvidenceRef[]>().notNull(),
     severity: text('severity').$type<InsightSeverity>().notNull(),
     dismissed: integer('dismissed', { mode: 'boolean' }).notNull(),
+    /**
+     * When the user dismissed it. Null while `dismissed` is false. The Progress
+     * reconciliation reads this instead of stashing a marker in `evidence`.
+     */
+    dismissedAt: text('dismissedAt'),
     createdAt: text('createdAt').notNull(),
   },
   (table) => [

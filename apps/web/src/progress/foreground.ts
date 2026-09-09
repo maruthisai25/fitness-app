@@ -24,6 +24,8 @@ import {
   daysBetween,
   decideReminders,
   durationBucketOf,
+  isDetectorInsight,
+  resolveWeeklyReviewDay,
   runInsightDetectors,
   startOfWeek,
   weekdayOf,
@@ -52,32 +54,6 @@ import { webNotifications } from '../platform/notifications';
 
 /** The rolling window the detectors and the review look back over. */
 export const DETECTOR_WINDOW_DAYS = 28;
-
-/**
- * Per-browser markers. They are device-local conveniences, not app data: the
- * `settings` table only accepts the DESIGN.md §4.1 keys, and neither of these
- * must ever travel in an export bundle. Both hold a local calendar day taken
- * from the Clock adapter — never a UTC slice of an instant.
- */
-const INSIGHT_RUN_KEY = 'vigor.insights.lastRunDate';
-const REVIEW_SEEN_KEY = 'vigor.weeklyReview.seenWeek';
-
-function readMarker(key: string): string | null {
-  try {
-    return window.localStorage.getItem(key);
-  } catch {
-    return null;
-  }
-}
-
-function writeMarker(key: string, value: string): void {
-  try {
-    window.localStorage.setItem(key, value);
-  } catch {
-    // A browser with storage blocked just re-runs the detectors; the identity
-    // dedupe below still stops duplicate rows.
-  }
-}
 
 /** `HH:mm` in the user's local wall clock. */
 export function localTimeNow(at: Date = new Date()): LocalTime {
@@ -112,7 +88,11 @@ export function localDayOf(instant: string): LocalDate {
  */
 export const SUBJECT_EVIDENCE_TABLE = 'insight_subject';
 
-/** The day a row was dismissed on, recorded the same way. */
+/**
+ * The evidence marker dismissal used before migration 0001 added the
+ * `insights.dismissedAt` column. Rows written then still carry it, so it stays
+ * readable — nothing writes it any more.
+ */
 export const DISMISSED_EVIDENCE_TABLE = 'insight_dismissed_at';
 
 /** A dismissed insight stays dismissed for this long before it may return. */
@@ -211,8 +191,13 @@ export function deriveSubject(draft: InsightDraft, ctx: SubjectContext): string 
   }
 }
 
-/** The day an insight was dismissed on, falling back to the day it was written. */
+/**
+ * The day an insight was dismissed on: the `dismissedAt` column, then the
+ * legacy evidence marker for rows written before migration 0001, then the day
+ * the row itself was written.
+ */
 function dismissedOn(insight: Insight): LocalDate {
+  if (insight.dismissedAt) return localDayOf(insight.dismissedAt);
   const ref = insight.evidence.find((entry) => entry.table === DISMISSED_EVIDENCE_TABLE);
   return ref?.id ?? localDayOf(insight.createdAt);
 }
@@ -220,6 +205,10 @@ function dismissedOn(insight: Insight): LocalDate {
 /**
  * Dismisses an insight and records the day, so the detectors know to stay quiet
  * about that subject for {@link DISMISSAL_QUIET_DAYS}.
+ *
+ * The day is written to `insights.dismissedAt` (migration 0001) — stamped at
+ * the user's calendar day rather than the browser instant, because the quiet
+ * window is counted in local days.
  */
 export async function dismissInsight(
   repos: Repositories,
@@ -228,10 +217,7 @@ export async function dismissInsight(
 ): Promise<void> {
   await repos.insights.update(insight.id, {
     dismissed: true,
-    evidence: [
-      ...insight.evidence.filter((ref) => ref.table !== DISMISSED_EVIDENCE_TABLE),
-      { table: DISMISSED_EVIDENCE_TABLE, id: today, note: 'dismissed on' },
-    ],
+    dismissedAt: isoAtLocalTime(today, '00:00'),
   });
 }
 
@@ -346,13 +332,18 @@ async function executeDetectors(
   today: LocalDate,
   options: { force?: boolean },
 ): Promise<InsightDraft[]> {
-  if (!options.force && readMarker(INSIGHT_RUN_KEY) === today) return [];
+  if (!options.force && (await repos.settings.get('insightsLastRunOn')) === today) return [];
 
   const input = await loadDetectorInput(repos, today);
   const { insights } = runInsightDetectors(input);
   const ctx = subjectContext(input);
 
-  const existing = await repos.insights.list({ includeDismissed: true });
+  // Only the seven §5.8 detector codes are reconciled here. Today writes
+  // `PLATEAU` and the deload answer (`DELOAD_ACCEPTED` / `DELOAD_DISMISSED`)
+  // into the same table; those are user decisions this pass must never touch.
+  const existing = (await repos.insights.list({ includeDismissed: true })).filter(
+    isDetectorInsight,
+  );
   const byIdentity = indexByIdentity(existing);
 
   const inserts: InsightDraft[] = [];
@@ -392,7 +383,7 @@ async function executeDetectors(
   }
 
   if (inserts.length > 0) await repos.insights.createMany(inserts);
-  writeMarker(INSIGHT_RUN_KEY, today);
+  await repos.settings.set('insightsLastRunOn', today);
   return inserts;
 }
 
@@ -409,18 +400,24 @@ export function lastCompletedWeekStart(today: LocalDate, weekStartsOn: WeekDay):
 }
 
 /**
- * True once the user has actually opened the review for that week on this
- * device. The reminder is about reading the review, not about the row existing
- * — the row is written by this very runner, moments before the reminder is
- * evaluated, so "the row exists" would silence the reminder for ever.
+ * True once the user has actually opened the review for that week. The reminder
+ * is about reading the review, not about the row existing — the row is written
+ * by this very runner, moments before the reminder is evaluated, so "the row
+ * exists" would silence the reminder for ever.
  */
-export function hasSeenWeeklyReview(weekStart: LocalDate): boolean {
-  return readMarker(REVIEW_SEEN_KEY) === weekStart;
+export function hasSeenWeeklyReview(settings: Settings, weekStart: LocalDate): boolean {
+  const seen = settings.lastReviewViewedWeek;
+  return seen != null && seen >= weekStart;
 }
 
 /** Called by the Weekly review screen when it shows that week. */
-export function markWeeklyReviewSeen(weekStart: LocalDate): void {
-  writeMarker(REVIEW_SEEN_KEY, weekStart);
+export async function markWeeklyReviewSeen(
+  repos: Repositories,
+  weekStart: LocalDate,
+): Promise<void> {
+  const current = await repos.settings.get('lastReviewViewedWeek');
+  if (current != null && current >= weekStart) return;
+  await repos.settings.set('lastReviewViewedWeek', weekStart);
 }
 
 /**
@@ -549,8 +546,13 @@ export async function loadReminderState(
     ),
     minutesSinceLastMealLog,
     remainingProteinG: targets ? day.remaining.proteinG : null,
-    weeklyReviewDay: settings.weekStartsOn,
-    weeklyReviewGenerated: hasSeenWeeklyReview(lastCompletedWeekStart(today, settings.weekStartsOn)),
+    // The user's chosen day, defaulting to the first day of their week.
+    weeklyReviewDay: resolveWeeklyReviewDay(settings),
+    weeklyReviewGenerated: false,
+    reviewWeekViewed: hasSeenWeeklyReview(
+      settings,
+      lastCompletedWeekStart(today, settings.weekStartsOn),
+    ),
   };
 }
 

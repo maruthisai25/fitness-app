@@ -46,10 +46,33 @@ export interface ReminderState {
   minutesSinceLastMealLog: number | null;
   /** Signed remaining protein for today, or null when there is no target. */
   remainingProteinG: number | null;
-  /** The weekday the user chose for their weekly review. */
+  /**
+   * The weekday the user chose for their weekly review — resolve it with
+   * {@link resolveWeeklyReviewDay} so the `weekStartsOn` default is applied in
+   * one place.
+   */
   weeklyReviewDay: WeekDay;
-  /** True once this week's review row exists. */
+  /**
+   * True once the due week's review row exists. Reported as a fact; it does not
+   * silence the reminder on its own, because the runner writes that row moments
+   * before the reminder is decided — {@link ReminderState.reviewWeekViewed} is
+   * what the skip turns on.
+   */
   weeklyReviewGenerated: boolean;
+  /**
+   * True when `settings.lastReviewViewedWeek` already covers the review that is
+   * due — the user opened it, so there is nothing left to nudge them towards.
+   * Omitted means "not viewed".
+   */
+  reviewWeekViewed?: boolean;
+}
+
+/**
+ * Which weekday the weekly review lands on: the user's explicit choice, or the
+ * first day of their week when they have not made one (DESIGN.md §7.3).
+ */
+export function resolveWeeklyReviewDay(settings: Settings): WeekDay {
+  return settings.weeklyReviewDay ?? settings.weekStartsOn;
 }
 
 export interface ReminderDecision {
@@ -290,6 +313,8 @@ export function decideWeeklyReviewReminder(state: ReminderState): ReminderDecisi
     weekday: state.weekday,
     weeklyReviewDay: state.weeklyReviewDay,
     weeklyReviewGenerated: state.weeklyReviewGenerated,
+    reviewWeekViewed: state.reviewWeekViewed === true,
+    lastReviewViewedWeek: state.settings.lastReviewViewedWeek,
   };
 
   if (state.weekday !== state.weeklyReviewDay) {
@@ -305,15 +330,19 @@ export function decideWeeklyReviewReminder(state: ReminderState): ReminderDecisi
     };
   }
 
-  if (state.weeklyReviewGenerated) {
+  // The nudge is about *reading* the review, not about the row existing: the
+  // foreground runner writes that row moments before this runs, so "already
+  // generated" would silence the reminder for ever. `reviewWeekViewed` comes
+  // from `settings.lastReviewViewedWeek`, set when the user opens one.
+  if (state.reviewWeekViewed === true) {
     return {
       kind: 'weekly_review',
       fires: false,
       scheduledFor: at,
       rationale: makeRationale(
-        ['REVIEW_ALREADY_GENERATED'],
+        ['REVIEW_ALREADY_VIEWED'],
         facts,
-        'This week’s review has already been generated.',
+        'You have already read this week’s review.',
       ),
     };
   }

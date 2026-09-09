@@ -168,19 +168,13 @@ export function withSubjectMarker(
 }
 
 /**
- * The local day a row was dismissed on, when it carries the marker.
+ * The local day a row was dismissed on, read from the legacy evidence marker.
  *
- * `insights` has no `dismissedAt` column and the schema is fixed for this
- * phase, so the day is stamped into evidence by {@link markDismissedOn} at the
- * moment the user dismisses the row.
+ * Dismissal now writes the `dismissedAt` column (migration 0001). This stays as
+ * the fallback for rows dismissed before that column existed, whose day is only
+ * recorded in `evidence`.
  */
 export function dismissedOn(insight: Insight): LocalDate | null {
   const value = marker(insight.evidence, DISMISSED_MARKER_TABLE);
   return value == null ? null : (value as LocalDate);
-}
-
-/** Evidence for a row being dismissed today. */
-export function markDismissedOn(insight: Insight, today: LocalDate): EvidenceRef[] {
-  const rest = insight.evidence.filter((entry) => entry.table !== DISMISSED_MARKER_TABLE);
-  return [...rest, { table: DISMISSED_MARKER_TABLE, id: today, note: 'dismissed' }];
 }

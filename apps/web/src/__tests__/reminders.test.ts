@@ -101,10 +101,14 @@ describe('loadReminderState', () => {
     expect(state.minutesSinceLastMealLog).not.toBeNull();
     expect(state.minutesSinceLastMealLog ?? Number.NaN).toBeLessThan(5);
     // "Has this week's review been read", not "does any review exist".
-    expect(state.weeklyReviewGenerated).toBe(false);
+    expect(state.reviewWeekViewed).toBe(false);
 
-    markWeeklyReviewSeen(lastCompletedWeekStart(TODAY, settings.weekStartsOn));
-    expect((await loadReminderState(db.repos, settings, TODAY, '12:00')).weeklyReviewGenerated).toBe(
+    await markWeeklyReviewSeen(db.repos, lastCompletedWeekStart(TODAY, settings.weekStartsOn));
+    const seenSettings: Settings = {
+      ...settings,
+      lastReviewViewedWeek: await db.repos.settings.get('lastReviewViewedWeek'),
+    };
+    expect((await loadReminderState(db.repos, seenSettings, TODAY, '12:00')).reviewWeekViewed).toBe(
       true,
     );
   });
@@ -125,12 +129,16 @@ describe('syncReminders', () => {
     expect(before.scheduled).toContain(notificationIdFor('weekly_review'));
 
     // Reading the week is what silences it — for that week only.
-    markWeeklyReviewSeen(lastCompletedWeekStart(TODAY, settings.weekStartsOn));
+    await markWeeklyReviewSeen(db.repos, lastCompletedWeekStart(TODAY, settings.weekStartsOn));
+    const seenSettings: Settings = {
+      ...settings,
+      lastReviewViewedWeek: await db.repos.settings.get('lastReviewViewedWeek'),
+    };
 
-    const after = await syncReminders(db.repos, settings, TODAY, '10:00');
+    const after = await syncReminders(db.repos, seenSettings, TODAY, '10:00');
     const reviewAgain = after.decisions.find((decision) => decision.kind === 'weekly_review');
     expect(reviewAgain?.fires).toBe(false);
-    expect(reviewAgain?.rationale.codes).toContain('REVIEW_ALREADY_GENERATED');
+    expect(reviewAgain?.rationale.codes).toContain('REVIEW_ALREADY_VIEWED');
     expect(after.cancelled).toContain(notificationIdFor('weekly_review'));
   });
 

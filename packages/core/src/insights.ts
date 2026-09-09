@@ -145,7 +145,16 @@ function draft(
   refs: EvidenceRef[],
   severity: Insight['severity'],
 ): InsightDraft {
-  return { detector, period, headline, detail, evidence: refs, severity, dismissed: false };
+  return {
+    detector,
+    period,
+    headline,
+    detail,
+    evidence: refs,
+    severity,
+    dismissed: false,
+    dismissedAt: null,
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -678,6 +687,35 @@ export const INSIGHT_DETECTORS = [
   detectFrequentFoods,
   detectMissedTargetStreak,
 ] as const;
+
+/**
+ * The seven detector codes of DESIGN.md §5.8 — the closed set the daily
+ * reconciliation owns.
+ *
+ * Other rows land in `insights` too: Today files `PLATEAU` (§5.3) and the
+ * deload answer under `DELOAD_ACCEPTED` / `DELOAD_DISMISSED`. Those are user
+ * decisions, not detector output, and re-deriving them is not possible — so the
+ * reconciliation must filter stored rows through {@link isDetectorInsight}
+ * before it updates, suppresses or replaces anything.
+ */
+export const DETECTOR_CODES = [
+  'EXERCISE_TREND',
+  'PUSH_PULL_BALANCE',
+  'SKIPPED_PATTERN',
+  'PROTEIN_GAP_BY_DAY',
+  'COMPLETION_BY_DURATION',
+  'FREQUENT_FOODS',
+  'MISSED_TARGET_STREAK',
+] as const;
+
+export type DetectorCode = (typeof DETECTOR_CODES)[number];
+
+const DETECTOR_CODE_SET: ReadonlySet<string> = new Set(DETECTOR_CODES);
+
+/** True only for rows one of the seven §5.8 detectors produced. */
+export function isDetectorInsight(row: { detector: string }): boolean {
+  return DETECTOR_CODE_SET.has(row.detector);
+}
 
 export interface InsightRunResult {
   insights: InsightDraft[];

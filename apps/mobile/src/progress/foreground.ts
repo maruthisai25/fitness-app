@@ -22,6 +22,7 @@
 import {
   addDays,
   buildWeeklyReview,
+  isDetectorInsight,
   runInsightDetectors,
   startOfWeek,
   daysBetween,
@@ -42,7 +43,6 @@ import {
   dismissedOn,
   evidenceWithSubject,
   insightIdentity,
-  markDismissedOn,
   withSubjectMarker,
   type SubjectContext,
 } from './insightIdentity';
@@ -60,24 +60,18 @@ export const INSIGHT_WINDOW_DAYS = 28;
 export const EXERCISE_HISTORY_LIMIT = 24;
 
 /**
- * Remembers, for this app session, which local calendar day the detectors last
- * ran on — the Clock adapter's `today()`, never a slice of a UTC timestamp,
- * which is a different day for most of the world for part of every day.
+ * Joined by every overlapping caller so a run never races itself.
  *
- * The marker is device-local and in-memory for now: the `settings` key list is
- * fixed in `packages/core` for this phase, so `insightsLastRunOn` cannot be
- * persisted yet. A cold start therefore repeats the run, which is harmless —
- * the identity reconciliation below makes a repeat write-free.
+ * The once-a-day guard itself is the `insightsLastRunOn` settings row — the
+ * Clock adapter's `today()`, never a slice of a UTC timestamp, which is a
+ * different day for most of the world for part of every day. Storing it means
+ * the rule survives a cold start instead of resetting with the module.
  */
-let lastDetectorRun: LocalDate | null = null;
-
-/** Joined by every overlapping caller so a run never races itself. */
 let detectorRunInFlight: Promise<InsightRunOutcome> | null = null;
 let foregroundRunInFlight: Promise<ForegroundRunResult> | null = null;
 
-/** Test seam: forgets the once-a-day guard and any in-flight run. */
+/** Test seam: forgets any in-flight run (the day marker lives in `settings`). */
 export function resetDetectorGuard(): void {
-  lastDetectorRun = null;
   detectorRunInFlight = null;
   foregroundRunInFlight = null;
 }
@@ -121,14 +115,23 @@ function buildSubjectContext(
 }
 
 /**
+ * The local day a row was dismissed on: the `dismissedAt` column, falling back
+ * to the evidence marker rows written before migration 0001 added it.
+ */
+function dismissedDayOf(row: Insight): LocalDate | null {
+  if (row.dismissedAt) return row.dismissedAt.slice(0, 10) as LocalDate;
+  return dismissedOn(row);
+}
+
+/**
  * True while a dismissal should still keep an insight quiet.
  *
- * Rows dismissed before dismissal days were stamped carry no marker; those stay
- * quiet rather than reappearing, which is the behaviour the user asked for when
- * they dismissed them.
+ * Rows dismissed before either the column or the marker existed carry no day;
+ * those stay quiet rather than reappearing, which is the behaviour the user
+ * asked for when they dismissed them.
  */
 function dismissalStillHolds(row: Insight, today: LocalDate): boolean {
-  const dismissedDay = dismissedOn(row);
+  const dismissedDay = dismissedDayOf(row);
   if (dismissedDay == null) return true;
   return daysBetween(dismissedDay, today) <= INSIGHT_WINDOW_DAYS;
 }
@@ -150,7 +153,8 @@ export function runDailyInsights(repos: AppRepos, today: LocalDate): Promise<Ins
 }
 
 async function executeDailyInsights(repos: AppRepos, today: LocalDate): Promise<InsightRunOutcome> {
-  if (lastDetectorRun === today) {
+  const lastRunOn = await repos.settings.get('insightsLastRunOn');
+  if (lastRunOn === today) {
     return {
       ran: false,
       created: 0,
@@ -204,7 +208,12 @@ async function executeDailyInsights(repos: AppRepos, today: LocalDate): Promise<
   });
 
   const context = buildSubjectContext(workouts, exerciseHistories);
-  const existing = await repos.insights.list({ includeDismissed: true });
+  // Only the seven §5.8 detector codes are reconciled. Today writes `PLATEAU`
+  // and the deload answer into the same table; those are user decisions this
+  // pass must never update, suppress or replace.
+  const existing = (await repos.insights.list({ includeDismissed: true })).filter(
+    isDetectorInsight,
+  );
 
   // `list` returns newest first, so the first row seen for an identity is the
   // one that matters.
@@ -248,7 +257,7 @@ async function executeDailyInsights(repos: AppRepos, today: LocalDate): Promise<
 
   if (inserts.length > 0) await repos.insights.createMany(inserts);
 
-  lastDetectorRun = today;
+  await repos.settings.set('insightsLastRunOn', today);
   return {
     ran: true,
     created: inserts.length,
@@ -260,18 +269,24 @@ async function executeDailyInsights(repos: AppRepos, today: LocalDate): Promise<
 }
 
 /**
- * Dismisses an insight and stamps the local day it happened on, so a later
- * detector run knows how long the row has been dismissed for.
+ * Dismisses an insight and stamps when it happened, so a later detector run
+ * knows how long the row has been dismissed for.
+ *
+ * The stamp is the `dismissedAt` column (migration 0001). Rows dismissed before
+ * that landed carry the old evidence marker instead, and `dismissedDayOf` still
+ * reads it.
  */
 export async function dismissInsight(
   repos: AppRepos,
   insight: Insight,
   today: LocalDate,
 ): Promise<Insight> {
-  // `insights.dismiss` would drop the day; this keeps the audit in evidence.
+  // Stamped at the user's calendar day, not the device instant: the quiet
+  // window is counted in local days, and a UTC instant is a different day for
+  // most of the world for part of every day.
   return repos.insights.update(insight.id, {
     dismissed: true,
-    evidence: markDismissedOn(insight, today),
+    dismissedAt: `${today}T00:00:00.000Z`,
   });
 }
 
@@ -335,6 +350,7 @@ export async function ensureWeeklyReview(
       evidence: insight.evidence,
       severity: insight.severity,
       dismissed: insight.dismissed,
+      dismissedAt: insight.dismissedAt,
     })),
   });
 

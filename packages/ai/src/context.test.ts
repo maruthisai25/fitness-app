@@ -117,6 +117,7 @@ function makeInput(overrides: Partial<CoachContextInput> = {}): CoachContextInpu
       evidence: [],
       severity: 'notice',
       dismissed: false,
+      dismissedAt: null,
       createdAt: '2026-09-09T07:00:00.000Z',
     },
     {
@@ -128,6 +129,7 @@ function makeInput(overrides: Partial<CoachContextInput> = {}): CoachContextInpu
       evidence: [],
       severity: 'warning',
       dismissed: false,
+      dismissedAt: null,
       createdAt: '2026-09-08T07:00:00.000Z',
     },
   ];

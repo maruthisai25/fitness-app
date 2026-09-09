@@ -151,5 +151,3 @@ export function CoachProvider({ children }: { children: ReactNode }): ReactNode 
 // through the real SecureStore/network — see `apps/web/src/coach/*.test.tsx`.
 export { CoachContext };
 
-/** Whether `serverSideFallback` is currently on, for the settings screen. */
-export { getServerSideFallbackPref, setServerSideFallbackPref } from './fallbackPref';

@@ -193,6 +193,10 @@ export function makeSettings(partial: Partial<Settings> = {}): Settings {
     weekStartsOn: partial.weekStartsOn ?? 1,
     onboardingComplete: partial.onboardingComplete ?? true,
     disclaimerAcceptedAt: partial.disclaimerAcceptedAt ?? '2026-09-01T00:00:00.000Z',
+    insightsLastRunOn: partial.insightsLastRunOn ?? null,
+    weeklyReviewDay: partial.weeklyReviewDay ?? null,
+    lastReviewViewedWeek: partial.lastReviewViewedWeek ?? null,
+    serverSideFallback: partial.serverSideFallback ?? true,
   };
 }
 

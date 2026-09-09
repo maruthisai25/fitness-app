@@ -84,9 +84,16 @@ describe('runDailyInsights', () => {
     const second = await runDailyInsights(db.repos, TODAY);
     expect(second.ran).toBe(false);
 
-    // A cold start loses the in-session guard. The detectors may run again,
-    // but every draft matches a stored row, so nothing new is written.
+    // The guard is `settings.insightsLastRunOn`, so it survives a cold start
+    // rather than resetting with the module.
     resetDetectorGuard();
+    expect(await db.repos.settings.get('insightsLastRunOn')).toBe(TODAY);
+    expect((await runDailyInsights(db.repos, TODAY)).ran).toBe(false);
+
+    // Forced past the guard, every draft still matches a stored row, so a
+    // repeat run writes nothing new.
+    resetDetectorGuard();
+    await db.repos.settings.set('insightsLastRunOn', null);
     const third = await runDailyInsights(db.repos, TODAY);
     expect(third.created).toBe(0);
     expect(third.duplicates).toBe(first.created);

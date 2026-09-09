@@ -50,6 +50,10 @@ const SETTINGS: Settings = {
   weekStartsOn: 1,
   onboardingComplete: true,
   disclaimerAcceptedAt: '2026-01-01T00:00:00.000Z',
+  insightsLastRunOn: null,
+  weeklyReviewDay: null,
+  lastReviewViewedWeek: null,
+  serverSideFallback: true,
 };
 
 function stateAt(now: Date, overrides: Partial<ReminderState> = {}): ReminderState {

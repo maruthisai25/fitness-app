@@ -22,17 +22,24 @@ import { lastCompletedWeekStart, markWeeklyReviewSeen, resyncForeground } from '
 const NO_SUMMARY = 'Summary arrives when the coach is connected.';
 
 export function ReviewsPanel(): ReactNode {
-  const { settings } = useDb();
+  const { repos, settings, refreshSettings } = useDb();
   const reviews = useWeeklyReviews();
 
-  // Opening this screen is what "you have reviewed your week" means. The
-  // weekly-review reminder is quiet from here on, and only for that week — the
-  // review row itself cannot say this, because the foreground runner writes it
-  // moments before the reminder is decided.
+  // Opening this screen is what "you have reviewed your week" means. It is
+  // recorded in `settings.lastReviewViewedWeek`, so the weekly-review reminder
+  // is quiet from here on — and only for that week. The review row itself
+  // cannot say this, because the foreground runner writes it moments before the
+  // reminder is decided.
   useEffect(() => {
-    markWeeklyReviewSeen(lastCompletedWeekStart(webClock.today(), settings.weekStartsOn));
-    resyncForeground();
-  }, [settings.weekStartsOn]);
+    void (async () => {
+      await markWeeklyReviewSeen(
+        repos,
+        lastCompletedWeekStart(webClock.today(), settings.weekStartsOn),
+      );
+      await refreshSettings();
+      resyncForeground();
+    })();
+  }, [repos, refreshSettings, settings.weekStartsOn]);
 
   if (reviews.isPending) return <EmptyState>Loading your reviews…</EmptyState>;
   if ((reviews.data ?? []).length === 0) {

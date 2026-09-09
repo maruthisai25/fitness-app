@@ -5,11 +5,11 @@
  * prose is an `ai_job` that fills `summary` and `recommendation` later. Until
  * it lands the screen says so rather than inventing a sentence.
  */
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { View } from 'react-native';
 
-import { queryKeys, type WeeklyReview } from '@vigor/core';
+import { queryKeys, type LocalDate, type WeeklyReview } from '@vigor/core';
 
 import { useRepos } from '../db/AppDataProvider';
 import { ErrorBanner, LoadingScreen, Screen, ScreenBlurb, ScreenTitle } from '../ui/components';
@@ -115,6 +115,25 @@ export function ReviewsScreen() {
     queryFn: () => repos.reviews.list({ limit: 26 }),
   });
 
+  /**
+   * Opening a review is what "the user has seen this week" means, so the week
+   * is recorded here. The weekly-review reminder reads it and stays quiet for a
+   * week already read (DESIGN.md §7.3).
+   */
+  const markViewed = useMutation({
+    mutationFn: async (weekStart: LocalDate) => {
+      const current = await repos.settings.get('lastReviewViewedWeek');
+      if (current != null && current >= weekStart) return;
+      await repos.settings.set('lastReviewViewedWeek', weekStart);
+    },
+  });
+
+  function toggleOpen(review: WeeklyReview): void {
+    const opening = openId !== review.id;
+    setOpenId(opening ? review.id : null);
+    if (opening) markViewed.mutate(review.weekStart);
+  }
+
   if (reviews.isPending) return <LoadingScreen label="Loading reviews…" />;
   if (reviews.error)
     return <ErrorScreen message={`Could not load reviews: ${reviews.error.message}`} />;
@@ -157,7 +176,7 @@ export function ReviewsScreen() {
             <ActionRow>
               <InlineAction
                 label={openId === review.id ? 'Hide the numbers' : 'Show the numbers'}
-                onPress={() => setOpenId(openId === review.id ? null : review.id)}
+                onPress={() => toggleOpen(review)}
               />
             </ActionRow>
           </Card>

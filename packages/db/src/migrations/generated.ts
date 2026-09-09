@@ -80,4 +80,12 @@ export const MIGRATIONS: readonly Migration[] = [
       "CREATE INDEX `workouts_status_date_idx` ON `workouts` (`status`,`date`);",
     ],
   },
+  {
+    idx: 1,
+    tag: "0001_insights_dismissed_at",
+    hash: "1be1f02d133dfe0760c1a5a98000474a28a0426e8d80d02852cdf5d5edc77101",
+    statements: [
+      "ALTER TABLE `insights` ADD `dismissedAt` text;",
+    ],
+  },
 ];

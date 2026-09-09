@@ -184,12 +184,20 @@ describe('weekly review reminder — DESIGN.md §7.3', () => {
     expect(decision.rationale.codes).toEqual(['WRONG_DAY']);
   });
 
-  it('stays quiet once the review has been generated', () => {
+  it('still fires when the row exists but the user has not read it', () => {
     const decision = decideWeeklyReviewReminder(
       state({ weekday: 0, weeklyReviewDay: 0, weeklyReviewGenerated: true }),
     );
+    expect(decision.fires).toBe(true);
+    expect(decision.rationale.codes).toEqual(['WEEKLY_REVIEW_DUE']);
+  });
+
+  it('stays quiet once the user has opened that week’s review', () => {
+    const decision = decideWeeklyReviewReminder(
+      state({ weekday: 0, weeklyReviewDay: 0, weeklyReviewGenerated: true, reviewWeekViewed: true }),
+    );
     expect(decision.fires).toBe(false);
-    expect(decision.rationale.codes).toEqual(['REVIEW_ALREADY_GENERATED']);
+    expect(decision.rationale.codes).toEqual(['REVIEW_ALREADY_VIEWED']);
   });
 
   it('waits for its configured time', () => {

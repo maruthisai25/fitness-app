@@ -14,7 +14,6 @@ import { createClientFromSecureStore, type AiClient, type ModelSettings } from '
 
 import { useAiClientOverride, usePlatform } from '../db/AppDataProvider';
 import { useSettingsQuery } from '../data/queries';
-import { useAiPreferences } from './preferences';
 
 /** Local-only cache key: not one of `@vigor/core/queries`' shared roots because
  * nothing outside this app needs to invalidate it — it is invalidated after a
@@ -35,11 +34,12 @@ export function useAiClient(): AiClientState {
   const override = useAiClientOverride();
   const { secureStore } = usePlatform();
   const settingsQuery = useSettingsQuery();
-  const preferencesQuery = useAiPreferences();
 
   const coachModel = settingsQuery.data?.coachModel;
   const fastModel = settingsQuery.data?.fastModel;
-  const serverSideFallback = preferencesQuery.data?.serverSideFallback ?? true;
+  // A stored settings row (DESIGN.md §4.1), so it travels with the export and
+  // is the same decision on every screen.
+  const serverSideFallback = settingsQuery.data?.serverSideFallback ?? true;
 
   const models = useMemo<Partial<ModelSettings> | null>(
     () =>

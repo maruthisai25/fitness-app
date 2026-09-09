@@ -286,6 +286,7 @@ describe('phraseInsights', () => {
           evidence: [],
           severity: 'notice',
           dismissed: false,
+          dismissedAt: null,
           createdAt: '2026-09-10T07:00:00.000Z',
         },
       ],

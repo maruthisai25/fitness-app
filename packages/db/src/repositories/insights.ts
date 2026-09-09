@@ -49,6 +49,7 @@ export function createInsightRepository(db: VigorDb): InsightRepository {
       evidence,
       severity: draft.severity ?? 'info',
       dismissed: draft.dismissed ?? false,
+      dismissedAt: draft.dismissedAt ?? null,
       createdAt: db.now(),
     };
   }
@@ -102,7 +103,8 @@ export function createInsightRepository(db: VigorDb): InsightRepository {
       return rows;
     },
     update,
-    dismiss: (id) => update(id, { dismissed: true }),
+    /** Stamps the moment as well as the flag, so "when" survives the write. */
+    dismiss: (id) => update(id, { dismissed: true, dismissedAt: db.now() }),
     async remove(id: Id): Promise<void> {
       await db.orm.delete(insightsTable).where(eq(insightsTable.id, id));
     },

@@ -298,6 +298,30 @@ export interface Settings {
   weekStartsOn: WeekDay;
   onboardingComplete: boolean;
   disclaimerAcceptedAt: IsoTimestamp | null;
+  /**
+   * The calendar day the insight detectors last ran (DESIGN.md §5.8: "run on
+   * app open, at most once per day"). Lives in `settings` rather than in app
+   * memory or `localStorage` so the once-a-day rule survives a reload and is
+   * the same rule on both shells.
+   */
+  insightsLastRunOn: LocalDate | null;
+  /**
+   * Which weekday the weekly review is generated and reminded on
+   * (DESIGN.md §7.3: "weekly review on the user's chosen day").
+   * `null` follows `weekStartsOn`.
+   */
+  weeklyReviewDay: WeekDay | null;
+  /**
+   * The `weekStart` of the last weekly review the user actually opened. The
+   * weekly-review reminder is skipped for a week already seen.
+   */
+  lastReviewViewedWeek: LocalDate | null;
+  /**
+   * Whether the coach may fall back to Anthropic's server-side tools when a
+   * request cannot be served locally. A user decision, so it belongs in the
+   * database with the rest of the settings rather than in app-local storage.
+   */
+  serverSideFallback: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -607,6 +631,12 @@ export interface Insight {
   evidence: EvidenceRef[];
   severity: InsightSeverity;
   dismissed: boolean;
+  /**
+   * When the user dismissed it — `null` while `dismissed` is false. The
+   * Progress reconciliation reads this to leave a dismissed row alone instead
+   * of writing a marker into `evidence`.
+   */
+  dismissedAt: IsoTimestamp | null;
   createdAt: IsoTimestamp;
 }
 
