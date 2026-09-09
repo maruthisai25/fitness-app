@@ -28,6 +28,7 @@ import { useDb } from '../db/provider';
 import { themeColor } from '../theme/cssVars';
 import { fontSize } from '../theme/typeScale';
 import { useDayNutrition, useInvalidate } from './data';
+import { finalLogs } from './logs';
 import { MEAL_SLOT_LABEL, MEAL_SLOTS } from './mealSlots';
 
 export function DayLog({
@@ -165,7 +166,8 @@ export function DayLog({
       {MEAL_SLOTS.map((slot) => {
         const logs = nutrition.logs.filter((log) => log.mealSlot === slot);
         if (logs.length === 0) return null;
-        const totals = sumConsumed(logs);
+        // Same rule as the day totals: a pending estimate is not counted yet.
+        const totals = sumConsumed(finalLogs(logs));
         return (
           <Section
             key={slot}

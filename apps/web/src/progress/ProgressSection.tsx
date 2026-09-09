@@ -20,7 +20,6 @@ import { PhotosPanel } from './PhotosPanel';
 import { RemindersPanel } from './RemindersPanel';
 import { ReviewDetail, ReviewsPanel } from './ReviewsPanel';
 import { StrengthPanel } from './StrengthPanel';
-import { useForegroundTasks } from './foreground';
 
 const TABS = [
   { path: 'strength', label: 'Strength' },
@@ -33,11 +32,9 @@ const TABS = [
 ] as const;
 
 export function ProgressSection(): ReactNode {
+  // Detectors, the weekly review and reminders are foreground work run by the
+  // single runner in `App` (DESIGN.md §5.8, §5.9, §7.3), not by a section.
   const today: LocalDate = webClock.today();
-
-  // DESIGN.md §5.8, §5.9, §7.3 — detectors, the weekly review and reminder
-  // scheduling all happen on foreground, guarded to once per calendar day.
-  useForegroundTasks();
 
   return (
     <div style={{ padding: space.xl, maxWidth: 860 }}>

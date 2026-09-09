@@ -29,6 +29,23 @@ import { useMutation, useQuery, useQueryClient, type UseQueryResult } from '@tan
 import { useCallback } from 'react';
 
 import { useDb } from '../db/provider';
+import { resyncForeground } from '../progress/foreground';
+import { finalLogs } from './logs';
+
+/**
+ * Mutations that can change the answer a reminder skip rule gives, so the
+ * foreground runner has to decide again (DESIGN.md §7.3): a meal logged silences
+ * the meal-log reminder, a finished workout silences the workout reminder, and
+ * either can move today's remaining protein.
+ */
+const REMINDER_AFFECTING: ReadonlySet<MutationName> = new Set<MutationName>([
+  'logFood',
+  'deleteFoodLog',
+  'saveNutritionTargets',
+  'createWorkout',
+  'updateWorkout',
+  'finishWorkout',
+]);
 
 /** Invalidates exactly the key prefixes DESIGN.md §7.2 assigns to a mutation. */
 export function useInvalidate(): (mutation: MutationName) => Promise<void> {
@@ -38,6 +55,7 @@ export function useInvalidate(): (mutation: MutationName) => Promise<void> {
       await Promise.all(
         invalidationsFor(mutation).map((key) => client.invalidateQueries({ queryKey: key })),
       );
+      if (REMINDER_AFFECTING.has(mutation)) resyncForeground();
     },
     [client],
   );
@@ -61,6 +79,11 @@ export function useNutritionTargets(): UseQueryResult<NutritionTargets[]> {
 /**
  * One day of food, assembled by `buildDayNutrition` — the engine owns
  * `consumed` and the signed `remaining`; the screen clamps with `clampMacros`.
+ *
+ * Only settled logs reach the engine: a log still waiting on the coach's
+ * estimate carries no final numbers, and the day log says outright that the
+ * totals skip it until it lands. It stays in `logs` so the screen can still
+ * show it as "estimating…".
  */
 export function useDayNutrition(date: LocalDate): UseQueryResult<DayNutrition> {
   const { repos } = useDb();
@@ -71,7 +94,8 @@ export function useDayNutrition(date: LocalDate): UseQueryResult<DayNutrition> {
         repos.nutrition.listLogs({ from: date, to: date }),
         repos.targets.getActive(date),
       ]);
-      return buildDayNutrition({ date, logs, targets });
+      const day = buildDayNutrition({ date, logs: finalLogs(logs), targets });
+      return { ...day, logs };
     },
   });
 }

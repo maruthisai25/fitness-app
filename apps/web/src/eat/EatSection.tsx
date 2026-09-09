@@ -11,7 +11,6 @@ import { NavLink, Navigate, Route, Routes, useNavigate, useSearchParams } from '
 
 import { TabStripStyle } from '../components/ui';
 import { webClock } from '../platform/clock';
-import { useForegroundTasks } from '../progress/foreground';
 import { themeColor } from '../theme/cssVars';
 import { fontSize } from '../theme/typeScale';
 import { AddFood } from './AddFood';
@@ -36,9 +35,7 @@ export function EatSection(): ReactNode {
   const [date, setDate] = useState<LocalDate>(today);
 
   // Insights, the weekly review and reminders are foreground work (DESIGN.md
-  // §5.8, §5.9, §7.3). Mounting the runner here as well as on Progress means it
-  // gets its once-a-day chance wherever the user actually lands.
-  useForegroundTasks();
+  // §5.8, §5.9, §7.3) run by the single runner in `App`, above the routes.
 
   return (
     <div style={{ padding: space.xl, maxWidth: 860 }}>

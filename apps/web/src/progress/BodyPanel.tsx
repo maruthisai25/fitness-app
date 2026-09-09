@@ -40,6 +40,18 @@ export function measurementLabel(key: string): string {
 /** The window "latest vs then" compares across — DESIGN.md §7.1. */
 export const COMPARE_WINDOW_DAYS = 30;
 
+/**
+ * What `body.upsertMetric` merges into the row for that date. Only the keys
+ * present are written; an absent key keeps whatever is already stored.
+ */
+interface BodyMetricPatch {
+  date: LocalDate;
+  weightKg?: number;
+  waistCm?: number;
+  measurements?: BodyMeasurements;
+  notes?: string;
+}
+
 interface BodyDraft {
   date: LocalDate;
   weight: string;
@@ -97,30 +109,39 @@ export function BodyPanel({ today }: { today: LocalDate }): ReactNode {
     [rows, today, unitSystem],
   );
 
+  /**
+   * A day's entry is built up over several visits — the scale in the morning,
+   * the tape measure later. So the patch carries only the fields that were
+   * actually typed, and measurements merge into the ones already stored for
+   * that date. A blank field means "leave it alone", never "clear it".
+   */
   async function save(): Promise<void> {
     setBusy(true);
     try {
-      const measurements: BodyMeasurements = {};
+      const existing = await repos.body.getMetricByDate(draft.date);
+      const patch: BodyMetricPatch = { date: draft.date };
+
+      const measurements: BodyMeasurements = { ...(existing?.measurements ?? {}) };
+      let measurementTyped = false;
       for (const [key, value] of Object.entries(draft.measurements)) {
         const typed = Number(value);
         if (!value.trim() || !Number.isFinite(typed)) continue;
         measurements[key] = fromInput(typed, 'length', unitSystem);
+        measurementTyped = true;
       }
+      if (measurementTyped) patch.measurements = measurements;
+
       const weightTyped = Number(draft.weight);
+      if (draft.weight.trim() && Number.isFinite(weightTyped)) {
+        patch.weightKg = fromInput(weightTyped, 'weight', unitSystem);
+      }
       const waistTyped = Number(draft.waist);
-      await repos.body.upsertMetric({
-        date: draft.date,
-        weightKg:
-          draft.weight.trim() && Number.isFinite(weightTyped)
-            ? fromInput(weightTyped, 'weight', unitSystem)
-            : null,
-        waistCm:
-          draft.waist.trim() && Number.isFinite(waistTyped)
-            ? fromInput(waistTyped, 'length', unitSystem)
-            : null,
-        measurements,
-        notes: draft.notes.trim() || null,
-      });
+      if (draft.waist.trim() && Number.isFinite(waistTyped)) {
+        patch.waistCm = fromInput(waistTyped, 'length', unitSystem);
+      }
+      if (draft.notes.trim()) patch.notes = draft.notes.trim();
+
+      await repos.body.upsertMetric(patch);
       await invalidate('saveBodyMetric');
       setDraft(blankDraft(today));
       setNote('Saved. Stored in metric, shown in your units.');

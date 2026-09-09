@@ -7,18 +7,32 @@
 import { addDays, type WeeklyReview } from '@vigor/core';
 import { space } from '@vigor/ui-tokens';
 import type { ReactNode } from 'react';
+import { useEffect } from 'react';
 import { Link, useParams } from 'react-router';
 
 import { BarChart } from '../components/charts';
 import { Card, EmptyState, Notice, Pill, Section, Stat } from '../components/ui';
+import { useDb } from '../db/provider';
+import { webClock } from '../platform/clock';
 import { themeColor } from '../theme/cssVars';
 import { fontSize } from '../theme/typeScale';
 import { useWeeklyReviews } from './data';
+import { lastCompletedWeekStart, markWeeklyReviewSeen, resyncForeground } from './foreground';
 
 const NO_SUMMARY = 'Summary arrives when the coach is connected.';
 
 export function ReviewsPanel(): ReactNode {
+  const { settings } = useDb();
   const reviews = useWeeklyReviews();
+
+  // Opening this screen is what "you have reviewed your week" means. The
+  // weekly-review reminder is quiet from here on, and only for that week — the
+  // review row itself cannot say this, because the foreground runner writes it
+  // moments before the reminder is decided.
+  useEffect(() => {
+    markWeeklyReviewSeen(lastCompletedWeekStart(webClock.today(), settings.weekStartsOn));
+    resyncForeground();
+  }, [settings.weekStartsOn]);
 
   if (reviews.isPending) return <EmptyState>Loading your reviews…</EmptyState>;
   if ((reviews.data ?? []).length === 0) {

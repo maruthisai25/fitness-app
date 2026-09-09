@@ -82,4 +82,42 @@ describe('Progress → Body', () => {
     expect(stored?.weightKg).toBeCloseTo(81.6, 6);
     expect(stored?.waistCm).toBeNull();
   });
+
+  it('keeps the fields it was not asked about when the same date is saved again', async () => {
+    await harness.db.repos.profile.save({ displayName: 'Test profile', unitSystem: 'metric' });
+
+    const user = userEvent.setup();
+    renderWithProviders(<BodyPanel today={TODAY} />);
+
+    // Morning: the scale and the chest tape.
+    await user.type(await screen.findByLabelText(/body weight \(kg\)/i), '81.6');
+    await user.type(screen.getByLabelText(/chest \(cm\)/i), '100');
+    await user.type(screen.getByLabelText(/^notes$/i), 'Before breakfast');
+    await user.click(screen.getByRole('button', { name: /save measurement/i }));
+
+    await waitFor(async () => {
+      expect((await harness.db.repos.body.getMetricByDate(TODAY))?.weightKg).not.toBeNull();
+    });
+
+    // Evening: only the waist and one more measurement, everything else blank.
+    await user.type(screen.getByLabelText(/waist \(cm\)/i), '85');
+    await user.type(screen.getByLabelText(/thigh \(cm\)/i), '58');
+    await user.click(screen.getByRole('button', { name: /save measurement/i }));
+
+    await waitFor(async () => {
+      expect((await harness.db.repos.body.getMetricByDate(TODAY))?.waistCm).not.toBeNull();
+    });
+
+    const stored = await harness.db.repos.body.getMetricByDate(TODAY);
+    // The blank fields meant "leave it alone", not "clear it".
+    expect(stored?.weightKg).toBeCloseTo(81.6, 6);
+    expect(stored?.notes).toBe('Before breakfast');
+    expect(stored?.waistCm).toBeCloseTo(85, 6);
+    // …and measurements merged rather than replaced the earlier map.
+    expect(stored?.measurements.chestCm).toBeCloseTo(100, 6);
+    expect(stored?.measurements.thighCm).toBeCloseTo(58, 6);
+
+    // One row per day, still (DESIGN.md §4.1 `body_metrics`).
+    expect(await harness.db.repos.body.listMetrics({ from: TODAY, to: TODAY })).toHaveLength(1);
+  });
 });

@@ -6,11 +6,14 @@
 
 import {
   addDays,
+  buildWeeklyReview,
   computeStreak,
+  endOfWeek,
   startOfWeek,
   type LocalDate,
   type StreakDay,
   type WeekDay,
+  type WeeklyReviewStats,
   type WorkoutWithExercises,
 } from '@vigor/core';
 import { space } from '@vigor/ui-tokens';
@@ -39,39 +42,40 @@ export function streakDaysFrom(workouts: readonly WorkoutWithExercises[]): Strea
   return [...byDate.values()];
 }
 
-export interface WeekBucket {
-  weekStart: LocalDate;
-  planned: number;
-  completed: number;
-}
-
-/** Completion per week, oldest first. */
-export function weeklyCompletion(
+/**
+ * One `buildWeeklyReview` per week that has sessions in it, oldest first.
+ *
+ * The counts on this screen are the weekly review's counts (DESIGN.md §5.9) —
+ * completed, planned and missed all come out of the core builder, so
+ * Consistency and the Weekly review can never disagree about the same week.
+ * The exercise list is irrelevant here: nothing below reads volume by muscle.
+ */
+export function weeklyStats(
   workouts: readonly WorkoutWithExercises[],
   weekStartsOn: WeekDay,
-): WeekBucket[] {
-  const buckets = new Map<LocalDate, WeekBucket>();
-  for (const workout of workouts) {
-    const key = startOfWeek(workout.date, weekStartsOn);
-    const bucket = buckets.get(key) ?? { weekStart: key, planned: 0, completed: 0 };
-    bucket.planned += 1;
-    if (workout.status === 'completed') bucket.completed += 1;
-    buckets.set(key, bucket);
-  }
-  return [...buckets.values()].sort((a, b) => a.weekStart.localeCompare(b.weekStart));
+): WeeklyReviewStats[] {
+  const weekStarts = [
+    ...new Set(workouts.map((workout) => startOfWeek(workout.date, weekStartsOn))),
+  ].sort((a, b) => a.localeCompare(b));
+  return weekStarts.map((weekOf) =>
+    buildWeeklyReview({ weekOf, weekStartsOn, workouts, exercises: [] }),
+  );
 }
 
-/** Sessions that were scheduled and did not happen — DESIGN.md §5.9 `missedSessions`. */
+/**
+ * The sessions behind the builder's `missedSessions` count: skipped, abandoned,
+ * or still planned once their own week has run out.
+ */
 export function missedSessions(
   workouts: readonly WorkoutWithExercises[],
-  today: LocalDate,
+  weekStartsOn: WeekDay,
 ): WorkoutWithExercises[] {
   return workouts
     .filter(
       (workout) =>
         workout.status === 'skipped' ||
         workout.status === 'abandoned' ||
-        (workout.status === 'planned' && workout.date < today),
+        (workout.status === 'planned' && workout.date < endOfWeek(workout.date, weekStartsOn)),
     )
     .sort((a, b) => b.date.localeCompare(a.date));
 }
@@ -87,10 +91,13 @@ export function ConsistencyPanel({ today }: { today: LocalDate }): ReactNode {
     [rows, today],
   );
   const weeks = useMemo(
-    () => weeklyCompletion(rows, settings.weekStartsOn),
+    () => weeklyStats(rows, settings.weekStartsOn),
     [rows, settings.weekStartsOn],
   );
-  const missed = useMemo(() => missedSessions(rows, today), [rows, today]);
+  const missed = useMemo(
+    () => missedSessions(rows, settings.weekStartsOn),
+    [rows, settings.weekStartsOn],
+  );
 
   if (workouts.isPending) return <EmptyState>Loading your sessions…</EmptyState>;
   if (rows.length === 0) {
@@ -101,8 +108,9 @@ export function ConsistencyPanel({ today }: { today: LocalDate }): ReactNode {
     );
   }
 
-  const totalPlanned = weeks.reduce((total, week) => total + week.planned, 0);
-  const totalCompleted = weeks.reduce((total, week) => total + week.completed, 0);
+  const totalPlanned = weeks.reduce((total, week) => total + week.training.workoutsPlanned, 0);
+  const totalCompleted = weeks.reduce((total, week) => total + week.training.workoutsCompleted, 0);
+  const totalMissed = weeks.reduce((total, week) => total + week.training.missedSessions, 0);
 
   return (
     <div>
@@ -126,7 +134,7 @@ export function ConsistencyPanel({ today }: { today: LocalDate }): ReactNode {
             value={`${totalCompleted} / ${totalPlanned}`}
             tone={totalCompleted === totalPlanned ? 'good' : 'text'}
           />
-          <Stat label="Missed" value={String(missed.length)} tone={missed.length > 0 ? 'warn' : 'good'} />
+          <Stat label="Missed" value={String(totalMissed)} tone={totalMissed > 0 ? 'warn' : 'good'} />
         </div>
         <p
           style={{
@@ -145,8 +153,11 @@ export function ConsistencyPanel({ today }: { today: LocalDate }): ReactNode {
           title="Sessions completed per week"
           subtitle="Every bar is one week; the number is how many planned sessions you finished."
           unit="sessions"
-          points={weeks.map((week) => ({ label: week.weekStart, value: week.completed }))}
-          maxValue={Math.max(1, ...weeks.map((week) => week.planned))}
+          points={weeks.map((week) => ({
+            label: week.weekStart,
+            value: week.training.workoutsCompleted,
+          }))}
+          maxValue={Math.max(1, ...weeks.map((week) => week.training.workoutsPlanned))}
           labelEvery={Math.max(1, Math.ceil(weeks.length / 8))}
         />
       </Section>

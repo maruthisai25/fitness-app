@@ -26,7 +26,7 @@ import { webClock } from '../platform/clock';
 import { webNotifications } from '../platform/notifications';
 import { themeColor } from '../theme/cssVars';
 import { fontSize } from '../theme/typeScale';
-import { localTimeNow, syncReminders } from './foreground';
+import { loadReminderState, localTimeNow, syncReminders } from './foreground';
 
 const KIND_LABEL: Record<ReminderKind, string> = {
   workout: 'Workout',
@@ -69,27 +69,17 @@ export function RemindersPanel({ today }: { today: LocalDate }): ReactNode {
     });
   }, []);
 
+  // The preview must answer the same question the scheduler does, from the same
+  // rows: `loadReminderState` is the one place those inputs are assembled.
   useEffect(() => {
-    const now: LocalTime = localTimeNow();
-    const weekday = new Date(`${today}T00:00:00Z`).getUTCDay() as WeekDay;
+    let cancelled = false;
     void (async () => {
-      const reviewExists = await repos.reviews.list({ limit: 1 });
-      const workoutsToday = await repos.workouts.getByDate(today);
-      setDecisions(
-        decideReminders({
-          today,
-          now,
-          weekday,
-          settings,
-          workoutCompletedToday: workoutsToday.some((workout) => workout.status === 'completed'),
-          plannedWorkoutToday: workoutsToday.some((workout) => workout.status === 'planned'),
-          minutesSinceLastMealLog: null,
-          remainingProteinG: null,
-          weeklyReviewDay: settings.weekStartsOn,
-          weeklyReviewGenerated: reviewExists.length > 0,
-        }),
-      );
+      const state = await loadReminderState(repos, settings, today, localTimeNow());
+      if (!cancelled) setDecisions(decideReminders(state));
     })();
+    return () => {
+      cancelled = true;
+    };
   }, [repos, settings, today]);
 
   async function setTime(key: TimeKey, value: string): Promise<void> {

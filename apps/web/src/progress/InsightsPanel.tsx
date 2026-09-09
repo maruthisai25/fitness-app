@@ -16,7 +16,7 @@ import { webClock } from '../platform/clock';
 import { themeColor } from '../theme/cssVars';
 import { fontSize } from '../theme/typeScale';
 import { useOpenInsights } from './data';
-import { runDetectorsOnce } from './foreground';
+import { dismissInsight, runDetectorsOnce, visibleEvidence } from './foreground';
 
 const DETECTOR_LABEL: Record<string, string> = {
   EXERCISE_TREND: 'Strength trend',
@@ -35,10 +35,11 @@ export function InsightsPanel(): ReactNode {
   const [busy, setBusy] = useState(false);
   const [note, setNote] = useState<string | null>(null);
 
+  /** Records the day too, so the detectors stay off this subject for four weeks. */
   async function dismiss(insight: Insight): Promise<void> {
     setBusy(true);
     try {
-      await repos.insights.dismiss(insight.id);
+      await dismissInsight(repos, insight, webClock.today());
       await invalidate('dismissInsight');
     } finally {
       setBusy(false);
@@ -88,7 +89,9 @@ export function InsightsPanel(): ReactNode {
             Nothing to flag. Keep logging and the detectors will speak up when a pattern is real.
           </EmptyState>
         )}
-        {(insights.data ?? []).map((insight) => (
+        {(insights.data ?? []).map((insight) => {
+          const evidence = visibleEvidence(insight);
+          return (
           <Card
             key={insight.id}
             tone={insight.severity === 'warning' ? 'warn' : 'surface'}
@@ -132,7 +135,7 @@ export function InsightsPanel(): ReactNode {
                 >
                   {insight.detail}
                 </p>
-                {insight.evidence.length > 0 && (
+                {evidence.length > 0 && (
                   <details style={{ marginTop: space.sm }}>
                     <summary
                       style={{
@@ -141,8 +144,8 @@ export function InsightsPanel(): ReactNode {
                         fontSize: fontSize.caption,
                       }}
                     >
-                      What this is based on ({insight.evidence.length} row
-                      {insight.evidence.length === 1 ? '' : 's'})
+                      What this is based on ({evidence.length} row
+                      {evidence.length === 1 ? '' : 's'})
                     </summary>
                     <ul
                       className="tabular"
@@ -153,7 +156,7 @@ export function InsightsPanel(): ReactNode {
                         fontSize: fontSize.caption,
                       }}
                     >
-                      {insight.evidence.map((ref, index) => (
+                      {evidence.map((ref, index) => (
                         <li key={`${ref.table}-${ref.id}-${index}`}>
                           {ref.table} · {ref.id}
                           {ref.note ? ` · ${ref.note}` : ''}
@@ -168,7 +171,8 @@ export function InsightsPanel(): ReactNode {
               </LinkButton>
             </div>
           </Card>
-        ))}
+          );
+        })}
       </Section>
     </div>
   );

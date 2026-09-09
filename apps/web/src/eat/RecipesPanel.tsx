@@ -7,7 +7,7 @@
  * because the ones you actually cook are the ones you want first.
  */
 
-import { clampMacros, type LocalDate, type Recipe, type RecipeIngredient } from '@vigor/core';
+import { ZERO_MACROS, type LocalDate, type Recipe, type RecipeIngredient } from '@vigor/core';
 import { space } from '@vigor/ui-tokens';
 import type { ReactNode } from 'react';
 import { useState } from 'react';
@@ -55,7 +55,10 @@ export function RecipesPanel({ today }: { today: LocalDate }): ReactNode {
       const minutes = Number(timeLimit);
       const recipe = await gateway.generateRecipe({
         inventory: inventory.data ?? [],
-        remaining: clampMacros(day.data?.remaining ?? { kcal: 0, proteinG: 0, carbsG: 0, fatG: 0, fiberG: 0 }),
+        // Signed, as stored (DESIGN.md §5.6): the coach has to know when a
+        // macro is already over target, not read it as "nothing left". Only the
+        // UI clamps.
+        remaining: day.data?.remaining ?? { ...ZERO_MACROS },
         constraints: constraintsFrom(memories.data ?? []),
         preferences: preferencesFrom(memories.data ?? []),
         ...(Number.isFinite(minutes) && minutes > 0 ? { timeMinutes: minutes } : {}),
