@@ -1,0 +1,83 @@
+/*
+ * Theme tokens — DESIGN.md §7.5, values from `@vigor/ui-tokens`'s
+ * `lightPalette`/`darkPalette`. `src/theme/cssVars.ts` exposes these as
+ * `themeColor.*` for components.
+ */
+:root {
+  color-scheme: light dark;
+
+  --vg-color-bg: #f5f1e6;
+  --vg-color-surface: #ede7d6;
+  --vg-color-surface-raised: #e3dcc7;
+  --vg-color-border: #d2c8ae;
+  --vg-color-border-strong: #b3a784;
+
+  --vg-color-text: #141a16;
+  --vg-color-text-muted: #46524a;
+  --vg-color-text-faint: #63705f;
+  --vg-color-text-on-accent: #fffbf2;
+
+  --vg-color-accent: #8a4e15;
+  --vg-color-accent-pressed: #6e3d0f;
+  --vg-color-accent-soft: #e7d3b4;
+
+  --vg-color-good: #2f7a41;
+  --vg-color-warn: #8a5a16;
+  --vg-color-bad: #9c3830;
+  --vg-color-safety: #f6d9d4;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --vg-color-bg: #0b1210;
+    --vg-color-surface: #121b18;
+    --vg-color-surface-raised: #1a2622;
+    --vg-color-border: #26332e;
+    --vg-color-border-strong: #3a4a43;
+
+    --vg-color-text: #f2efe6;
+    --vg-color-text-muted: #a8b3ad;
+    --vg-color-text-faint: #6e7b75;
+    --vg-color-text-on-accent: #140c05;
+
+    --vg-color-accent: #c4711f;
+    --vg-color-accent-pressed: #a65c14;
+    --vg-color-accent-soft: #3a2611;
+
+    --vg-color-good: #4e9e60;
+    --vg-color-warn: #d9a441;
+    --vg-color-bad: #c4514a;
+    --vg-color-safety: #3a1512;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background: var(--vg-color-bg);
+  color: var(--vg-color-text);
+}
+
+/* Every number that sits in a column is tabular (DESIGN.md §7.5). */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+input,
+select,
+textarea,
+button {
+  font-family: inherit;
+  color: inherit;
+}

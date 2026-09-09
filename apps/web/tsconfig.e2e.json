@@ -1,0 +1,7 @@
+{
+  "extends": "../../tooling/tsconfig/react-app.json",
+  "compilerOptions": {
+    "types": ["node"]
+  },
+  "include": ["e2e/**/*.ts", "playwright.config.ts"]
+}

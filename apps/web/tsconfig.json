@@ -1,0 +1,7 @@
+{
+  "extends": "../../tooling/tsconfig/react-app.json",
+  "compilerOptions": {
+    "types": ["vite/client"]
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx", "vite.config.ts"]
+}
