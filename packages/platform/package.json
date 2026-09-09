@@ -16,6 +16,9 @@
     "lint": "eslint . --max-warnings=0",
     "test": "vitest run --passWithNoTests"
   },
+  "dependencies": {
+    "zod": "4.6.0"
+  },
   "devDependencies": {
     "@vigor/eslint-config": "workspace:*",
     "@vigor/tsconfig": "workspace:*",

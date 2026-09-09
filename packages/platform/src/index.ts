@@ -1,10 +1,14 @@
 /**
- * `@vigor/platform` — adapter interfaces only. DESIGN.md §3.
+ * `@vigor/platform` — adapter interfaces, plus the one piece of shared
+ * implementation both shells must agree on byte-for-byte: the encrypted export
+ * envelope (DESIGN.md §8). Everything else is supplied by the apps
+ * (expo-secure-store / expo-file-system / expo-notifications on mobile;
+ * IndexedDB / OPFS / Web Notifications on web). DESIGN.md §3.
  *
- * Each app supplies the implementations (expo-secure-store / expo-file-system /
- * expo-notifications on mobile; IndexedDB / OPFS / Web Notifications on web).
  * Nothing here imports another workspace package: platform is a leaf.
  */
+
+import type { EncryptedPayload } from './crypto-format.js';
 
 /**
  * Hardware-backed on mobile (expo-secure-store). On web this is IndexedDB and
@@ -86,24 +90,37 @@ export interface Clock {
 }
 
 /**
- * A passphrase-encrypted JSON envelope (DESIGN.md §8 export/import). Every
- * field needed to decrypt travels with the payload except the passphrase
- * itself, which the user supplies again on import.
+ * The export envelope and its `zod` schema live in `crypto-format.ts` — one
+ * format both shells read and write (DESIGN.md §8). Re-exported here so
+ * consumers keep importing `@vigor/platform` for everything.
  */
-export interface EncryptedPayload {
-  version: 1;
-  algorithm: 'AES-GCM';
-  kdf: 'PBKDF2';
-  kdfHash: 'SHA-256';
-  /** PBKDF2 iteration count used to derive the key for this payload. */
-  iterations: number;
-  /** Base64. */
-  saltB64: string;
-  /** Base64. */
-  ivB64: string;
-  /** Base64 ciphertext, GCM auth tag included. */
-  ciphertextB64: string;
-}
+export {
+  AES_KEY_BITS,
+  base64ToBytes,
+  bytesToBase64,
+  bytesToUtf8,
+  concatBytes,
+  DERIVED_KEY_BYTES,
+  encryptedPayloadSchema,
+  ENCRYPTED_PAYLOAD_VERSION,
+  GCM_TAG_BYTES,
+  isEncryptedPayload,
+  IV_BYTES,
+  parseEncryptedPayload,
+  PBKDF2_ITERATIONS,
+  PBKDF2_MIN_ITERATIONS,
+  SALT_BYTES,
+  utf8ToBytes,
+  type EncryptedPayload,
+} from './crypto-format.js';
+
+export { pbkdf2Sha256, type Pbkdf2Options, type Sha256Digest } from './pbkdf2.js';
+
+export {
+  createPortableCryptoAdapter,
+  type PortableCryptoOptions,
+  type PortableCryptoPrimitives,
+} from './portable-crypto.js';
 
 /**
  * AES-GCM + PBKDF2 via WebCrypto where available (DESIGN.md §8). Used for
