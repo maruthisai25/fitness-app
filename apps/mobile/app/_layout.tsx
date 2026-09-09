@@ -8,6 +8,7 @@ import { View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { AppDataProvider, useAppData } from '../src/db/AppDataProvider';
+import { ProgressForegroundProvider } from '../src/progress/ProgressForegroundProvider';
 import { ErrorBanner, LoadingScreen, Screen } from '../src/ui/components';
 import { CoachLauncher } from '../src/ui/CoachLauncher';
 // Side-effect only — registers the coach's Today-tab slots (DESIGN.md §7.1,
@@ -67,18 +68,26 @@ export default function RootLayout() {
         <AppDataProvider>
           <StatusBar style="light" />
           <OnboardingGate>
-            <View style={{ flex: 1 }}>
-              <Stack
-                screenOptions={{
-                  headerShown: false,
-                  contentStyle: { backgroundColor: color.bg },
-                }}
-              >
-                {/* Reachable from every screen (DESIGN.md §7.1) via `CoachLauncher`. */}
-                <Stack.Screen name="coach" options={{ presentation: 'modal', headerShown: false }} />
-              </Stack>
-              <CoachLauncher />
-            </View>
+            {/* One foreground runner for the whole app, above the tabs and
+                every route, so the detectors and the reminder sync happen once
+                per pass however many screens are mounted. */}
+            <ProgressForegroundProvider>
+              <View style={{ flex: 1 }}>
+                <Stack
+                  screenOptions={{
+                    headerShown: false,
+                    contentStyle: { backgroundColor: color.bg },
+                  }}
+                >
+                  {/* Reachable from every screen (DESIGN.md §7.1) via `CoachLauncher`. */}
+                  <Stack.Screen
+                    name="coach"
+                    options={{ presentation: 'modal', headerShown: false }}
+                  />
+                </Stack>
+                <CoachLauncher />
+              </View>
+            </ProgressForegroundProvider>
           </OnboardingGate>
         </AppDataProvider>
       </SafeAreaProvider>

@@ -12,9 +12,8 @@ export default defineConfig({
       'packages/platform',
       'packages/ui-tokens',
       'apps/web',
-      // The repository-backed mobile tests. The rendering ones live in
-      // `apps/mobile/vitest.components.config.ts` and need a React Native
-      // native-module layer, so they are not part of `pnpm check`.
+      // The mobile shell: the repository-backed tests plus the Eat/Progress
+      // component tests, both from `apps/mobile/vitest.config.mts`.
       'apps/mobile',
     ],
   },

@@ -41,6 +41,25 @@ export function useInvalidate(): (...mutations: MutationName[]) => Promise<void>
   );
 }
 
+/**
+ * Fire-and-forget twin of `useInvalidate`, for call sites inside a mutation's
+ * `onSuccess` that do not want to await the refresh (the Eat and Progress
+ * screens). Same rules, same keys — only the return type differs.
+ */
+export function useInvalidator(): (...mutations: readonly MutationName[]) => void {
+  const client = useQueryClient();
+  return useCallback(
+    (...mutations: readonly MutationName[]) => {
+      for (const mutation of mutations) {
+        for (const queryKey of invalidationsFor(mutation)) {
+          void client.invalidateQueries({ queryKey });
+        }
+      }
+    },
+    [client],
+  );
+}
+
 /** Today as the user's calendar day — read once per mount from the Clock adapter. */
 export function useToday(): LocalDate {
   const { clock } = usePlatform();

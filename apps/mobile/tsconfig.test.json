@@ -4,5 +4,13 @@
     "types": ["vitest/globals"],
     "noEmit": true
   },
-  "include": ["test/**/*.ts", "test/**/*.tsx", "src/**/*.ts", "src/**/*.tsx", "vitest.config.ts"]
+  "include": [
+    "test/**/*.ts",
+    "test/**/*.tsx",
+    "test/**/*.cjs",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "vitest.config.mts",
+    "vitest.components.config.ts"
+  ]
 }
