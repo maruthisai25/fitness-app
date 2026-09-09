@@ -4,9 +4,10 @@ import type { Settings } from '@vigor/core';
 import type { ReactNode } from 'react';
 import { createContext, useContext, useEffect, useState } from 'react';
 
+import { seedExerciseLibrary } from '../boot/seedLibrary';
 import { createWasmSqlDriver } from './workerDriver';
 
-interface DbContextValue {
+export interface DbContextValue {
   repos: Repositories;
   settings: Settings;
   /** Re-reads `settings` from storage, e.g. after `repos.settings.setMany`. */
@@ -35,6 +36,9 @@ export function DbProvider({ children }: { children: ReactNode }): ReactNode {
         const driver = await createWasmSqlDriver();
         await migrate(driver);
         const repos = createRepositories(driver);
+        // DESIGN.md §9 phase 0/1: the exercise library is seeded from
+        // `@vigor/library` on first run, after migrations.
+        await seedExerciseLibrary(repos);
         const settings = await repos.settings.getAll();
         if (cancelled) return;
         const refreshSettings = async () => {
@@ -91,6 +95,21 @@ function BootScreen({
       <p style={{ maxWidth: 420, margin: 0 }}>{message}</p>
     </div>
   );
+}
+
+/**
+ * Supplies an already-open database to the tree. `DbProvider` is the app's
+ * boot path; component tests use this directly with an in-memory database
+ * from `@vigor/db/testing` (DESIGN.md §10).
+ */
+export function DbContextProvider({
+  value,
+  children,
+}: {
+  value: DbContextValue;
+  children: ReactNode;
+}): ReactNode {
+  return <DbContext.Provider value={value}>{children}</DbContext.Provider>;
 }
 
 /** Every screen below `DbProvider` reaches the repositories and settings through this. */

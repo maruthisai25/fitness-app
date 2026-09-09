@@ -3,5 +3,9 @@
   "compilerOptions": {
     "types": ["vite/client"]
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "vite.config.ts"]
+  "include": ["src/**/*.ts", "src/**/*.tsx", "vite.config.ts"],
+  // Component tests pull in jsdom and @testing-library, which the app bundle
+  // never sees. `pnpm typecheck:test` (tsconfig.test.json) covers them, the
+  // same split `tsconfig.e2e.json` uses for the Playwright specs.
+  "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/testing/**"]
 }

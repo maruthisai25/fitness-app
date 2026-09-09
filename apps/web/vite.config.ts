@@ -41,6 +41,10 @@ export default defineConfig({
   },
   test: {
     name: 'web',
+    // Component tests for session mode render React against jsdom
+    // (DESIGN.md §10: "component tests for session mode and food log").
+    environment: 'jsdom',
+    globals: false,
     // `e2e/` holds Playwright specs (DESIGN.md §10). They are run by
     // `pnpm test:e2e`; vitest — including the workspace run that lists
     // `apps/web` as a project — must never collect them.
