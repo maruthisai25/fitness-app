@@ -7,14 +7,23 @@
  * which is the only place that reads the key — DESIGN.md §11).
  */
 
-import { createCoachDeps, systemCoachClock, toAiError, type AiClient, type CoachDeps } from '@vigor/ai';
+import {
+  createCoachDeps,
+  systemCoachClock,
+  toAiError,
+  type AiClient,
+  type CoachDeps,
+} from '@vigor/ai';
 import type { Id } from '@vigor/core';
 import type { Repositories } from '@vigor/db';
 import type { ReactNode } from 'react';
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
-import { useRepos } from '../data/hooks';
+import { AiGatewayProvider } from '../ai/context';
+import { realGateway } from '../ai/realGateway';
+import { useProfile, useRepos } from '../data/hooks';
 import { useDb } from '../db/provider';
+import { webClock } from '../platform/clock';
 import { webNetworkStatus } from '../platform/network';
 import { CoachDock } from './ChatDock';
 import { SessionCoachSlot } from './SessionCoachSlot';
@@ -85,8 +94,22 @@ export function CoachProvider({ children }: { children: ReactNode }): ReactNode 
   }, []);
 
   const deps = useMemo<CoachDeps>(
-    () => createCoachDeps({ repos, clock: systemCoachClock(), platform: { network: webNetworkStatus } }),
+    () =>
+      createCoachDeps({
+        repos,
+        clock: systemCoachClock(),
+        platform: { network: webNetworkStatus },
+      }),
     [repos],
+  );
+
+  // The Eat tab's prompt tasks (DESIGN.md §6.4) run on the same client and the
+  // same connectivity the coach does, so the gateway is built here — one place
+  // that knows whether there is a key and whether the browser is online.
+  const region = useProfile().data?.foodRegion ?? 'generic';
+  const gateway = useMemo(
+    () => realGateway(client, { region, online, today: webClock.today() }),
+    [client, region, online],
   );
 
   const value = useMemo<CoachContextValue>(
@@ -123,26 +146,28 @@ export function CoachProvider({ children }: { children: ReactNode }): ReactNode 
 
   return (
     <CoachContext.Provider value={value}>
-      <CoachSlotProvider
-        renderers={{
-          todayPlan: () => <TodayPlanSlot />,
-          todayInsights: () => <TodayInsightsSlot />,
-          sessionCoach: () => <SessionCoachSlot />,
-        }}
-      >
-        {/*
-         * A real flex row, not just adjacent DOM nodes — DESIGN.md §7.1's
-         * right rail needs to reserve its own width next to whichever route
-         * is showing (`AppShell` or full-screen session mode), and the brief
-         * requires the page body never to scroll horizontally, which
-         * `minWidth: 0` on the content side guarantees even under a very
-         * wide table or chart.
-         */}
-        <div style={{ display: 'flex', minHeight: '100vh' }}>
-          <div style={{ flex: 1, minWidth: 0 }}>{children}</div>
-          <CoachDock />
-        </div>
-      </CoachSlotProvider>
+      <AiGatewayProvider gateway={gateway}>
+        <CoachSlotProvider
+          renderers={{
+            todayPlan: () => <TodayPlanSlot />,
+            todayInsights: () => <TodayInsightsSlot />,
+            sessionCoach: () => <SessionCoachSlot />,
+          }}
+        >
+          {/*
+           * A real flex row, not just adjacent DOM nodes — DESIGN.md §7.1's
+           * right rail needs to reserve its own width next to whichever route
+           * is showing (`AppShell` or full-screen session mode), and the brief
+           * requires the page body never to scroll horizontally, which
+           * `minWidth: 0` on the content side guarantees even under a very
+           * wide table or chart.
+           */}
+          <div style={{ display: 'flex', minHeight: '100vh' }}>
+            <div style={{ flex: 1, minWidth: 0 }}>{children}</div>
+            <CoachDock />
+          </div>
+        </CoachSlotProvider>
+      </AiGatewayProvider>
     </CoachContext.Provider>
   );
 }
@@ -150,4 +175,3 @@ export function CoachProvider({ children }: { children: ReactNode }): ReactNode 
 // Re-exported so a component test can drop a scripted value in without going
 // through the real SecureStore/network — see `apps/web/src/coach/*.test.tsx`.
 export { CoachContext };
-

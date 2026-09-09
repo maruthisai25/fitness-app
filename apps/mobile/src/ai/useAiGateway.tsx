@@ -9,7 +9,12 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 
-import { getAiGateway, subscribeToAiGateway, type AiGateway } from './gateway';
+import { useProfileQuery } from '../data/queries';
+import { usePlatform } from '../db/AppDataProvider';
+import { getAiGateway, installAiGateway, subscribeToAiGateway, type AiGateway } from './gateway';
+import { realGateway } from './realGateway';
+import { useAiClient } from './useAiClient';
+import { useOnlineStatus } from './useOnlineStatus';
 
 const AiGatewayContext = createContext<AiGateway | null>(null);
 
@@ -30,4 +35,23 @@ export function useAiGateway(): AiGateway {
   useEffect(() => subscribeToAiGateway(setRegistered), []);
 
   return override ?? registered;
+}
+
+/**
+ * Keeps the registry pointed at the right gateway. Mounted once, above the
+ * routes, so every Eat screen sees the coach appear the moment a key is saved
+ * and fall back to manual entry the moment the device goes offline.
+ */
+export function AiGatewayInstaller({ children }: { children?: ReactNode }) {
+  const { client } = useAiClient();
+  const online = useOnlineStatus();
+  const { clock } = usePlatform();
+  const profile = useProfileQuery();
+  const region = profile.data?.foodRegion ?? 'generic';
+
+  useEffect(() => {
+    installAiGateway(realGateway(client, { region, online, today: clock.today() }));
+  }, [client, online, region, clock]);
+
+  return <>{children ?? null}</>;
 }

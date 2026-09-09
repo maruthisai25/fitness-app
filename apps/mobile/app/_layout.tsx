@@ -7,6 +7,7 @@ import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { AiGatewayInstaller } from '../src/ai/useAiGateway';
 import { AppDataProvider, useAppData } from '../src/db/AppDataProvider';
 import { ProgressForegroundProvider } from '../src/progress/ProgressForegroundProvider';
 import { ErrorBanner, LoadingScreen, Screen } from '../src/ui/components';
@@ -68,6 +69,10 @@ export default function RootLayout() {
         <AppDataProvider>
           <StatusBar style="light" />
           <OnboardingGate>
+            {/* Points the AI gateway registry at the real `@vigor/ai` tasks
+                whenever there is a key and a connection, and back at the
+                degraded gateway when there is not (DESIGN.md §6.4). */}
+            <AiGatewayInstaller />
             {/* One foreground runner for the whole app, above the tabs and
                 every route, so the detectors and the reminder sync happen once
                 per pass however many screens are mounted. */}
