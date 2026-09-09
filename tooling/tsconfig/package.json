@@ -1,0 +1,15 @@
+{
+  "name": "@vigor/tsconfig",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "files": [
+    "library.json",
+    "react-app.json"
+  ],
+  "scripts": {
+    "lint": "echo \"@vigor/tsconfig: no sources to lint\"",
+    "typecheck": "echo \"@vigor/tsconfig: config presets only\"",
+    "test": "echo \"@vigor/tsconfig: no tests\""
+  }
+}

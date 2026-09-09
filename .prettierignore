@@ -1,0 +1,22 @@
+node_modules
+dist
+build
+coverage
+dev-dist
+.expo
+pnpm-lock.yaml
+*.tsbuildinfo
+apps/web/dist
+
+# The build contract and the product brief are hand-authored specs.
+# Prettier must never reflow them.
+DESIGN.md
+idea.md
+
+# Generated artefacts. `migrations/` is drizzle-kit output and
+# `src/migrations/generated.ts` embeds it verbatim (its hash is checked at
+# runtime, so it must stay byte-stable); the seed library JSON is emitted by a
+# generator, not hand-edited.
+packages/db/migrations
+packages/db/src/migrations/generated.ts
+packages/library/src/data

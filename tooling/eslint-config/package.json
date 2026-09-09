@@ -1,0 +1,24 @@
+{
+  "name": "@vigor/eslint-config",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "lint": "echo \"@vigor/eslint-config: no sources to lint\"",
+    "typecheck": "echo \"@vigor/eslint-config: no TypeScript sources\"",
+    "test": "echo \"@vigor/eslint-config: no tests\""
+  },
+  "dependencies": {
+    "@eslint/js": "9.39.5",
+    "globals": "17.12.0",
+    "typescript-eslint": "8.70.0"
+  },
+  "peerDependencies": {
+    "eslint": "^10.0.0"
+  }
+}

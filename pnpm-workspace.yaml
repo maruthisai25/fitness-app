@@ -1,0 +1,15 @@
+packages:
+  - 'apps/*'
+  - 'packages/*'
+  - 'tooling/*'
+
+# Native/postinstall build scripts that are allowed to run (pnpm blocks the rest
+# by default). better-sqlite3 backs the in-memory SqlDriver used by db tests
+# (DESIGN.md §10); esbuild is Vite's/Vitest's transform binary.
+allowBuilds:
+  better-sqlite3: true
+  esbuild: true
+
+minimumReleaseAgeExclude:
+  - '@types/node@22.20.2'
+  - zod@4.6.0

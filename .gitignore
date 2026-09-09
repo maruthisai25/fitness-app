@@ -1,6 +1,7 @@
 node_modules/
 dist/
 build/
+dev-dist/
 .expo/
 .expo-shared/
 *.log
@@ -9,7 +10,20 @@ build/
 coverage/
 .turbo/
 *.tsbuildinfo
+.eslintcache
+.vite/
 .DS_Store
 web-build/
 ios/
 android/
+
+# Playwright run artefacts (DESIGN.md §10 web smoke test).
+test-results/
+playwright-report/
+.playwright/
+
+# Local SQLite artefacts and exports — never commit personal data.
+*.sqlite
+*.sqlite-journal
+*.db
+vigorengine-*.json
