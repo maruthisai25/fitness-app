@@ -11,6 +11,7 @@ import { queryKeys, type Id, type UnitSystem } from '@vigor/core';
 
 import { useInvalidate, useToday } from '../data/queries';
 import { useRepos } from '../db/AppDataProvider';
+import { useReminderResync } from '../progress/useProgressForeground';
 import { applySubstitution, finishSession, loadSession, type SessionView } from './sessionData';
 
 export {
@@ -77,6 +78,7 @@ export function useStartSession() {
 export function useSubstituteExercise() {
   const repos = useRepos();
   const invalidate = useInvalidate();
+  const resyncReminders = useReminderResync();
   const today = useToday();
   return useMutation({
     mutationFn: (input: { workoutExerciseId: Id; toExerciseId: Id }) =>
@@ -85,19 +87,29 @@ export function useSubstituteExercise() {
         toExerciseId: input.toExerciseId,
         today,
       }),
-    onSuccess: () => invalidate('substituteExercise'),
+    onSuccess: async () => {
+      await invalidate('substituteExercise');
+      // The plan changed, so what the workout reminder would say changed too.
+      resyncReminders();
+    },
   });
 }
 
 export function useFinishSession() {
   const repos = useRepos();
   const invalidate = useInvalidate();
+  const resyncReminders = useReminderResync();
   return useMutation({
     mutationFn: (input: {
       workoutId: Id;
       status: 'completed' | 'abandoned';
       unitSystem: UnitSystem;
     }) => finishSession(repos, input),
-    onSuccess: () => invalidate('finishWorkout'),
+    onSuccess: async () => {
+      await invalidate('finishWorkout');
+      // DESIGN.md §7.3: a finished session silences today's workout reminder.
+      // Re-decide now rather than leaving a scheduled notification to fire.
+      resyncReminders();
+    },
   });
 }

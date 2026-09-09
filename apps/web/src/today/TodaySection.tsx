@@ -1,7 +1,9 @@
 /**
- * Today — DESIGN.md §7.1: readiness check-in, today's plan, open insights and
- * the streak. Nutrition arrives in phase 4; the ring's slot is left to that
- * agent, so this screen shows only what phases 1–3 own.
+ * Today — DESIGN.md §7.1: readiness check-in, today's plan, the nutrition ring
+ * with remaining macros, open insights and the streak.
+ *
+ * The nutrition card comes from the Eat module: the arithmetic and the copy
+ * belong with the rest of nutrition, and this screen only places it.
  */
 
 import { space } from '@vigor/ui-tokens';
@@ -19,6 +21,7 @@ import {
 } from '../components/ui';
 import { useInvalidate, useRepos } from '../data/hooks';
 import { useDb } from '../db/provider';
+import { TodayNutritionCard } from '../eat/TodayNutritionCard';
 import { formatDate, todayLocalDate } from '../lib/localDate';
 import { themeColor } from '../theme/cssVars';
 import { fontSize } from '../theme/typeScale';
@@ -76,6 +79,8 @@ export function TodaySection(): ReactNode {
           deloadAccepted={deloadDecision === 'accepted'}
           safetyActive={view.safetyActive}
         />
+
+        <TodayNutritionCard date={date} />
 
         <DeloadCard
           date={date}

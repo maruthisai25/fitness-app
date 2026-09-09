@@ -1,22 +1,25 @@
+import { useRouter } from 'expo-router';
 import { View } from 'react-native';
 
 import { useRefreshToday, useTodayQuery } from '../../src/data/today';
+import { TodayNutritionCard } from '../../src/eat/TodayNutritionCard';
 import { PlanCard } from '../../src/today/PlanCard';
 import { ReadinessCard } from '../../src/today/ReadinessCard';
 import { Recommendations } from '../../src/today/Recommendations';
 import { ErrorBanner, LoadingScreen, Screen, ScreenTitle } from '../../src/ui/components';
-import { Body, Caption, Card, Numeral, StatRow, StatTile } from '../../src/ui/kit';
+import { Body, Caption, Card, StatRow, StatTile } from '../../src/ui/kit';
 import { SafetyBanner } from '../../src/ui/SafetyBanner';
 import { space } from '../../src/ui/tokens';
 
 /**
- * Today — DESIGN.md §7.1: readiness check-in, today's plan, streak, open
- * insights and the plateau/deload recommendation. Nutrition arrives in phase 4;
- * the ring is left to that agent, so this screen shows training and readiness.
+ * Today — DESIGN.md §7.1: readiness check-in, today's plan, the nutrition ring
+ * with remaining macros, streak, open insights and the plateau/deload
+ * recommendation.
  */
 export default function TodayScreen() {
   const today = useTodayQuery();
   const refresh = useRefreshToday();
+  const router = useRouter();
 
   if (today.isLoading || !today.data) {
     if (today.error) {
@@ -63,14 +66,9 @@ export default function TodayScreen() {
         </Card>
       ) : null}
 
-      {view.nutrition.hasTargets ? (
-        <Card title="Nutrition" subtitle={`${view.nutrition.mealsLogged} meals logged`}>
-          <Numeral
-            value={String(Math.round(view.nutrition.remainingForDisplay.proteinG))}
-            unit="g protein left"
-          />
-        </Card>
-      ) : null}
+      {/* The Eat module owns the nutrition arithmetic and the copy; Today only
+          places the card and says where a tap goes (DESIGN.md §7.1). */}
+      <TodayNutritionCard date={view.date} onOpenEat={() => router.push('/eat')} />
 
       <Recommendations bundle={bundle} onAnswered={() => void refresh()} />
 

@@ -23,6 +23,7 @@ export default defineConfig({
     alias: [
       { find: /^react-native$/, replacement: here('./test/reactNativeHost.tsx') },
       { find: /^react-native-safe-area-context$/, replacement: here('./test/safeAreaContext.tsx') },
+      { find: /^react-native-svg$/, replacement: here('./test/reactNativeSvg.tsx') },
     ],
   },
   test: {

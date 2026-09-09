@@ -41,6 +41,10 @@ async function seedEverything(db: TestDatabase): Promise<void> {
     weekStartsOn: 1,
     reminderTimes: { workout: '07:30', mealLog: null, protein: '18:30', weeklyReview: null },
     apiKeyRef: 'secure-store://anthropic',
+    insightsLastRunOn: '2026-05-01',
+    weeklyReviewDay: 0,
+    lastReviewViewedWeek: '2026-04-20',
+    serverSideFallback: false,
   });
 
   const press = await repos.exercises.create({
@@ -278,6 +282,37 @@ describe('export.bundle', () => {
     expect(keys).not.toContain('apiKeyRef');
     expect(keys).toContain('onboardingComplete');
     expect(JSON.stringify(bundle)).not.toContain('secure-store://anthropic');
+  });
+
+  it('round-trips every settings key except the API key handle', async () => {
+    await seedEverything(source);
+    const before = await source.repos.settings.getAll();
+
+    const bundle = await source.repos.export.bundle();
+    const exported = bundle.tables.settings.map((entry) => entry.key);
+    // The phase 4–6 keys travel with the bundle …
+    expect(exported).toEqual(
+      expect.arrayContaining([
+        'insightsLastRunOn',
+        'weeklyReviewDay',
+        'lastReviewViewedWeek',
+        'serverSideFallback',
+      ]),
+    );
+    // … and the SecureStore handle does not (DESIGN.md §8).
+    expect(exported).not.toContain('apiKeyRef');
+
+    const target = await createTestDatabase();
+    await target.repos.export.restore(bundle);
+    const after = await target.repos.settings.getAll();
+
+    expect(after.insightsLastRunOn).toBe('2026-05-01');
+    expect(after.weeklyReviewDay).toBe(0);
+    expect(after.lastReviewViewedWeek).toBe('2026-04-20');
+    expect(after.serverSideFallback).toBe(false);
+    // Everything else is identical; only the key handle is back at its default.
+    expect(after).toEqual({ ...before, apiKeyRef: null });
+    await target.close();
   });
 
   it('carries photo bytes the caller supplies', async () => {

@@ -16,6 +16,7 @@ import { useInvalidate } from '../data/queries';
 import { useRepos } from '../db/AppDataProvider';
 import { useAiClient } from '../ai/useAiClient';
 import { useCoachDeps } from '../ai/useCoachDeps';
+import { useReminderResync } from '../progress/useProgressForeground';
 import { extractAndRecordMemories, getOrCreateDefaultConversation } from './coachData';
 import { useCoachStream } from './coachStream';
 
@@ -69,6 +70,7 @@ export function useSendCoachMessage(conversationId: Id) {
   // `useConversationStream`).
   const stream = useCoachStream.getState();
   const invalidate = useInvalidate();
+  const resyncReminders = useReminderResync();
 
   return useMutation({
     mutationFn: async (userText: string): Promise<CoachTurnResult> => {
@@ -140,6 +142,9 @@ export function useSendCoachMessage(conversationId: Id) {
           'saveRecipe',
           'saveMeal',
         );
+        // A coach-led plan or swap changes what the reminders would say, and
+        // `log_food` moves the meal-log rule (DESIGN.md §7.3).
+        resyncReminders();
         await queryClient.invalidateQueries({ queryKey: queryKeys.messages(conversationId) });
         await queryClient.invalidateQueries({ queryKey: queryKeys.conversations() });
 

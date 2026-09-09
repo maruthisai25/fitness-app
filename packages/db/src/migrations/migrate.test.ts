@@ -1,9 +1,16 @@
 import { describe, expect, it } from 'vitest';
 
+import type { SqlDriver } from '../driver';
 import { createBetterSqlite3Driver } from '../drivers/better-sqlite3';
 import { createTestClock, listTableNames } from '../testing';
 import { MIGRATIONS } from './generated';
 import { migrate, MigrationIntegrityError, readAppliedMigrations } from './migrate';
+
+/** The columns a table currently has, straight from SQLite. */
+async function columnNames(driver: SqlDriver, table: string): Promise<string[]> {
+  const { rows } = await driver.run(`PRAGMA table_info("${table}")`, []);
+  return rows.map((row) => String(row[1]));
+}
 
 /** Every table named in DESIGN.md §4.1, plus the two this package adds. */
 const DESIGN_TABLES = [
@@ -132,6 +139,49 @@ describe('migrate', () => {
       MigrationIntegrityError,
     );
     await driver.close();
+  });
+
+  it('adds insights.dismissedAt on an empty database and on top of 0000', async () => {
+    const zero = MIGRATIONS.find((migration) => migration.tag === '0000_init');
+    const one = MIGRATIONS.find((migration) => migration.tag === '0001_insights_dismissed_at');
+    if (!zero || !one) throw new Error('expected the 0000 and 0001 migrations to ship');
+
+    // Empty database: both migrations apply in order.
+    const fresh = createBetterSqlite3Driver();
+    const freshResult = await migrate(fresh, { now: createTestClock().now });
+    expect(freshResult.applied).toEqual(expect.arrayContaining([zero.tag, one.tag]));
+    expect(await columnNames(fresh, 'insights')).toContain('dismissedAt');
+    await fresh.close();
+
+    // A database already at 0000 — a real user's, before this build — gets
+    // 0001 alone, and the rows it already holds survive with a null stamp.
+    const upgraded = createBetterSqlite3Driver();
+    await migrate(upgraded, { migrations: [zero] });
+    expect(await columnNames(upgraded, 'insights')).not.toContain('dismissedAt');
+    await upgraded.run(
+      'INSERT INTO "insights" ("id", "detector", "period", "headline", "detail", "evidence", "severity", "dismissed", "createdAt") ' +
+        'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+      [
+        'insight-1',
+        'PUSH_PULL_BALANCE',
+        JSON.stringify({ from: '2026-08-13', to: '2026-09-10' }),
+        'Pulling volume is behind',
+        'x',
+        JSON.stringify([]),
+        'notice',
+        1,
+        '2026-09-10T07:00:00.000Z',
+      ],
+    );
+
+    const result = await migrate(upgraded, { now: createTestClock().now });
+    expect(result.applied).toEqual([one.tag]);
+    expect(result.alreadyApplied).toEqual([zero.tag]);
+    expect(await columnNames(upgraded, 'insights')).toContain('dismissedAt');
+
+    const { rows } = await upgraded.run('SELECT "id", "dismissedAt" FROM "insights"', []);
+    expect(rows).toEqual([['insight-1', null]]);
+    await upgraded.close();
   });
 
   it('refuses a database migrated by a newer build', async () => {

@@ -29,6 +29,7 @@ import type { ExerciseSearchFilter, Repositories } from '@vigor/db';
 import { useCallback } from 'react';
 
 import { useDb } from '../db/provider';
+import { resyncForeground } from '../progress/foreground';
 
 /** The repository surface, without pulling the whole context into a screen. */
 export function useRepos(): Repositories {
@@ -36,8 +37,26 @@ export function useRepos(): Repositories {
 }
 
 /**
- * Invalidates exactly the key prefixes DESIGN.md §7.2 assigns to a mutation.
- * Call it after a repository write; never invalidate by hand.
+ * Mutations after which the reminder rules can answer differently, so the
+ * foreground runner has to decide again rather than leaving an armed slot to
+ * fire from a stale plan (DESIGN.md §7.3):
+ *
+ *  - `finishWorkout` — a finished session silences today's workout reminder;
+ *  - `substituteExercise` / `createWorkout` / `updateWorkout` — the plan changed;
+ *  - `logFood` — the meal-log and protein rules both move with a new log.
+ */
+const RESYNC_AFTER: ReadonlySet<MutationName> = new Set<MutationName>([
+  'finishWorkout',
+  'substituteExercise',
+  'createWorkout',
+  'updateWorkout',
+  'logFood',
+]);
+
+/**
+ * Invalidates exactly the key prefixes DESIGN.md §7.2 assigns to a mutation,
+ * then resyncs the reminders when this mutation is one that can change what
+ * they would say. Call it after a repository write; never invalidate by hand.
  */
 export function useInvalidate(): (mutation: MutationName) => Promise<void> {
   const client = useQueryClient();
@@ -46,6 +65,7 @@ export function useInvalidate(): (mutation: MutationName) => Promise<void> {
       await Promise.all(
         invalidationsFor(mutation).map((queryKey) => client.invalidateQueries({ queryKey })),
       );
+      if (RESYNC_AFTER.has(mutation)) resyncForeground();
     },
     [client],
   );

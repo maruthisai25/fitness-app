@@ -119,3 +119,10 @@ export const AppState = {
   currentState: 'active' as const,
   addEventListener: () => ({ remove: () => undefined }),
 };
+
+/**
+ * `react-native-svg` mixes React Native's legacy `Touchable` into every shape.
+ * The charts under test never receive a touch, so an empty mixin is enough to
+ * let the library load.
+ */
+export const Touchable = { Mixin: {} as Record<string, unknown> };

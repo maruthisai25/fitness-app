@@ -47,4 +47,6 @@ module.exports = {
     absoluteFillObject: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 },
   },
   Platform: { OS: 'ios', Version: 18, select: (spec) => spec.ios ?? spec.native ?? spec.default },
+  // `react-native-svg` mixes the legacy `Touchable` into every shape.
+  Touchable: { Mixin: {} },
 };

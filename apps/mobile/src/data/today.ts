@@ -30,6 +30,7 @@ import {
 import type { Repositories } from '@vigor/db';
 
 import { useRepos } from '../db/AppDataProvider';
+import { useReminderResync } from '../progress/useProgressForeground';
 import { useInvalidate, useToday } from './queries';
 import { planToday, type DeloadAdjustment } from './planner';
 
@@ -225,13 +226,18 @@ export function usePlanToday() {
   const repos = useRepos();
   const date = useToday();
   const invalidate = useInvalidate();
+  const resyncReminders = useReminderResync();
 
   return useMutation({
     mutationFn: async (options: { deload?: DeloadAdjustment | null } = {}) => {
       const plan = await planToday(repos, { date, deload: options.deload ?? null });
       return repos.workouts.createPlanned(plan);
     },
-    onSuccess: () => invalidate('createWorkout'),
+    onSuccess: async () => {
+      await invalidate('createWorkout');
+      // A new plan changes what the workout reminder would say (DESIGN.md §7.3).
+      resyncReminders();
+    },
   });
 }
 
