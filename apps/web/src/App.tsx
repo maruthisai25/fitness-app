@@ -5,8 +5,11 @@ import { NavLink, Route, Routes } from 'react-router';
 import { CoachProvider } from './coach/CoachProvider';
 import { useDb } from './db/provider';
 import { DESTINATIONS } from './destinations';
+import { EatSection } from './eat/EatSection';
 import { OnboardingFlow } from './onboarding/OnboardingFlow';
 import { Placeholder } from './Placeholder';
+import { useForegroundRunner } from './progress/foreground';
+import { ProgressSection } from './progress/ProgressSection';
 import { SafetyBanner } from './safety/SafetyBanner';
 import { SessionMode } from './session/SessionMode';
 import { themeColor } from './theme/cssVars';
@@ -22,6 +25,11 @@ import { YouSection } from './you/YouSection';
  */
 export function App(): ReactNode {
   const { settings, refreshSettings } = useDb();
+
+  // The one foreground runner, above the tabs and routes: the detectors, the
+  // weekly review and reminder scheduling (DESIGN.md §5.8, §5.9, §7.3) run once
+  // per foreground however the user navigates, never once per section.
+  useForegroundRunner();
 
   if (!settings.onboardingComplete) {
     return <OnboardingFlow onComplete={() => void refreshSettings()} />;
@@ -95,18 +103,13 @@ function AppShell(): ReactNode {
       <main style={{ flex: 1, minWidth: 0 }}>
         <SafetyBanner />
         <Routes>
+          {/* All five destinations own a real section now (DESIGN.md §7.1);
+              `Placeholder` is only the not-found fallback below. */}
           <Route path="/" element={<TodaySection />} />
           <Route path="/train/*" element={<TrainSection />} />
-          {DESTINATIONS.filter(
-            (destination) => !['/', '/train', '/you'].includes(destination.path),
-          ).map((destination) => (
-            <Route
-              key={destination.path}
-              path={destination.path}
-              element={<Placeholder title={destination.label} blurb={destination.blurb} />}
-            />
-          ))}
           <Route path="/you/*" element={<YouSection />} />
+          <Route path="/eat/*" element={<EatSection />} />
+          <Route path="/progress/*" element={<ProgressSection />} />
           <Route
             path="*"
             element={<Placeholder title="Not found" blurb="That screen does not exist yet." />}
