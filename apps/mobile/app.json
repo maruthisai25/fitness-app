@@ -28,7 +28,8 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "VigorEngine uses your photos only to store progress photos on this device."
+          "photosPermission": "VigorEngine uses your photos only to store progress photos on this device.",
+          "cameraPermission": "VigorEngine uses the camera only to take progress photos, which stay on this device."
         }
       ]
     ]
