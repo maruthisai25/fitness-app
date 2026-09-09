@@ -7,6 +7,7 @@ import { fontSize } from '../theme/typeScale';
 import { EquipmentPanel } from './EquipmentPanel';
 import { ExportImportPanel } from './ExportImportPanel';
 import { GoalsPanel } from './GoalsPanel';
+import { MemoriesPanel } from './MemoriesPanel';
 import { ProfilePanel } from './ProfilePanel';
 import { SettingsPanel } from './SettingsPanel';
 
@@ -14,6 +15,7 @@ const TABS = [
   { path: 'profile', label: 'Profile' },
   { path: 'goals', label: 'Goals' },
   { path: 'equipment', label: 'Equipment' },
+  { path: 'memories', label: 'Memories' },
   { path: 'settings', label: 'Settings' },
   { path: 'export', label: 'Export / Import' },
 ] as const;
@@ -63,6 +65,7 @@ export function YouSection(): ReactNode {
         <Route path="profile" element={<ProfilePanel />} />
         <Route path="goals" element={<GoalsPanel />} />
         <Route path="equipment" element={<EquipmentPanel />} />
+        <Route path="memories" element={<MemoriesPanel />} />
         <Route path="settings" element={<SettingsPanel />} />
         <Route path="export" element={<ExportImportPanel />} />
       </Routes>

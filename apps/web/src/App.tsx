@@ -2,17 +2,23 @@ import { fontFamily, radius, space } from '@vigor/ui-tokens';
 import type { ReactNode } from 'react';
 import { NavLink, Route, Routes } from 'react-router';
 
+import { CoachProvider } from './coach/CoachProvider';
 import { useDb } from './db/provider';
 import { DESTINATIONS } from './destinations';
 import { OnboardingFlow } from './onboarding/OnboardingFlow';
 import { Placeholder } from './Placeholder';
+import { SafetyBanner } from './safety/SafetyBanner';
+import { SessionMode } from './session/SessionMode';
 import { themeColor } from './theme/cssVars';
+import { TodaySection } from './today/TodaySection';
+import { TrainSection } from './train/TrainSection';
 import { fontSize } from './theme/typeScale';
 import { YouSection } from './you/YouSection';
 
 /**
- * Phase 0 shell — DESIGN.md §7.1 sidebar with the five destinations, gated
- * on onboarding (DESIGN.md §9 phase 0).
+ * DESIGN.md §7.1 — the five destinations in the web sidebar, gated on
+ * onboarding. Session mode is a full-screen flow, so it sits outside the
+ * sidebar shell (DESIGN.md §7.1: "Session mode is a full-screen flow").
  */
 export function App(): ReactNode {
   const { settings, refreshSettings } = useDb();
@@ -21,6 +27,18 @@ export function App(): ReactNode {
     return <OnboardingFlow onComplete={() => void refreshSettings()} />;
   }
 
+  return (
+    <CoachProvider>
+      <Routes>
+        <Route path="/session/:workoutId" element={<SessionMode />} />
+        <Route path="*" element={<AppShell />} />
+      </Routes>
+    </CoachProvider>
+  );
+}
+
+/** Sidebar, safety banner and the four in-shell destinations. */
+function AppShell(): ReactNode {
   return (
     <div
       style={{
@@ -75,8 +93,13 @@ export function App(): ReactNode {
       </nav>
 
       <main style={{ flex: 1, minWidth: 0 }}>
+        <SafetyBanner />
         <Routes>
-          {DESTINATIONS.filter((destination) => destination.path !== '/you').map((destination) => (
+          <Route path="/" element={<TodaySection />} />
+          <Route path="/train/*" element={<TrainSection />} />
+          {DESTINATIONS.filter(
+            (destination) => !['/', '/train', '/you'].includes(destination.path),
+          ).map((destination) => (
             <Route
               key={destination.path}
               path={destination.path}

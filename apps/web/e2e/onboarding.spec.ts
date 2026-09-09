@@ -34,4 +34,11 @@ test('completes onboarding and reaches the main shell', async ({ page }) => {
 
   await expect(page.getByRole('link', { name: 'Today' })).toBeVisible();
   await expect(page.getByRole('link', { name: 'You' })).toBeVisible();
+
+  // DESIGN.md §9 phase 2: the coach panel is reachable from every screen, and
+  // shows a typed offline/no-key state instead of crashing when onboarding
+  // skipped the API key step.
+  const coachPanel = page.getByRole('complementary', { name: 'Coach chat' });
+  await expect(coachPanel).toBeVisible();
+  await expect(coachPanel.getByText(/needs an API key/i)).toBeVisible();
 });
