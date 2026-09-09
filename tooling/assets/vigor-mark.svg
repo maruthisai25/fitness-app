@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="VigorEngine">
+  <title>VigorEngine</title>
+  <!--
+    The VigorEngine mark (DESIGN.md §7.5: athletic, unfussy; a single burnt-amber
+    accent on a deep green-black ground).
+
+    Geometry only, no text: a loaded bar (rounded bar, accentPressed #A65C14) with
+    a bold chevron beneath it (accent #C4711F) — the "V" of Vigor and the down/up
+    stroke of a rep. Two tones give the emblem depth at 512 px while the silhouette
+    still reads at 16 px.
+
+    This file is the single source of truth for every raster icon. It carries no
+    background so `tooling/scripts/render-icons.mjs` can compose it onto the token
+    ground (or leave it transparent for the Android adaptive foreground) and scale
+    it into each platform's safe zone. Everything the script rasterises lives
+    inside the group whose id is "mark"; the script lifts that group verbatim.
+
+    Drawn content spans x 107-405, y 104-409 of the 512 box — centred, and 60 % of
+    the canvas, which leaves the margin a full-bleed app icon wants.
+  -->
+  <g id="mark">
+    <rect x="152" y="104" width="208" height="56" rx="28" fill="#A65C14" />
+    <path
+      d="M 140 208 L 256 376 L 372 208"
+      fill="none"
+      stroke="#C4711F"
+      stroke-width="66"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </g>
+</svg>
