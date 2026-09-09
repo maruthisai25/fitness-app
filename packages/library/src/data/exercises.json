@@ -1,0 +1,6637 @@
+[
+  {
+    "id": "ex_barbell_back_squat",
+    "name": "Barbell Back Squat",
+    "slug": "barbell-back-squat",
+    "movementPattern": "squat",
+    "primaryMuscles": [
+      "quads",
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "hamstrings",
+      "abs"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": 4,
+    "instructions": "Set up with a barbell. Brace your core, sit your hips back and down while keeping your chest tall, then drive through your heels to stand back up. Keep your knees tracking over your toes throughout the movement. This is an advanced variation — build the base movement first and stop if form breaks down.",
+    "cues": [
+      "Knees track toes",
+      "Chest stays tall",
+      "Drive through heels"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 4,
+      "max": 8
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_barbell_front_squat",
+    "name": "Barbell Front Squat",
+    "slug": "barbell-front-squat",
+    "movementPattern": "squat",
+    "primaryMuscles": [
+      "quads",
+      "abs"
+    ],
+    "secondaryMuscles": [
+      "glutes"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": 4,
+    "instructions": "Set up with a barbell. Brace your core, sit your hips back and down while keeping your chest tall, then drive through your heels to stand back up. Keep your knees tracking over your toes throughout the movement. This is an advanced variation — build the base movement first and stop if form breaks down.",
+    "cues": [
+      "Knees track toes",
+      "Chest stays tall",
+      "Drive through heels"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 4,
+      "max": 8
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_goblet_squat",
+    "name": "Goblet Squat",
+    "slug": "goblet-squat",
+    "movementPattern": "squat",
+    "primaryMuscles": [
+      "quads",
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "abs"
+    ],
+    "equipment": [
+      "dumbbell",
+      "kettlebell"
+    ],
+    "difficulty": 2,
+    "instructions": "Set up with a pair of dumbbells or a kettlebell. Brace your core, sit your hips back and down while keeping your chest tall, then drive through your heels to stand back up. Keep your knees tracking over your toes throughout the movement.",
+    "cues": [
+      "Knees track toes",
+      "Chest stays tall",
+      "Drive through heels"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_dumbbell_squat",
+    "name": "Dumbbell Squat",
+    "slug": "dumbbell-squat",
+    "movementPattern": "squat",
+    "primaryMuscles": [
+      "quads",
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "hamstrings"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": 2,
+    "instructions": "Set up with a pair of dumbbells. Brace your core, sit your hips back and down while keeping your chest tall, then drive through your heels to stand back up. Keep your knees tracking over your toes throughout the movement.",
+    "cues": [
+      "Knees track toes",
+      "Chest stays tall",
+      "Drive through heels"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_bodyweight_squat",
+    "name": "Bodyweight Squat",
+    "slug": "bodyweight-squat",
+    "movementPattern": "squat",
+    "primaryMuscles": [
+      "quads",
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "hamstrings"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 1,
+    "instructions": "Set up with your bodyweight. Brace your core, sit your hips back and down while keeping your chest tall, then drive through your heels to stand back up. Keep your knees tracking over your toes throughout the movement.",
+    "cues": [
+      "Knees track toes",
+      "Chest stays tall",
+      "Drive through heels"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 20
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_jump_squat",
+    "name": "Jump Squat",
+    "slug": "jump-squat",
+    "movementPattern": "squat",
+    "primaryMuscles": [
+      "quads",
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "calves"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 3,
+    "instructions": "Set up with your bodyweight. Brace your core, sit your hips back and down while keeping your chest tall, then drive through your heels to stand back up. Keep your knees tracking over your toes throughout the movement.",
+    "cues": [
+      "Knees track toes",
+      "Chest stays tall",
+      "Drive through heels"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 6,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_box_squat",
+    "name": "Box Squat",
+    "slug": "box-squat",
+    "movementPattern": "squat",
+    "primaryMuscles": [
+      "quads",
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "hamstrings"
+    ],
+    "equipment": [
+      "barbell",
+      "other"
+    ],
+    "difficulty": 3,
+    "instructions": "Set up with a barbell or the equipment. Brace your core, sit your hips back and down while keeping your chest tall, then drive through your heels to stand back up. Keep your knees tracking over your toes throughout the movement.",
+    "cues": [
+      "Knees track toes",
+      "Chest stays tall",
+      "Drive through heels"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 5,
+      "max": 8
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_leg_press",
+    "name": "Leg Press",
+    "slug": "leg-press",
+    "movementPattern": "squat",
+    "primaryMuscles": [
+      "quads",
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "hamstrings"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": 2,
+    "instructions": "Set up with the machine. Brace your core, sit your hips back and down while keeping your chest tall, then drive through your heels to stand back up. Keep your knees tracking over your toes throughout the movement.",
+    "cues": [
+      "Knees track toes",
+      "Chest stays tall",
+      "Drive through heels"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_hack_squat",
+    "name": "Hack Squat",
+    "slug": "hack-squat",
+    "movementPattern": "squat",
+    "primaryMuscles": [
+      "quads"
+    ],
+    "secondaryMuscles": [
+      "glutes"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": 3,
+    "instructions": "Set up with the machine. Brace your core, sit your hips back and down while keeping your chest tall, then drive through your heels to stand back up. Keep your knees tracking over your toes throughout the movement.",
+    "cues": [
+      "Knees track toes",
+      "Chest stays tall",
+      "Drive through heels"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 6,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_smith_machine_squat",
+    "name": "Smith Machine Squat",
+    "slug": "smith-machine-squat",
+    "movementPattern": "squat",
+    "primaryMuscles": [
+      "quads",
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "hamstrings"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": 3,
+    "instructions": "Set up with the machine. Brace your core, sit your hips back and down while keeping your chest tall, then drive through your heels to stand back up. Keep your knees tracking over your toes throughout the movement.",
+    "cues": [
+      "Knees track toes",
+      "Chest stays tall",
+      "Drive through heels"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 6,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_kettlebell_front_squat",
+    "name": "Kettlebell Front Squat",
+    "slug": "kettlebell-front-squat",
+    "movementPattern": "squat",
+    "primaryMuscles": [
+      "quads",
+      "abs"
+    ],
+    "secondaryMuscles": [
+      "glutes"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": 3,
+    "instructions": "Set up with a kettlebell. Brace your core, sit your hips back and down while keeping your chest tall, then drive through your heels to stand back up. Keep your knees tracking over your toes throughout the movement.",
+    "cues": [
+      "Knees track toes",
+      "Chest stays tall",
+      "Drive through heels"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 6,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_pistol_squat",
+    "name": "Pistol Squat",
+    "slug": "pistol-squat",
+    "movementPattern": "squat",
+    "primaryMuscles": [
+      "quads",
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "abs",
+      "hip_flexors"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 5,
+    "instructions": "Set up with your bodyweight. Brace your core, sit your hips back and down while keeping your chest tall, then drive through your heels to stand back up. Keep your knees tracking over your toes throughout the movement. This is an advanced variation — build the base movement first and stop if form breaks down.",
+    "cues": [
+      "Knees track toes",
+      "Chest stays tall",
+      "Drive through heels"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 3,
+      "max": 8
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_wall_sit",
+    "name": "Wall Sit",
+    "slug": "wall-sit",
+    "movementPattern": "squat",
+    "primaryMuscles": [
+      "quads"
+    ],
+    "secondaryMuscles": [
+      "glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 1,
+    "instructions": "Set up with your bodyweight. Brace your core, sit your hips back and down while keeping your chest tall, then drive through your heels to stand back up. Keep your knees tracking over your toes throughout the movement.",
+    "cues": [
+      "Knees track toes",
+      "Chest stays tall",
+      "Drive through heels"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 20,
+      "max": 60
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_zercher_squat",
+    "name": "Zercher Squat",
+    "slug": "zercher-squat",
+    "movementPattern": "squat",
+    "primaryMuscles": [
+      "quads",
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "abs",
+      "biceps"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": 4,
+    "instructions": "Set up with a barbell. Brace your core, sit your hips back and down while keeping your chest tall, then drive through your heels to stand back up. Keep your knees tracking over your toes throughout the movement. This is an advanced variation — build the base movement first and stop if form breaks down.",
+    "cues": [
+      "Knees track toes",
+      "Chest stays tall",
+      "Drive through heels"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 4,
+      "max": 8
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_sumo_squat",
+    "name": "Sumo Squat",
+    "slug": "sumo-squat",
+    "movementPattern": "squat",
+    "primaryMuscles": [
+      "glutes",
+      "adductors"
+    ],
+    "secondaryMuscles": [
+      "quads"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": 2,
+    "instructions": "Set up with a pair of dumbbells. Brace your core, sit your hips back and down while keeping your chest tall, then drive through your heels to stand back up. Keep your knees tracking over your toes throughout the movement.",
+    "cues": [
+      "Knees track toes",
+      "Chest stays tall",
+      "Drive through heels"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_resistance_band_squat",
+    "name": "Resistance Band Squat",
+    "slug": "resistance-band-squat",
+    "movementPattern": "squat",
+    "primaryMuscles": [
+      "quads",
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "abductors"
+    ],
+    "equipment": [
+      "band"
+    ],
+    "difficulty": 1,
+    "instructions": "Set up with a resistance band. Brace your core, sit your hips back and down while keeping your chest tall, then drive through your heels to stand back up. Keep your knees tracking over your toes throughout the movement.",
+    "cues": [
+      "Knees track toes",
+      "Chest stays tall",
+      "Drive through heels"
+    ],
+    "isCustom": false,
+    "loadType": "band",
+    "defaultRepRange": {
+      "min": 12,
+      "max": 20
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_overhead_squat",
+    "name": "Overhead Squat",
+    "slug": "overhead-squat",
+    "movementPattern": "squat",
+    "primaryMuscles": [
+      "quads",
+      "shoulders"
+    ],
+    "secondaryMuscles": [
+      "abs",
+      "glutes"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": 5,
+    "instructions": "Set up with a barbell. Brace your core, sit your hips back and down while keeping your chest tall, then drive through your heels to stand back up. Keep your knees tracking over your toes throughout the movement. This is an advanced variation — build the base movement first and stop if form breaks down.",
+    "cues": [
+      "Knees track toes",
+      "Chest stays tall",
+      "Drive through heels"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 3,
+      "max": 6
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_cable_squat",
+    "name": "Cable Squat",
+    "slug": "cable-squat",
+    "movementPattern": "squat",
+    "primaryMuscles": [
+      "quads",
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "hamstrings"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": 2,
+    "instructions": "Set up with a cable stack. Brace your core, sit your hips back and down while keeping your chest tall, then drive through your heels to stand back up. Keep your knees tracking over your toes throughout the movement.",
+    "cues": [
+      "Knees track toes",
+      "Chest stays tall",
+      "Drive through heels"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_duck_walk",
+    "name": "Duck Walk",
+    "slug": "duck-walk",
+    "movementPattern": "squat",
+    "primaryMuscles": [
+      "quads",
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "adductors"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 2,
+    "instructions": "Set up with your bodyweight. Brace your core, sit your hips back and down while keeping your chest tall, then drive through your heels to stand back up. Keep your knees tracking over your toes throughout the movement.",
+    "cues": [
+      "Knees track toes",
+      "Chest stays tall",
+      "Drive through heels"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 20
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_barbell_deadlift",
+    "name": "Barbell Deadlift",
+    "slug": "barbell-deadlift",
+    "movementPattern": "hinge",
+    "primaryMuscles": [
+      "hamstrings",
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "lower_back",
+      "traps"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": 4,
+    "instructions": "Stand holding a barbell, feet roughly hip-width apart. Push your hips back while keeping a neutral spine and soft knees until you feel a stretch through your hamstrings, then drive your hips forward to return to standing. This is an advanced variation — build the base movement first and stop if form breaks down.",
+    "cues": [
+      "Bar over midfoot",
+      "Push floor away",
+      "Lock out hips and knees together"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 3,
+      "max": 6
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_romanian_deadlift",
+    "name": "Romanian Deadlift",
+    "slug": "romanian-deadlift",
+    "movementPattern": "hinge",
+    "primaryMuscles": [
+      "hamstrings",
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "lower_back"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": 3,
+    "instructions": "Stand holding a barbell, feet roughly hip-width apart. Push your hips back while keeping a neutral spine and soft knees until you feel a stretch through your hamstrings, then drive your hips forward to return to standing.",
+    "cues": [
+      "Hips back first",
+      "Neutral spine",
+      "Squeeze glutes at the top"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 6,
+      "max": 10
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_sumo_deadlift",
+    "name": "Sumo Deadlift",
+    "slug": "sumo-deadlift",
+    "movementPattern": "hinge",
+    "primaryMuscles": [
+      "glutes",
+      "adductors"
+    ],
+    "secondaryMuscles": [
+      "hamstrings",
+      "lower_back"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": 4,
+    "instructions": "Stand holding a barbell, feet roughly hip-width apart. Push your hips back while keeping a neutral spine and soft knees until you feel a stretch through your hamstrings, then drive your hips forward to return to standing. This is an advanced variation — build the base movement first and stop if form breaks down.",
+    "cues": [
+      "Hips back first",
+      "Neutral spine",
+      "Squeeze glutes at the top"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 3,
+      "max": 6
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_dumbbell_romanian_deadlift",
+    "name": "Dumbbell Romanian Deadlift",
+    "slug": "dumbbell-romanian-deadlift",
+    "movementPattern": "hinge",
+    "primaryMuscles": [
+      "hamstrings",
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "lower_back"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": 2,
+    "instructions": "Stand holding a pair of dumbbells, feet roughly hip-width apart. Push your hips back while keeping a neutral spine and soft knees until you feel a stretch through your hamstrings, then drive your hips forward to return to standing.",
+    "cues": [
+      "Hips back first",
+      "Neutral spine",
+      "Squeeze glutes at the top"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_kettlebell_deadlift",
+    "name": "Kettlebell Deadlift",
+    "slug": "kettlebell-deadlift",
+    "movementPattern": "hinge",
+    "primaryMuscles": [
+      "hamstrings",
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "lower_back"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": 2,
+    "instructions": "Stand holding a kettlebell, feet roughly hip-width apart. Push your hips back while keeping a neutral spine and soft knees until you feel a stretch through your hamstrings, then drive your hips forward to return to standing.",
+    "cues": [
+      "Hips back first",
+      "Neutral spine",
+      "Squeeze glutes at the top"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_kettlebell_swing",
+    "name": "Kettlebell Swing",
+    "slug": "kettlebell-swing",
+    "movementPattern": "hinge",
+    "primaryMuscles": [
+      "glutes",
+      "hamstrings"
+    ],
+    "secondaryMuscles": [
+      "abs",
+      "shoulders"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": 3,
+    "instructions": "Stand holding a kettlebell, feet roughly hip-width apart. Push your hips back while keeping a neutral spine and soft knees until you feel a stretch through your hamstrings, then drive your hips forward to return to standing.",
+    "cues": [
+      "Hinge, do not squat",
+      "Snap the hips",
+      "Arms are just a rope"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 20
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_kettlebell_clean",
+    "name": "Kettlebell Clean",
+    "slug": "kettlebell-clean",
+    "movementPattern": "hinge",
+    "primaryMuscles": [
+      "glutes",
+      "hamstrings"
+    ],
+    "secondaryMuscles": [
+      "shoulders",
+      "forearms"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": 3,
+    "instructions": "Stand holding a kettlebell, feet roughly hip-width apart. Push your hips back while keeping a neutral spine and soft knees until you feel a stretch through your hamstrings, then drive your hips forward to return to standing.",
+    "cues": [
+      "Hips back first",
+      "Neutral spine",
+      "Squeeze glutes at the top"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 5,
+      "max": 10
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_kettlebell_snatch",
+    "name": "Kettlebell Snatch",
+    "slug": "kettlebell-snatch",
+    "movementPattern": "hinge",
+    "primaryMuscles": [
+      "glutes",
+      "hamstrings"
+    ],
+    "secondaryMuscles": [
+      "shoulders"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": 4,
+    "instructions": "Stand holding a kettlebell, feet roughly hip-width apart. Push your hips back while keeping a neutral spine and soft knees until you feel a stretch through your hamstrings, then drive your hips forward to return to standing. This is an advanced variation — build the base movement first and stop if form breaks down.",
+    "cues": [
+      "Hips back first",
+      "Neutral spine",
+      "Squeeze glutes at the top"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 5,
+      "max": 10
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_good_morning",
+    "name": "Good Morning",
+    "slug": "good-morning",
+    "movementPattern": "hinge",
+    "primaryMuscles": [
+      "hamstrings",
+      "lower_back"
+    ],
+    "secondaryMuscles": [
+      "glutes"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": 3,
+    "instructions": "Stand holding a barbell, feet roughly hip-width apart. Push your hips back while keeping a neutral spine and soft knees until you feel a stretch through your hamstrings, then drive your hips forward to return to standing.",
+    "cues": [
+      "Hips back first",
+      "Neutral spine",
+      "Squeeze glutes at the top"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 6,
+      "max": 10
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_single_leg_romanian_deadlift",
+    "name": "Single-Leg Romanian Deadlift",
+    "slug": "single-leg-romanian-deadlift",
+    "movementPattern": "hinge",
+    "primaryMuscles": [
+      "hamstrings",
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "abs"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": 3,
+    "instructions": "Stand holding a pair of dumbbells, feet roughly hip-width apart. Push your hips back while keeping a neutral spine and soft knees until you feel a stretch through your hamstrings, then drive your hips forward to return to standing.",
+    "cues": [
+      "Hips back first",
+      "Neutral spine",
+      "Squeeze glutes at the top"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 6,
+      "max": 10
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_cable_pull_through",
+    "name": "Cable Pull-Through",
+    "slug": "cable-pull-through",
+    "movementPattern": "hinge",
+    "primaryMuscles": [
+      "glutes",
+      "hamstrings"
+    ],
+    "secondaryMuscles": [
+      "lower_back"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": 2,
+    "instructions": "Stand holding a cable stack, feet roughly hip-width apart. Push your hips back while keeping a neutral spine and soft knees until you feel a stretch through your hamstrings, then drive your hips forward to return to standing.",
+    "cues": [
+      "Hips back first",
+      "Neutral spine",
+      "Squeeze glutes at the top"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_glute_bridge",
+    "name": "Glute Bridge",
+    "slug": "glute-bridge",
+    "movementPattern": "hinge",
+    "primaryMuscles": [
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "hamstrings"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 1,
+    "instructions": "Stand holding your bodyweight, feet roughly hip-width apart. Push your hips back while keeping a neutral spine and soft knees until you feel a stretch through your hamstrings, then drive your hips forward to return to standing.",
+    "cues": [
+      "Hips back first",
+      "Neutral spine",
+      "Squeeze glutes at the top"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 20
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_single_leg_glute_bridge",
+    "name": "Single-Leg Glute Bridge",
+    "slug": "single-leg-glute-bridge",
+    "movementPattern": "hinge",
+    "primaryMuscles": [
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "hamstrings",
+      "abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 2,
+    "instructions": "Stand holding your bodyweight, feet roughly hip-width apart. Push your hips back while keeping a neutral spine and soft knees until you feel a stretch through your hamstrings, then drive your hips forward to return to standing.",
+    "cues": [
+      "Hips back first",
+      "Neutral spine",
+      "Squeeze glutes at the top"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_barbell_hip_thrust",
+    "name": "Barbell Hip Thrust",
+    "slug": "barbell-hip-thrust",
+    "movementPattern": "hinge",
+    "primaryMuscles": [
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "hamstrings"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": 3,
+    "instructions": "Stand holding a barbell, feet roughly hip-width apart. Push your hips back while keeping a neutral spine and soft knees until you feel a stretch through your hamstrings, then drive your hips forward to return to standing.",
+    "cues": [
+      "Hips back first",
+      "Neutral spine",
+      "Squeeze glutes at the top"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 6,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_band_good_morning",
+    "name": "Band Good Morning",
+    "slug": "band-good-morning",
+    "movementPattern": "hinge",
+    "primaryMuscles": [
+      "hamstrings",
+      "lower_back"
+    ],
+    "secondaryMuscles": [
+      "glutes"
+    ],
+    "equipment": [
+      "band"
+    ],
+    "difficulty": 2,
+    "instructions": "Stand holding a resistance band, feet roughly hip-width apart. Push your hips back while keeping a neutral spine and soft knees until you feel a stretch through your hamstrings, then drive your hips forward to return to standing.",
+    "cues": [
+      "Hips back first",
+      "Neutral spine",
+      "Squeeze glutes at the top"
+    ],
+    "isCustom": false,
+    "loadType": "band",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_band_hip_thrust",
+    "name": "Band Hip Thrust",
+    "slug": "band-hip-thrust",
+    "movementPattern": "hinge",
+    "primaryMuscles": [
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "hamstrings"
+    ],
+    "equipment": [
+      "band"
+    ],
+    "difficulty": 1,
+    "instructions": "Stand holding a resistance band, feet roughly hip-width apart. Push your hips back while keeping a neutral spine and soft knees until you feel a stretch through your hamstrings, then drive your hips forward to return to standing.",
+    "cues": [
+      "Hips back first",
+      "Neutral spine",
+      "Squeeze glutes at the top"
+    ],
+    "isCustom": false,
+    "loadType": "band",
+    "defaultRepRange": {
+      "min": 12,
+      "max": 20
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_trap_bar_deadlift",
+    "name": "Trap Bar Deadlift",
+    "slug": "trap-bar-deadlift",
+    "movementPattern": "hinge",
+    "primaryMuscles": [
+      "hamstrings",
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "traps",
+      "quads"
+    ],
+    "equipment": [
+      "other"
+    ],
+    "difficulty": 3,
+    "instructions": "Stand holding the equipment, feet roughly hip-width apart. Push your hips back while keeping a neutral spine and soft knees until you feel a stretch through your hamstrings, then drive your hips forward to return to standing.",
+    "cues": [
+      "Hips back first",
+      "Neutral spine",
+      "Squeeze glutes at the top"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 5,
+      "max": 8
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_back_extension",
+    "name": "Back Extension",
+    "slug": "back-extension",
+    "movementPattern": "hinge",
+    "primaryMuscles": [
+      "lower_back",
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "hamstrings"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": 2,
+    "instructions": "Stand holding the machine, feet roughly hip-width apart. Push your hips back while keeping a neutral spine and soft knees until you feel a stretch through your hamstrings, then drive your hips forward to return to standing.",
+    "cues": [
+      "Hips back first",
+      "Neutral spine",
+      "Squeeze glutes at the top"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_jefferson_curl",
+    "name": "Jefferson Curl",
+    "slug": "jefferson-curl",
+    "movementPattern": "hinge",
+    "primaryMuscles": [
+      "lower_back",
+      "hamstrings"
+    ],
+    "secondaryMuscles": [
+      "spine"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": 4,
+    "instructions": "Stand holding a pair of dumbbells, feet roughly hip-width apart. Push your hips back while keeping a neutral spine and soft knees until you feel a stretch through your hamstrings, then drive your hips forward to return to standing. This is an advanced variation — build the base movement first and stop if form breaks down.",
+    "cues": [
+      "Hips back first",
+      "Neutral spine",
+      "Squeeze glutes at the top"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 6,
+      "max": 10
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_dumbbell_walking_lunge",
+    "name": "Dumbbell Walking Lunge",
+    "slug": "dumbbell-walking-lunge",
+    "movementPattern": "lunge",
+    "primaryMuscles": [
+      "quads",
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "hamstrings"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": 2,
+    "instructions": "Step into position using a pair of dumbbells. Lower your back knee toward the floor while keeping your front shin close to vertical, then push back through the front heel to the start. Keep your torso upright throughout.",
+    "cues": [
+      "Front shin near vertical",
+      "Controlled descent",
+      "Push through front heel"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_bodyweight_lunge",
+    "name": "Bodyweight Lunge",
+    "slug": "bodyweight-lunge",
+    "movementPattern": "lunge",
+    "primaryMuscles": [
+      "quads",
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "hamstrings"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 1,
+    "instructions": "Step into position using your bodyweight. Lower your back knee toward the floor while keeping your front shin close to vertical, then push back through the front heel to the start. Keep your torso upright throughout.",
+    "cues": [
+      "Front shin near vertical",
+      "Controlled descent",
+      "Push through front heel"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 16
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_bulgarian_split_squat",
+    "name": "Bulgarian Split Squat",
+    "slug": "bulgarian-split-squat",
+    "movementPattern": "lunge",
+    "primaryMuscles": [
+      "quads",
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "hamstrings",
+      "abs"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": 3,
+    "instructions": "Step into position using a pair of dumbbells. Lower your back knee toward the floor while keeping your front shin close to vertical, then push back through the front heel to the start. Keep your torso upright throughout.",
+    "cues": [
+      "Front shin near vertical",
+      "Controlled descent",
+      "Push through front heel"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 6,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_barbell_reverse_lunge",
+    "name": "Barbell Reverse Lunge",
+    "slug": "barbell-reverse-lunge",
+    "movementPattern": "lunge",
+    "primaryMuscles": [
+      "quads",
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "hamstrings"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": 3,
+    "instructions": "Step into position using a barbell. Lower your back knee toward the floor while keeping your front shin close to vertical, then push back through the front heel to the start. Keep your torso upright throughout.",
+    "cues": [
+      "Front shin near vertical",
+      "Controlled descent",
+      "Push through front heel"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 6,
+      "max": 10
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_kettlebell_lunge",
+    "name": "Kettlebell Lunge",
+    "slug": "kettlebell-lunge",
+    "movementPattern": "lunge",
+    "primaryMuscles": [
+      "quads",
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "hamstrings"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": 2,
+    "instructions": "Step into position using a kettlebell. Lower your back knee toward the floor while keeping your front shin close to vertical, then push back through the front heel to the start. Keep your torso upright throughout.",
+    "cues": [
+      "Front shin near vertical",
+      "Controlled descent",
+      "Push through front heel"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_step_up",
+    "name": "Step-Up",
+    "slug": "step-up",
+    "movementPattern": "lunge",
+    "primaryMuscles": [
+      "quads",
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "hamstrings"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": 2,
+    "instructions": "Step into position using a pair of dumbbells. Lower your back knee toward the floor while keeping your front shin close to vertical, then push back through the front heel to the start. Keep your torso upright throughout.",
+    "cues": [
+      "Front shin near vertical",
+      "Controlled descent",
+      "Push through front heel"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_curtsy_lunge",
+    "name": "Curtsy Lunge",
+    "slug": "curtsy-lunge",
+    "movementPattern": "lunge",
+    "primaryMuscles": [
+      "glutes",
+      "adductors"
+    ],
+    "secondaryMuscles": [
+      "quads"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 2,
+    "instructions": "Step into position using your bodyweight. Lower your back knee toward the floor while keeping your front shin close to vertical, then push back through the front heel to the start. Keep your torso upright throughout.",
+    "cues": [
+      "Front shin near vertical",
+      "Controlled descent",
+      "Push through front heel"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 14
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_lateral_lunge",
+    "name": "Lateral Lunge",
+    "slug": "lateral-lunge",
+    "movementPattern": "lunge",
+    "primaryMuscles": [
+      "adductors",
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "quads"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": 2,
+    "instructions": "Step into position using a pair of dumbbells. Lower your back knee toward the floor while keeping your front shin close to vertical, then push back through the front heel to the start. Keep your torso upright throughout.",
+    "cues": [
+      "Front shin near vertical",
+      "Controlled descent",
+      "Push through front heel"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_cable_lunge",
+    "name": "Cable Lunge",
+    "slug": "cable-lunge",
+    "movementPattern": "lunge",
+    "primaryMuscles": [
+      "quads",
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "hamstrings"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": 2,
+    "instructions": "Step into position using a cable stack. Lower your back knee toward the floor while keeping your front shin close to vertical, then push back through the front heel to the start. Keep your torso upright throughout.",
+    "cues": [
+      "Front shin near vertical",
+      "Controlled descent",
+      "Push through front heel"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_band_lunge",
+    "name": "Band Lunge",
+    "slug": "band-lunge",
+    "movementPattern": "lunge",
+    "primaryMuscles": [
+      "quads",
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "hamstrings"
+    ],
+    "equipment": [
+      "band"
+    ],
+    "difficulty": 1,
+    "instructions": "Step into position using a resistance band. Lower your back knee toward the floor while keeping your front shin close to vertical, then push back through the front heel to the start. Keep your torso upright throughout.",
+    "cues": [
+      "Front shin near vertical",
+      "Controlled descent",
+      "Push through front heel"
+    ],
+    "isCustom": false,
+    "loadType": "band",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_smith_machine_reverse_lunge",
+    "name": "Smith Machine Reverse Lunge",
+    "slug": "smith-machine-reverse-lunge",
+    "movementPattern": "lunge",
+    "primaryMuscles": [
+      "quads",
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "hamstrings"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": 2,
+    "instructions": "Step into position using the machine. Lower your back knee toward the floor while keeping your front shin close to vertical, then push back through the front heel to the start. Keep your torso upright throughout.",
+    "cues": [
+      "Front shin near vertical",
+      "Controlled descent",
+      "Push through front heel"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_cossack_squat",
+    "name": "Cossack Squat",
+    "slug": "cossack-squat",
+    "movementPattern": "lunge",
+    "primaryMuscles": [
+      "adductors",
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "quads"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 3,
+    "instructions": "Step into position using your bodyweight. Lower your back knee toward the floor while keeping your front shin close to vertical, then push back through the front heel to the start. Keep your torso upright throughout.",
+    "cues": [
+      "Front shin near vertical",
+      "Controlled descent",
+      "Push through front heel"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 6,
+      "max": 10
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_step_down",
+    "name": "Step-Down",
+    "slug": "step-down",
+    "movementPattern": "lunge",
+    "primaryMuscles": [
+      "quads",
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 2,
+    "instructions": "Step into position using your bodyweight. Lower your back knee toward the floor while keeping your front shin close to vertical, then push back through the front heel to the start. Keep your torso upright throughout.",
+    "cues": [
+      "Front shin near vertical",
+      "Controlled descent",
+      "Push through front heel"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_barbell_bench_press",
+    "name": "Barbell Bench Press",
+    "slug": "barbell-bench-press",
+    "movementPattern": "horizontal_push",
+    "primaryMuscles": [
+      "chest",
+      "triceps"
+    ],
+    "secondaryMuscles": [
+      "front_delts"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": 3,
+    "instructions": "Set up with a barbell at chest height, shoulder blades set. Lower under control until your elbows are roughly level with your torso, then press back to full extension without slamming the joint. Keep your core braced throughout.",
+    "cues": [
+      "Shoulder blades set",
+      "Elbows near 45°",
+      "Full lockout, no slam"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 5,
+      "max": 10
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_incline_barbell_bench_press",
+    "name": "Incline Barbell Bench Press",
+    "slug": "incline-barbell-bench-press",
+    "movementPattern": "horizontal_push",
+    "primaryMuscles": [
+      "chest",
+      "front_delts"
+    ],
+    "secondaryMuscles": [
+      "triceps"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": 3,
+    "instructions": "Set up with a barbell at chest height, shoulder blades set. Lower under control until your elbows are roughly level with your torso, then press back to full extension without slamming the joint. Keep your core braced throughout.",
+    "cues": [
+      "Shoulder blades set",
+      "Elbows near 45°",
+      "Full lockout, no slam"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 5,
+      "max": 10
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_dumbbell_bench_press",
+    "name": "Dumbbell Bench Press",
+    "slug": "dumbbell-bench-press",
+    "movementPattern": "horizontal_push",
+    "primaryMuscles": [
+      "chest",
+      "triceps"
+    ],
+    "secondaryMuscles": [
+      "front_delts"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": 2,
+    "instructions": "Set up with a pair of dumbbells at chest height, shoulder blades set. Lower under control until your elbows are roughly level with your torso, then press back to full extension without slamming the joint. Keep your core braced throughout.",
+    "cues": [
+      "Shoulder blades set",
+      "Elbows near 45°",
+      "Full lockout, no slam"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_incline_dumbbell_press",
+    "name": "Incline Dumbbell Press",
+    "slug": "incline-dumbbell-press",
+    "movementPattern": "horizontal_push",
+    "primaryMuscles": [
+      "chest",
+      "front_delts"
+    ],
+    "secondaryMuscles": [
+      "triceps"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": 2,
+    "instructions": "Set up with a pair of dumbbells at chest height, shoulder blades set. Lower under control until your elbows are roughly level with your torso, then press back to full extension without slamming the joint. Keep your core braced throughout.",
+    "cues": [
+      "Shoulder blades set",
+      "Elbows near 45°",
+      "Full lockout, no slam"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_floor_press",
+    "name": "Floor Press",
+    "slug": "floor-press",
+    "movementPattern": "horizontal_push",
+    "primaryMuscles": [
+      "chest",
+      "triceps"
+    ],
+    "secondaryMuscles": [
+      "front_delts"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": 2,
+    "instructions": "Set up with a pair of dumbbells at chest height, shoulder blades set. Lower under control until your elbows are roughly level with your torso, then press back to full extension without slamming the joint. Keep your core braced throughout.",
+    "cues": [
+      "Shoulder blades set",
+      "Elbows near 45°",
+      "Full lockout, no slam"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_wall_push_up",
+    "name": "Wall Push-Up",
+    "slug": "wall-push-up",
+    "movementPattern": "horizontal_push",
+    "primaryMuscles": [
+      "chest",
+      "triceps"
+    ],
+    "secondaryMuscles": [
+      "front_delts"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 1,
+    "instructions": "Set up with your bodyweight at chest height, shoulder blades set. Lower under control until your elbows are roughly level with your torso, then press back to full extension without slamming the joint. Keep your core braced throughout.",
+    "cues": [
+      "Shoulder blades set",
+      "Elbows near 45°",
+      "Full lockout, no slam"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 20
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_knee_push_up",
+    "name": "Knee Push-Up",
+    "slug": "knee-push-up",
+    "movementPattern": "horizontal_push",
+    "primaryMuscles": [
+      "chest",
+      "triceps"
+    ],
+    "secondaryMuscles": [
+      "front_delts"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 1,
+    "instructions": "Set up with your bodyweight at chest height, shoulder blades set. Lower under control until your elbows are roughly level with your torso, then press back to full extension without slamming the joint. Keep your core braced throughout.",
+    "cues": [
+      "Shoulder blades set",
+      "Elbows near 45°",
+      "Full lockout, no slam"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_incline_push_up",
+    "name": "Incline Push-Up",
+    "slug": "incline-push-up",
+    "movementPattern": "horizontal_push",
+    "primaryMuscles": [
+      "chest",
+      "triceps"
+    ],
+    "secondaryMuscles": [
+      "front_delts"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 1,
+    "instructions": "Set up with your bodyweight at chest height, shoulder blades set. Lower under control until your elbows are roughly level with your torso, then press back to full extension without slamming the joint. Keep your core braced throughout.",
+    "cues": [
+      "Shoulder blades set",
+      "Elbows near 45°",
+      "Full lockout, no slam"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_push_up",
+    "name": "Push-Up",
+    "slug": "push-up",
+    "movementPattern": "horizontal_push",
+    "primaryMuscles": [
+      "chest",
+      "triceps"
+    ],
+    "secondaryMuscles": [
+      "front_delts",
+      "abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 2,
+    "instructions": "Set up with your bodyweight at chest height, shoulder blades set. Lower under control until your elbows are roughly level with your torso, then press back to full extension without slamming the joint. Keep your core braced throughout.",
+    "cues": [
+      "Shoulder blades set",
+      "Elbows near 45°",
+      "Full lockout, no slam"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 20
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_decline_push_up",
+    "name": "Decline Push-Up",
+    "slug": "decline-push-up",
+    "movementPattern": "horizontal_push",
+    "primaryMuscles": [
+      "chest",
+      "front_delts"
+    ],
+    "secondaryMuscles": [
+      "triceps"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 2,
+    "instructions": "Set up with your bodyweight at chest height, shoulder blades set. Lower under control until your elbows are roughly level with your torso, then press back to full extension without slamming the joint. Keep your core braced throughout.",
+    "cues": [
+      "Shoulder blades set",
+      "Elbows near 45°",
+      "Full lockout, no slam"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_diamond_push_up",
+    "name": "Diamond Push-Up",
+    "slug": "diamond-push-up",
+    "movementPattern": "horizontal_push",
+    "primaryMuscles": [
+      "triceps",
+      "chest"
+    ],
+    "secondaryMuscles": [
+      "front_delts"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 3,
+    "instructions": "Set up with your bodyweight at chest height, shoulder blades set. Lower under control until your elbows are roughly level with your torso, then press back to full extension without slamming the joint. Keep your core braced throughout.",
+    "cues": [
+      "Shoulder blades set",
+      "Elbows near 45°",
+      "Full lockout, no slam"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 6,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_deficit_push_up",
+    "name": "Deficit Push-Up",
+    "slug": "deficit-push-up",
+    "movementPattern": "horizontal_push",
+    "primaryMuscles": [
+      "chest",
+      "triceps"
+    ],
+    "secondaryMuscles": [
+      "front_delts"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 3,
+    "instructions": "Set up with your bodyweight at chest height, shoulder blades set. Lower under control until your elbows are roughly level with your torso, then press back to full extension without slamming the joint. Keep your core braced throughout.",
+    "cues": [
+      "Shoulder blades set",
+      "Elbows near 45°",
+      "Full lockout, no slam"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 6,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_archer_push_up",
+    "name": "Archer Push-Up",
+    "slug": "archer-push-up",
+    "movementPattern": "horizontal_push",
+    "primaryMuscles": [
+      "chest",
+      "triceps"
+    ],
+    "secondaryMuscles": [
+      "front_delts"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 4,
+    "instructions": "Set up with your bodyweight at chest height, shoulder blades set. Lower under control until your elbows are roughly level with your torso, then press back to full extension without slamming the joint. Keep your core braced throughout. This is an advanced variation — build the base movement first and stop if form breaks down.",
+    "cues": [
+      "Shoulder blades set",
+      "Elbows near 45°",
+      "Full lockout, no slam"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 4,
+      "max": 8
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_pseudo_planche_push_up",
+    "name": "Pseudo Planche Push-Up",
+    "slug": "pseudo-planche-push-up",
+    "movementPattern": "horizontal_push",
+    "primaryMuscles": [
+      "chest",
+      "shoulders"
+    ],
+    "secondaryMuscles": [
+      "abs",
+      "triceps"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 5,
+    "instructions": "Set up with your bodyweight at chest height, shoulder blades set. Lower under control until your elbows are roughly level with your torso, then press back to full extension without slamming the joint. Keep your core braced throughout. This is an advanced variation — build the base movement first and stop if form breaks down.",
+    "cues": [
+      "Shoulder blades set",
+      "Elbows near 45°",
+      "Full lockout, no slam"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 3,
+      "max": 8
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_ring_push_up",
+    "name": "Ring Push-Up",
+    "slug": "ring-push-up",
+    "movementPattern": "horizontal_push",
+    "primaryMuscles": [
+      "chest",
+      "triceps"
+    ],
+    "secondaryMuscles": [
+      "front_delts",
+      "abs"
+    ],
+    "equipment": [
+      "other"
+    ],
+    "difficulty": 4,
+    "instructions": "Set up with the equipment at chest height, shoulder blades set. Lower under control until your elbows are roughly level with your torso, then press back to full extension without slamming the joint. Keep your core braced throughout. This is an advanced variation — build the base movement first and stop if form breaks down.",
+    "cues": [
+      "Shoulder blades set",
+      "Elbows near 45°",
+      "Full lockout, no slam"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 5,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_cable_chest_press",
+    "name": "Cable Chest Press",
+    "slug": "cable-chest-press",
+    "movementPattern": "horizontal_push",
+    "primaryMuscles": [
+      "chest",
+      "triceps"
+    ],
+    "secondaryMuscles": [
+      "front_delts"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": 2,
+    "instructions": "Set up with a cable stack at chest height, shoulder blades set. Lower under control until your elbows are roughly level with your torso, then press back to full extension without slamming the joint. Keep your core braced throughout.",
+    "cues": [
+      "Shoulder blades set",
+      "Elbows near 45°",
+      "Full lockout, no slam"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_machine_chest_press",
+    "name": "Machine Chest Press",
+    "slug": "machine-chest-press",
+    "movementPattern": "horizontal_push",
+    "primaryMuscles": [
+      "chest",
+      "triceps"
+    ],
+    "secondaryMuscles": [
+      "front_delts"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": 1,
+    "instructions": "Set up with the machine at chest height, shoulder blades set. Lower under control until your elbows are roughly level with your torso, then press back to full extension without slamming the joint. Keep your core braced throughout.",
+    "cues": [
+      "Shoulder blades set",
+      "Elbows near 45°",
+      "Full lockout, no slam"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_smith_machine_bench_press",
+    "name": "Smith Machine Bench Press",
+    "slug": "smith-machine-bench-press",
+    "movementPattern": "horizontal_push",
+    "primaryMuscles": [
+      "chest",
+      "triceps"
+    ],
+    "secondaryMuscles": [
+      "front_delts"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": 2,
+    "instructions": "Set up with the machine at chest height, shoulder blades set. Lower under control until your elbows are roughly level with your torso, then press back to full extension without slamming the joint. Keep your core braced throughout.",
+    "cues": [
+      "Shoulder blades set",
+      "Elbows near 45°",
+      "Full lockout, no slam"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 6,
+      "max": 10
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_band_chest_press",
+    "name": "Band Chest Press",
+    "slug": "band-chest-press",
+    "movementPattern": "horizontal_push",
+    "primaryMuscles": [
+      "chest",
+      "triceps"
+    ],
+    "secondaryMuscles": [
+      "front_delts"
+    ],
+    "equipment": [
+      "band"
+    ],
+    "difficulty": 1,
+    "instructions": "Set up with a resistance band at chest height, shoulder blades set. Lower under control until your elbows are roughly level with your torso, then press back to full extension without slamming the joint. Keep your core braced throughout.",
+    "cues": [
+      "Shoulder blades set",
+      "Elbows near 45°",
+      "Full lockout, no slam"
+    ],
+    "isCustom": false,
+    "loadType": "band",
+    "defaultRepRange": {
+      "min": 12,
+      "max": 20
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_bench_dip",
+    "name": "Bench Dip",
+    "slug": "bench-dip",
+    "movementPattern": "horizontal_push",
+    "primaryMuscles": [
+      "triceps"
+    ],
+    "secondaryMuscles": [
+      "front_delts",
+      "chest"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 2,
+    "instructions": "Set up with your bodyweight at chest height, shoulder blades set. Lower under control until your elbows are roughly level with your torso, then press back to full extension without slamming the joint. Keep your core braced throughout.",
+    "cues": [
+      "Shoulder blades set",
+      "Elbows near 45°",
+      "Full lockout, no slam"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_svend_press",
+    "name": "Svend Press",
+    "slug": "svend-press",
+    "movementPattern": "horizontal_push",
+    "primaryMuscles": [
+      "chest"
+    ],
+    "secondaryMuscles": [
+      "triceps"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": 2,
+    "instructions": "Set up with a pair of dumbbells at chest height, shoulder blades set. Lower under control until your elbows are roughly level with your torso, then press back to full extension without slamming the joint. Keep your core braced throughout.",
+    "cues": [
+      "Shoulder blades set",
+      "Elbows near 45°",
+      "Full lockout, no slam"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_parallette_push_up",
+    "name": "Parallette Push-Up",
+    "slug": "parallette-push-up",
+    "movementPattern": "horizontal_push",
+    "primaryMuscles": [
+      "chest",
+      "triceps"
+    ],
+    "secondaryMuscles": [
+      "front_delts"
+    ],
+    "equipment": [
+      "other"
+    ],
+    "difficulty": 3,
+    "instructions": "Set up with the equipment at chest height, shoulder blades set. Lower under control until your elbows are roughly level with your torso, then press back to full extension without slamming the joint. Keep your core braced throughout.",
+    "cues": [
+      "Shoulder blades set",
+      "Elbows near 45°",
+      "Full lockout, no slam"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 6,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_trx_chest_press",
+    "name": "TRX Chest Press",
+    "slug": "trx-chest-press",
+    "movementPattern": "horizontal_push",
+    "primaryMuscles": [
+      "chest",
+      "triceps"
+    ],
+    "secondaryMuscles": [
+      "front_delts"
+    ],
+    "equipment": [
+      "other"
+    ],
+    "difficulty": 2,
+    "instructions": "Set up with the equipment at chest height, shoulder blades set. Lower under control until your elbows are roughly level with your torso, then press back to full extension without slamming the joint. Keep your core braced throughout.",
+    "cues": [
+      "Shoulder blades set",
+      "Elbows near 45°",
+      "Full lockout, no slam"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_barbell_overhead_press",
+    "name": "Barbell Overhead Press",
+    "slug": "barbell-overhead-press",
+    "movementPattern": "vertical_push",
+    "primaryMuscles": [
+      "shoulders",
+      "triceps"
+    ],
+    "secondaryMuscles": [
+      "abs"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": 3,
+    "instructions": "Press a barbell from shoulder height to straight overhead until your arms are fully extended. Keep your ribs down and avoid over-arching your lower back. Lower with control back to the start position.",
+    "cues": [
+      "Ribs down",
+      "Press in a straight line",
+      "Brace the core"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 5,
+      "max": 8
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_dumbbell_shoulder_press",
+    "name": "Dumbbell Shoulder Press",
+    "slug": "dumbbell-shoulder-press",
+    "movementPattern": "vertical_push",
+    "primaryMuscles": [
+      "shoulders",
+      "triceps"
+    ],
+    "secondaryMuscles": [
+      "front_delts"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": 2,
+    "instructions": "Press a pair of dumbbells from shoulder height to straight overhead until your arms are fully extended. Keep your ribs down and avoid over-arching your lower back. Lower with control back to the start position.",
+    "cues": [
+      "Ribs down",
+      "Press in a straight line",
+      "Brace the core"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_seated_machine_shoulder_press",
+    "name": "Seated Machine Shoulder Press",
+    "slug": "seated-machine-shoulder-press",
+    "movementPattern": "vertical_push",
+    "primaryMuscles": [
+      "shoulders",
+      "triceps"
+    ],
+    "secondaryMuscles": [
+      "front_delts"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": 1,
+    "instructions": "Press the machine from shoulder height to straight overhead until your arms are fully extended. Keep your ribs down and avoid over-arching your lower back. Lower with control back to the start position.",
+    "cues": [
+      "Ribs down",
+      "Press in a straight line",
+      "Brace the core"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_arnold_press",
+    "name": "Arnold Press",
+    "slug": "arnold-press",
+    "movementPattern": "vertical_push",
+    "primaryMuscles": [
+      "shoulders",
+      "triceps"
+    ],
+    "secondaryMuscles": [
+      "front_delts"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": 3,
+    "instructions": "Press a pair of dumbbells from shoulder height to straight overhead until your arms are fully extended. Keep your ribs down and avoid over-arching your lower back. Lower with control back to the start position.",
+    "cues": [
+      "Ribs down",
+      "Press in a straight line",
+      "Brace the core"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_push_press",
+    "name": "Push Press",
+    "slug": "push-press",
+    "movementPattern": "vertical_push",
+    "primaryMuscles": [
+      "shoulders",
+      "triceps"
+    ],
+    "secondaryMuscles": [
+      "quads"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": 4,
+    "instructions": "Press a barbell from shoulder height to straight overhead until your arms are fully extended. Keep your ribs down and avoid over-arching your lower back. Lower with control back to the start position. This is an advanced variation — build the base movement first and stop if form breaks down.",
+    "cues": [
+      "Ribs down",
+      "Press in a straight line",
+      "Brace the core"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 3,
+      "max": 6
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_pike_push_up",
+    "name": "Pike Push-Up",
+    "slug": "pike-push-up",
+    "movementPattern": "vertical_push",
+    "primaryMuscles": [
+      "shoulders",
+      "triceps"
+    ],
+    "secondaryMuscles": [
+      "front_delts"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 3,
+    "instructions": "Press your bodyweight from shoulder height to straight overhead until your arms are fully extended. Keep your ribs down and avoid over-arching your lower back. Lower with control back to the start position.",
+    "cues": [
+      "Ribs down",
+      "Press in a straight line",
+      "Brace the core"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 6,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_handstand_push_up",
+    "name": "Handstand Push-Up",
+    "slug": "handstand-push-up",
+    "movementPattern": "vertical_push",
+    "primaryMuscles": [
+      "shoulders",
+      "triceps"
+    ],
+    "secondaryMuscles": [
+      "front_delts"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 5,
+    "instructions": "Press your bodyweight from shoulder height to straight overhead until your arms are fully extended. Keep your ribs down and avoid over-arching your lower back. Lower with control back to the start position. This is an advanced variation — build the base movement first and stop if form breaks down.",
+    "cues": [
+      "Ribs down",
+      "Press in a straight line",
+      "Brace the core"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 3,
+      "max": 8
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_landmine_press",
+    "name": "Landmine Press",
+    "slug": "landmine-press",
+    "movementPattern": "vertical_push",
+    "primaryMuscles": [
+      "shoulders",
+      "chest"
+    ],
+    "secondaryMuscles": [
+      "triceps"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": 2,
+    "instructions": "Press a barbell from shoulder height to straight overhead until your arms are fully extended. Keep your ribs down and avoid over-arching your lower back. Lower with control back to the start position.",
+    "cues": [
+      "Ribs down",
+      "Press in a straight line",
+      "Brace the core"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_kettlebell_overhead_press",
+    "name": "Kettlebell Overhead Press",
+    "slug": "kettlebell-overhead-press",
+    "movementPattern": "vertical_push",
+    "primaryMuscles": [
+      "shoulders",
+      "triceps"
+    ],
+    "secondaryMuscles": [
+      "abs"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": 2,
+    "instructions": "Press a kettlebell from shoulder height to straight overhead until your arms are fully extended. Keep your ribs down and avoid over-arching your lower back. Lower with control back to the start position.",
+    "cues": [
+      "Ribs down",
+      "Press in a straight line",
+      "Brace the core"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 6,
+      "max": 10
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_cable_overhead_press",
+    "name": "Cable Overhead Press",
+    "slug": "cable-overhead-press",
+    "movementPattern": "vertical_push",
+    "primaryMuscles": [
+      "shoulders",
+      "triceps"
+    ],
+    "secondaryMuscles": [
+      "front_delts"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": 2,
+    "instructions": "Press a cable stack from shoulder height to straight overhead until your arms are fully extended. Keep your ribs down and avoid over-arching your lower back. Lower with control back to the start position.",
+    "cues": [
+      "Ribs down",
+      "Press in a straight line",
+      "Brace the core"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_band_overhead_press",
+    "name": "Band Overhead Press",
+    "slug": "band-overhead-press",
+    "movementPattern": "vertical_push",
+    "primaryMuscles": [
+      "shoulders",
+      "triceps"
+    ],
+    "secondaryMuscles": [
+      "front_delts"
+    ],
+    "equipment": [
+      "band"
+    ],
+    "difficulty": 1,
+    "instructions": "Press a resistance band from shoulder height to straight overhead until your arms are fully extended. Keep your ribs down and avoid over-arching your lower back. Lower with control back to the start position.",
+    "cues": [
+      "Ribs down",
+      "Press in a straight line",
+      "Brace the core"
+    ],
+    "isCustom": false,
+    "loadType": "band",
+    "defaultRepRange": {
+      "min": 12,
+      "max": 20
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_parallel_bar_dip",
+    "name": "Parallel Bar Dip",
+    "slug": "parallel-bar-dip",
+    "movementPattern": "vertical_push",
+    "primaryMuscles": [
+      "triceps",
+      "chest"
+    ],
+    "secondaryMuscles": [
+      "front_delts"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 4,
+    "instructions": "Press your bodyweight from shoulder height to straight overhead until your arms are fully extended. Keep your ribs down and avoid over-arching your lower back. Lower with control back to the start position. This is an advanced variation — build the base movement first and stop if form breaks down.",
+    "cues": [
+      "Ribs down",
+      "Press in a straight line",
+      "Brace the core"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 5,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_machine_assisted_dip",
+    "name": "Machine Assisted Dip",
+    "slug": "machine-assisted-dip",
+    "movementPattern": "vertical_push",
+    "primaryMuscles": [
+      "triceps",
+      "chest"
+    ],
+    "secondaryMuscles": [
+      "front_delts"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": 1,
+    "instructions": "Press the machine from shoulder height to straight overhead until your arms are fully extended. Keep your ribs down and avoid over-arching your lower back. Lower with control back to the start position.",
+    "cues": [
+      "Ribs down",
+      "Press in a straight line",
+      "Brace the core"
+    ],
+    "isCustom": false,
+    "loadType": "assisted",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_ring_dip",
+    "name": "Ring Dip",
+    "slug": "ring-dip",
+    "movementPattern": "vertical_push",
+    "primaryMuscles": [
+      "triceps",
+      "chest"
+    ],
+    "secondaryMuscles": [
+      "front_delts",
+      "abs"
+    ],
+    "equipment": [
+      "other"
+    ],
+    "difficulty": 5,
+    "instructions": "Press the equipment from shoulder height to straight overhead until your arms are fully extended. Keep your ribs down and avoid over-arching your lower back. Lower with control back to the start position. This is an advanced variation — build the base movement first and stop if form breaks down.",
+    "cues": [
+      "Ribs down",
+      "Press in a straight line",
+      "Brace the core"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 4,
+      "max": 10
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_smith_machine_overhead_press",
+    "name": "Smith Machine Overhead Press",
+    "slug": "smith-machine-overhead-press",
+    "movementPattern": "vertical_push",
+    "primaryMuscles": [
+      "shoulders",
+      "triceps"
+    ],
+    "secondaryMuscles": [
+      "front_delts"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": 2,
+    "instructions": "Press the machine from shoulder height to straight overhead until your arms are fully extended. Keep your ribs down and avoid over-arching your lower back. Lower with control back to the start position.",
+    "cues": [
+      "Ribs down",
+      "Press in a straight line",
+      "Brace the core"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 6,
+      "max": 10
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_barbell_bent_over_row",
+    "name": "Barbell Bent-Over Row",
+    "slug": "barbell-bent-over-row",
+    "movementPattern": "horizontal_pull",
+    "primaryMuscles": [
+      "lats",
+      "upper_back"
+    ],
+    "secondaryMuscles": [
+      "biceps",
+      "rear_delts"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": 3,
+    "instructions": "Hinge forward slightly and pull a barbell toward your torso, driving your elbows back and squeezing your shoulder blades together. Control the weight back out to a full stretch before the next rep.",
+    "cues": [
+      "Elbows drive back",
+      "Squeeze shoulder blades",
+      "Control the negative"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 6,
+      "max": 10
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_dumbbell_row",
+    "name": "Dumbbell Row",
+    "slug": "dumbbell-row",
+    "movementPattern": "horizontal_pull",
+    "primaryMuscles": [
+      "lats",
+      "upper_back"
+    ],
+    "secondaryMuscles": [
+      "biceps"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": 2,
+    "instructions": "Hinge forward slightly and pull a pair of dumbbells toward your torso, driving your elbows back and squeezing your shoulder blades together. Control the weight back out to a full stretch before the next rep.",
+    "cues": [
+      "Elbows drive back",
+      "Squeeze shoulder blades",
+      "Control the negative"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_seated_cable_row",
+    "name": "Seated Cable Row",
+    "slug": "seated-cable-row",
+    "movementPattern": "horizontal_pull",
+    "primaryMuscles": [
+      "lats",
+      "upper_back"
+    ],
+    "secondaryMuscles": [
+      "biceps",
+      "rear_delts"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": 2,
+    "instructions": "Hinge forward slightly and pull a cable stack toward your torso, driving your elbows back and squeezing your shoulder blades together. Control the weight back out to a full stretch before the next rep.",
+    "cues": [
+      "Elbows drive back",
+      "Squeeze shoulder blades",
+      "Control the negative"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_chest_supported_row",
+    "name": "Chest-Supported Row",
+    "slug": "chest-supported-row",
+    "movementPattern": "horizontal_pull",
+    "primaryMuscles": [
+      "upper_back",
+      "lats"
+    ],
+    "secondaryMuscles": [
+      "biceps"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": 2,
+    "instructions": "Hinge forward slightly and pull a pair of dumbbells toward your torso, driving your elbows back and squeezing your shoulder blades together. Control the weight back out to a full stretch before the next rep.",
+    "cues": [
+      "Elbows drive back",
+      "Squeeze shoulder blades",
+      "Control the negative"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_t_bar_row",
+    "name": "T-Bar Row",
+    "slug": "t-bar-row",
+    "movementPattern": "horizontal_pull",
+    "primaryMuscles": [
+      "lats",
+      "upper_back"
+    ],
+    "secondaryMuscles": [
+      "biceps"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": 3,
+    "instructions": "Hinge forward slightly and pull a barbell toward your torso, driving your elbows back and squeezing your shoulder blades together. Control the weight back out to a full stretch before the next rep.",
+    "cues": [
+      "Elbows drive back",
+      "Squeeze shoulder blades",
+      "Control the negative"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 6,
+      "max": 10
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_meadows_row",
+    "name": "Meadows Row",
+    "slug": "meadows-row",
+    "movementPattern": "horizontal_pull",
+    "primaryMuscles": [
+      "lats",
+      "upper_back"
+    ],
+    "secondaryMuscles": [
+      "biceps"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": 3,
+    "instructions": "Hinge forward slightly and pull a barbell toward your torso, driving your elbows back and squeezing your shoulder blades together. Control the weight back out to a full stretch before the next rep.",
+    "cues": [
+      "Elbows drive back",
+      "Squeeze shoulder blades",
+      "Control the negative"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_inverted_row",
+    "name": "Inverted Row",
+    "slug": "inverted-row",
+    "movementPattern": "horizontal_pull",
+    "primaryMuscles": [
+      "upper_back",
+      "lats"
+    ],
+    "secondaryMuscles": [
+      "biceps",
+      "abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 2,
+    "instructions": "Hinge forward slightly and pull your bodyweight toward your torso, driving your elbows back and squeezing your shoulder blades together. Control the weight back out to a full stretch before the next rep.",
+    "cues": [
+      "Elbows drive back",
+      "Squeeze shoulder blades",
+      "Control the negative"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_australian_pull_up",
+    "name": "Australian Pull-Up",
+    "slug": "australian-pull-up",
+    "movementPattern": "horizontal_pull",
+    "primaryMuscles": [
+      "upper_back",
+      "lats"
+    ],
+    "secondaryMuscles": [
+      "biceps"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 2,
+    "instructions": "Hinge forward slightly and pull your bodyweight toward your torso, driving your elbows back and squeezing your shoulder blades together. Control the weight back out to a full stretch before the next rep.",
+    "cues": [
+      "Elbows drive back",
+      "Squeeze shoulder blades",
+      "Control the negative"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_band_row",
+    "name": "Band Row",
+    "slug": "band-row",
+    "movementPattern": "horizontal_pull",
+    "primaryMuscles": [
+      "lats",
+      "upper_back"
+    ],
+    "secondaryMuscles": [
+      "biceps"
+    ],
+    "equipment": [
+      "band"
+    ],
+    "difficulty": 1,
+    "instructions": "Hinge forward slightly and pull a resistance band toward your torso, driving your elbows back and squeezing your shoulder blades together. Control the weight back out to a full stretch before the next rep.",
+    "cues": [
+      "Elbows drive back",
+      "Squeeze shoulder blades",
+      "Control the negative"
+    ],
+    "isCustom": false,
+    "loadType": "band",
+    "defaultRepRange": {
+      "min": 12,
+      "max": 20
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_machine_row",
+    "name": "Machine Row",
+    "slug": "machine-row",
+    "movementPattern": "horizontal_pull",
+    "primaryMuscles": [
+      "lats",
+      "upper_back"
+    ],
+    "secondaryMuscles": [
+      "biceps"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": 1,
+    "instructions": "Hinge forward slightly and pull the machine toward your torso, driving your elbows back and squeezing your shoulder blades together. Control the weight back out to a full stretch before the next rep.",
+    "cues": [
+      "Elbows drive back",
+      "Squeeze shoulder blades",
+      "Control the negative"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_kettlebell_row",
+    "name": "Kettlebell Row",
+    "slug": "kettlebell-row",
+    "movementPattern": "horizontal_pull",
+    "primaryMuscles": [
+      "lats",
+      "upper_back"
+    ],
+    "secondaryMuscles": [
+      "biceps"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": 2,
+    "instructions": "Hinge forward slightly and pull a kettlebell toward your torso, driving your elbows back and squeezing your shoulder blades together. Control the weight back out to a full stretch before the next rep.",
+    "cues": [
+      "Elbows drive back",
+      "Squeeze shoulder blades",
+      "Control the negative"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_renegade_row",
+    "name": "Renegade Row",
+    "slug": "renegade-row",
+    "movementPattern": "horizontal_pull",
+    "primaryMuscles": [
+      "lats",
+      "upper_back"
+    ],
+    "secondaryMuscles": [
+      "abs",
+      "biceps"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": 3,
+    "instructions": "Hinge forward slightly and pull a pair of dumbbells toward your torso, driving your elbows back and squeezing your shoulder blades together. Control the weight back out to a full stretch before the next rep.",
+    "cues": [
+      "Elbows drive back",
+      "Squeeze shoulder blades",
+      "Control the negative"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 6,
+      "max": 10
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_face_pull",
+    "name": "Face Pull",
+    "slug": "face-pull",
+    "movementPattern": "horizontal_pull",
+    "primaryMuscles": [
+      "rear_delts",
+      "upper_back"
+    ],
+    "secondaryMuscles": [
+      "traps"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": 2,
+    "instructions": "Hinge forward slightly and pull a cable stack toward your torso, driving your elbows back and squeezing your shoulder blades together. Control the weight back out to a full stretch before the next rep.",
+    "cues": [
+      "Elbows drive back",
+      "Squeeze shoulder blades",
+      "Control the negative"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 12,
+      "max": 20
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_band_face_pull",
+    "name": "Band Face Pull",
+    "slug": "band-face-pull",
+    "movementPattern": "horizontal_pull",
+    "primaryMuscles": [
+      "rear_delts",
+      "upper_back"
+    ],
+    "secondaryMuscles": [
+      "traps"
+    ],
+    "equipment": [
+      "band"
+    ],
+    "difficulty": 1,
+    "instructions": "Hinge forward slightly and pull a resistance band toward your torso, driving your elbows back and squeezing your shoulder blades together. Control the weight back out to a full stretch before the next rep.",
+    "cues": [
+      "Elbows drive back",
+      "Squeeze shoulder blades",
+      "Control the negative"
+    ],
+    "isCustom": false,
+    "loadType": "band",
+    "defaultRepRange": {
+      "min": 12,
+      "max": 20
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_trx_row",
+    "name": "TRX Row",
+    "slug": "trx-row",
+    "movementPattern": "horizontal_pull",
+    "primaryMuscles": [
+      "upper_back",
+      "lats"
+    ],
+    "secondaryMuscles": [
+      "biceps"
+    ],
+    "equipment": [
+      "other"
+    ],
+    "difficulty": 2,
+    "instructions": "Hinge forward slightly and pull the equipment toward your torso, driving your elbows back and squeezing your shoulder blades together. Control the weight back out to a full stretch before the next rep.",
+    "cues": [
+      "Elbows drive back",
+      "Squeeze shoulder blades",
+      "Control the negative"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_pull_up",
+    "name": "Pull-Up",
+    "slug": "pull-up",
+    "movementPattern": "vertical_pull",
+    "primaryMuscles": [
+      "lats",
+      "upper_back"
+    ],
+    "secondaryMuscles": [
+      "biceps"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 4,
+    "instructions": "Grip your bodyweight and pull your chest up toward your hands, driving your elbows down and back. Lower yourself under control to a full stretch at the bottom before the next rep. This is an advanced variation — build the base movement first and stop if form breaks down.",
+    "cues": [
+      "Dead hang start",
+      "Chest to the bar",
+      "Control the descent"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 3,
+      "max": 10
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_chin_up",
+    "name": "Chin-Up",
+    "slug": "chin-up",
+    "movementPattern": "vertical_pull",
+    "primaryMuscles": [
+      "lats",
+      "biceps"
+    ],
+    "secondaryMuscles": [
+      "upper_back"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 4,
+    "instructions": "Grip your bodyweight and pull your chest up toward your hands, driving your elbows down and back. Lower yourself under control to a full stretch at the bottom before the next rep. This is an advanced variation — build the base movement first and stop if form breaks down.",
+    "cues": [
+      "Chest to the bar",
+      "Elbows down and back",
+      "Full stretch at the bottom"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 3,
+      "max": 10
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_lat_pulldown",
+    "name": "Lat Pulldown",
+    "slug": "lat-pulldown",
+    "movementPattern": "vertical_pull",
+    "primaryMuscles": [
+      "lats",
+      "upper_back"
+    ],
+    "secondaryMuscles": [
+      "biceps"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": 2,
+    "instructions": "Grip a cable stack and pull your chest up toward your hands, driving your elbows down and back. Lower yourself under control to a full stretch at the bottom before the next rep.",
+    "cues": [
+      "Chest to the bar",
+      "Elbows down and back",
+      "Full stretch at the bottom"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_assisted_pull_up_machine",
+    "name": "Assisted Pull-Up Machine",
+    "slug": "assisted-pull-up-machine",
+    "movementPattern": "vertical_pull",
+    "primaryMuscles": [
+      "lats",
+      "upper_back"
+    ],
+    "secondaryMuscles": [
+      "biceps"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": 2,
+    "instructions": "Grip the machine and pull your chest up toward your hands, driving your elbows down and back. Lower yourself under control to a full stretch at the bottom before the next rep.",
+    "cues": [
+      "Chest to the bar",
+      "Elbows down and back",
+      "Full stretch at the bottom"
+    ],
+    "isCustom": false,
+    "loadType": "assisted",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_band_assisted_pull_up",
+    "name": "Band-Assisted Pull-Up",
+    "slug": "band-assisted-pull-up",
+    "movementPattern": "vertical_pull",
+    "primaryMuscles": [
+      "lats",
+      "upper_back"
+    ],
+    "secondaryMuscles": [
+      "biceps"
+    ],
+    "equipment": [
+      "band"
+    ],
+    "difficulty": 3,
+    "instructions": "Grip a resistance band and pull your chest up toward your hands, driving your elbows down and back. Lower yourself under control to a full stretch at the bottom before the next rep.",
+    "cues": [
+      "Chest to the bar",
+      "Elbows down and back",
+      "Full stretch at the bottom"
+    ],
+    "isCustom": false,
+    "loadType": "band",
+    "defaultRepRange": {
+      "min": 5,
+      "max": 10
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_straight_arm_pulldown",
+    "name": "Straight-Arm Pulldown",
+    "slug": "straight-arm-pulldown",
+    "movementPattern": "vertical_pull",
+    "primaryMuscles": [
+      "lats"
+    ],
+    "secondaryMuscles": [
+      "upper_back"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": 2,
+    "instructions": "Grip a cable stack and pull your chest up toward your hands, driving your elbows down and back. Lower yourself under control to a full stretch at the bottom before the next rep.",
+    "cues": [
+      "Chest to the bar",
+      "Elbows down and back",
+      "Full stretch at the bottom"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_kneeling_band_pulldown",
+    "name": "Kneeling Band Pulldown",
+    "slug": "kneeling-band-pulldown",
+    "movementPattern": "vertical_pull",
+    "primaryMuscles": [
+      "lats",
+      "upper_back"
+    ],
+    "secondaryMuscles": [
+      "biceps"
+    ],
+    "equipment": [
+      "band"
+    ],
+    "difficulty": 1,
+    "instructions": "Grip a resistance band and pull your chest up toward your hands, driving your elbows down and back. Lower yourself under control to a full stretch at the bottom before the next rep.",
+    "cues": [
+      "Chest to the bar",
+      "Elbows down and back",
+      "Full stretch at the bottom"
+    ],
+    "isCustom": false,
+    "loadType": "band",
+    "defaultRepRange": {
+      "min": 12,
+      "max": 20
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_neutral_grip_pulldown",
+    "name": "Neutral-Grip Pulldown",
+    "slug": "neutral-grip-pulldown",
+    "movementPattern": "vertical_pull",
+    "primaryMuscles": [
+      "lats",
+      "upper_back"
+    ],
+    "secondaryMuscles": [
+      "biceps"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": 2,
+    "instructions": "Grip the machine and pull your chest up toward your hands, driving your elbows down and back. Lower yourself under control to a full stretch at the bottom before the next rep.",
+    "cues": [
+      "Chest to the bar",
+      "Elbows down and back",
+      "Full stretch at the bottom"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_towel_pull_up",
+    "name": "Towel Pull-Up",
+    "slug": "towel-pull-up",
+    "movementPattern": "vertical_pull",
+    "primaryMuscles": [
+      "lats",
+      "forearms"
+    ],
+    "secondaryMuscles": [
+      "biceps"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 5,
+    "instructions": "Grip your bodyweight and pull your chest up toward your hands, driving your elbows down and back. Lower yourself under control to a full stretch at the bottom before the next rep. This is an advanced variation — build the base movement first and stop if form breaks down.",
+    "cues": [
+      "Chest to the bar",
+      "Elbows down and back",
+      "Full stretch at the bottom"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 3,
+      "max": 8
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_scapular_pull_up",
+    "name": "Scapular Pull-Up",
+    "slug": "scapular-pull-up",
+    "movementPattern": "vertical_pull",
+    "primaryMuscles": [
+      "upper_back",
+      "lats"
+    ],
+    "secondaryMuscles": [
+      "forearms"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 2,
+    "instructions": "Grip your bodyweight and pull your chest up toward your hands, driving your elbows down and back. Lower yourself under control to a full stretch at the bottom before the next rep.",
+    "cues": [
+      "Chest to the bar",
+      "Elbows down and back",
+      "Full stretch at the bottom"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 6,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_negative_pull_up",
+    "name": "Negative Pull-Up",
+    "slug": "negative-pull-up",
+    "movementPattern": "vertical_pull",
+    "primaryMuscles": [
+      "lats",
+      "upper_back"
+    ],
+    "secondaryMuscles": [
+      "biceps"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 3,
+    "instructions": "Grip your bodyweight and pull your chest up toward your hands, driving your elbows down and back. Lower yourself under control to a full stretch at the bottom before the next rep.",
+    "cues": [
+      "Chest to the bar",
+      "Elbows down and back",
+      "Full stretch at the bottom"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 3,
+      "max": 6
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_rope_climb",
+    "name": "Rope Climb",
+    "slug": "rope-climb",
+    "movementPattern": "vertical_pull",
+    "primaryMuscles": [
+      "lats",
+      "forearms"
+    ],
+    "secondaryMuscles": [
+      "biceps",
+      "abs"
+    ],
+    "equipment": [
+      "other"
+    ],
+    "difficulty": 4,
+    "instructions": "Grip the equipment and pull your chest up toward your hands, driving your elbows down and back. Lower yourself under control to a full stretch at the bottom before the next rep. This is an advanced variation — build the base movement first and stop if form breaks down.",
+    "cues": [
+      "Chest to the bar",
+      "Elbows down and back",
+      "Full stretch at the bottom"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 1,
+      "max": 3
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_farmer_s_carry",
+    "name": "Farmer's Carry",
+    "slug": "farmer-s-carry",
+    "movementPattern": "carry",
+    "primaryMuscles": [
+      "forearms",
+      "traps"
+    ],
+    "secondaryMuscles": [
+      "abs",
+      "quads"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": 2,
+    "instructions": "Pick up a pair of dumbbells and stand tall with your shoulders back and core braced. Walk for the target distance with short, controlled steps, then set the load down with control.",
+    "cues": [
+      "Shoulders back",
+      "Core braced",
+      "Short controlled steps"
+    ],
+    "isCustom": false,
+    "loadType": "distance",
+    "defaultRepRange": {
+      "min": 15,
+      "max": 40
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_kettlebell_suitcase_carry",
+    "name": "Kettlebell Suitcase Carry",
+    "slug": "kettlebell-suitcase-carry",
+    "movementPattern": "carry",
+    "primaryMuscles": [
+      "obliques",
+      "forearms"
+    ],
+    "secondaryMuscles": [
+      "abs"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": 2,
+    "instructions": "Pick up a kettlebell and stand tall with your shoulders back and core braced. Walk for the target distance with short, controlled steps, then set the load down with control.",
+    "cues": [
+      "Shoulders back",
+      "Core braced",
+      "Short controlled steps"
+    ],
+    "isCustom": false,
+    "loadType": "distance",
+    "defaultRepRange": {
+      "min": 15,
+      "max": 40
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_front_loaded_carry",
+    "name": "Front-Loaded Carry",
+    "slug": "front-loaded-carry",
+    "movementPattern": "carry",
+    "primaryMuscles": [
+      "abs",
+      "shoulders"
+    ],
+    "secondaryMuscles": [
+      "forearms"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": 3,
+    "instructions": "Pick up a kettlebell and stand tall with your shoulders back and core braced. Walk for the target distance with short, controlled steps, then set the load down with control.",
+    "cues": [
+      "Shoulders back",
+      "Core braced",
+      "Short controlled steps"
+    ],
+    "isCustom": false,
+    "loadType": "distance",
+    "defaultRepRange": {
+      "min": 15,
+      "max": 30
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_double_kettlebell_carry",
+    "name": "Double Kettlebell Carry",
+    "slug": "double-kettlebell-carry",
+    "movementPattern": "carry",
+    "primaryMuscles": [
+      "forearms",
+      "traps"
+    ],
+    "secondaryMuscles": [
+      "abs"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": 3,
+    "instructions": "Pick up a kettlebell and stand tall with your shoulders back and core braced. Walk for the target distance with short, controlled steps, then set the load down with control.",
+    "cues": [
+      "Shoulders back",
+      "Core braced",
+      "Short controlled steps"
+    ],
+    "isCustom": false,
+    "loadType": "distance",
+    "defaultRepRange": {
+      "min": 15,
+      "max": 30
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_overhead_carry",
+    "name": "Overhead Carry",
+    "slug": "overhead-carry",
+    "movementPattern": "carry",
+    "primaryMuscles": [
+      "shoulders",
+      "abs"
+    ],
+    "secondaryMuscles": [
+      "triceps"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": 3,
+    "instructions": "Pick up a pair of dumbbells and stand tall with your shoulders back and core braced. Walk for the target distance with short, controlled steps, then set the load down with control.",
+    "cues": [
+      "Shoulders back",
+      "Core braced",
+      "Short controlled steps"
+    ],
+    "isCustom": false,
+    "loadType": "distance",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 25
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_barbell_zercher_carry",
+    "name": "Barbell Zercher Carry",
+    "slug": "barbell-zercher-carry",
+    "movementPattern": "carry",
+    "primaryMuscles": [
+      "abs",
+      "biceps"
+    ],
+    "secondaryMuscles": [
+      "quads"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": 3,
+    "instructions": "Pick up a barbell and stand tall with your shoulders back and core braced. Walk for the target distance with short, controlled steps, then set the load down with control.",
+    "cues": [
+      "Shoulders back",
+      "Core braced",
+      "Short controlled steps"
+    ],
+    "isCustom": false,
+    "loadType": "distance",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 25
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_sandbag_carry",
+    "name": "Sandbag Carry",
+    "slug": "sandbag-carry",
+    "movementPattern": "carry",
+    "primaryMuscles": [
+      "forearms",
+      "abs"
+    ],
+    "secondaryMuscles": [
+      "quads"
+    ],
+    "equipment": [
+      "other"
+    ],
+    "difficulty": 3,
+    "instructions": "Pick up the equipment and stand tall with your shoulders back and core braced. Walk for the target distance with short, controlled steps, then set the load down with control.",
+    "cues": [
+      "Shoulders back",
+      "Core braced",
+      "Short controlled steps"
+    ],
+    "isCustom": false,
+    "loadType": "distance",
+    "defaultRepRange": {
+      "min": 15,
+      "max": 30
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_trap_bar_carry",
+    "name": "Trap Bar Carry",
+    "slug": "trap-bar-carry",
+    "movementPattern": "carry",
+    "primaryMuscles": [
+      "forearms",
+      "traps"
+    ],
+    "secondaryMuscles": [
+      "quads"
+    ],
+    "equipment": [
+      "other"
+    ],
+    "difficulty": 3,
+    "instructions": "Pick up the equipment and stand tall with your shoulders back and core braced. Walk for the target distance with short, controlled steps, then set the load down with control.",
+    "cues": [
+      "Shoulders back",
+      "Core braced",
+      "Short controlled steps"
+    ],
+    "isCustom": false,
+    "loadType": "distance",
+    "defaultRepRange": {
+      "min": 15,
+      "max": 30
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_band_resisted_carry",
+    "name": "Band-Resisted Carry",
+    "slug": "band-resisted-carry",
+    "movementPattern": "carry",
+    "primaryMuscles": [
+      "abs",
+      "quads"
+    ],
+    "secondaryMuscles": [
+      "forearms"
+    ],
+    "equipment": [
+      "band"
+    ],
+    "difficulty": 2,
+    "instructions": "Pick up a resistance band and stand tall with your shoulders back and core braced. Walk for the target distance with short, controlled steps, then set the load down with control.",
+    "cues": [
+      "Shoulders back",
+      "Core braced",
+      "Short controlled steps"
+    ],
+    "isCustom": false,
+    "loadType": "distance",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 20
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_plate_pinch_carry",
+    "name": "Plate Pinch Carry",
+    "slug": "plate-pinch-carry",
+    "movementPattern": "carry",
+    "primaryMuscles": [
+      "forearms"
+    ],
+    "secondaryMuscles": [
+      "traps"
+    ],
+    "equipment": [
+      "other"
+    ],
+    "difficulty": 2,
+    "instructions": "Pick up the equipment and stand tall with your shoulders back and core braced. Walk for the target distance with short, controlled steps, then set the load down with control.",
+    "cues": [
+      "Shoulders back",
+      "Core braced",
+      "Short controlled steps"
+    ],
+    "isCustom": false,
+    "loadType": "distance",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 25
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_bear_crawl",
+    "name": "Bear Crawl",
+    "slug": "bear-crawl",
+    "movementPattern": "carry",
+    "primaryMuscles": [
+      "abs",
+      "shoulders"
+    ],
+    "secondaryMuscles": [
+      "quads"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 3,
+    "instructions": "Pick up your bodyweight and stand tall with your shoulders back and core braced. Walk for the target distance with short, controlled steps, then set the load down with control.",
+    "cues": [
+      "Shoulders back",
+      "Core braced",
+      "Short controlled steps"
+    ],
+    "isCustom": false,
+    "loadType": "distance",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 20
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_crab_walk",
+    "name": "Crab Walk",
+    "slug": "crab-walk",
+    "movementPattern": "carry",
+    "primaryMuscles": [
+      "triceps",
+      "abs"
+    ],
+    "secondaryMuscles": [
+      "glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 2,
+    "instructions": "Pick up your bodyweight and stand tall with your shoulders back and core braced. Walk for the target distance with short, controlled steps, then set the load down with control.",
+    "cues": [
+      "Shoulders back",
+      "Core braced",
+      "Short controlled steps"
+    ],
+    "isCustom": false,
+    "loadType": "distance",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 20
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_plank",
+    "name": "Plank",
+    "slug": "plank",
+    "movementPattern": "core",
+    "primaryMuscles": [
+      "abs"
+    ],
+    "secondaryMuscles": [
+      "shoulders"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 1,
+    "instructions": "Brace your core into a neutral spine and perform the movement using your bodyweight. Breathe steadily throughout and do not let your lower back arch off the floor.",
+    "cues": [
+      "Ribs down",
+      "Squeeze glutes",
+      "Long neutral neck"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 20,
+      "max": 60
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_side_plank",
+    "name": "Side Plank",
+    "slug": "side-plank",
+    "movementPattern": "core",
+    "primaryMuscles": [
+      "obliques"
+    ],
+    "secondaryMuscles": [
+      "shoulders"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 2,
+    "instructions": "Brace your core into a neutral spine and perform the movement using your bodyweight. Breathe steadily throughout and do not let your lower back arch off the floor.",
+    "cues": [
+      "Ribs down",
+      "Exhale on effort",
+      "No lower-back arch"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 20,
+      "max": 45
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_hollow_body_hold",
+    "name": "Hollow Body Hold",
+    "slug": "hollow-body-hold",
+    "movementPattern": "core",
+    "primaryMuscles": [
+      "abs"
+    ],
+    "secondaryMuscles": [
+      "hip_flexors"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 2,
+    "instructions": "Brace your core into a neutral spine and perform the movement using your bodyweight. Breathe steadily throughout and do not let your lower back arch off the floor.",
+    "cues": [
+      "Ribs down",
+      "Exhale on effort",
+      "No lower-back arch"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 15,
+      "max": 40
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_l_sit_hold",
+    "name": "L-Sit Hold",
+    "slug": "l-sit-hold",
+    "movementPattern": "core",
+    "primaryMuscles": [
+      "abs",
+      "hip_flexors"
+    ],
+    "secondaryMuscles": [
+      "triceps"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 4,
+    "instructions": "Brace your core into a neutral spine and perform the movement using your bodyweight. Breathe steadily throughout and do not let your lower back arch off the floor. This is an advanced variation — build the base movement first and stop if form breaks down.",
+    "cues": [
+      "Ribs down",
+      "Exhale on effort",
+      "No lower-back arch"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 5,
+      "max": 20
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_hanging_leg_raise",
+    "name": "Hanging Leg Raise",
+    "slug": "hanging-leg-raise",
+    "movementPattern": "core",
+    "primaryMuscles": [
+      "abs",
+      "hip_flexors"
+    ],
+    "secondaryMuscles": [
+      "forearms"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 4,
+    "instructions": "Brace your core into a neutral spine and perform the movement using your bodyweight. Breathe steadily throughout and do not let your lower back arch off the floor. This is an advanced variation — build the base movement first and stop if form breaks down.",
+    "cues": [
+      "Ribs down",
+      "Exhale on effort",
+      "No lower-back arch"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 6,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_reverse_crunch",
+    "name": "Reverse Crunch",
+    "slug": "reverse-crunch",
+    "movementPattern": "core",
+    "primaryMuscles": [
+      "abs"
+    ],
+    "secondaryMuscles": [
+      "hip_flexors"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 1,
+    "instructions": "Brace your core into a neutral spine and perform the movement using your bodyweight. Breathe steadily throughout and do not let your lower back arch off the floor.",
+    "cues": [
+      "Ribs down",
+      "Exhale on effort",
+      "No lower-back arch"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 20
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_v_up",
+    "name": "V-Up",
+    "slug": "v-up",
+    "movementPattern": "core",
+    "primaryMuscles": [
+      "abs"
+    ],
+    "secondaryMuscles": [
+      "hip_flexors"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 2,
+    "instructions": "Brace your core into a neutral spine and perform the movement using your bodyweight. Breathe steadily throughout and do not let your lower back arch off the floor.",
+    "cues": [
+      "Ribs down",
+      "Exhale on effort",
+      "No lower-back arch"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_flutter_kicks",
+    "name": "Flutter Kicks",
+    "slug": "flutter-kicks",
+    "movementPattern": "core",
+    "primaryMuscles": [
+      "abs",
+      "hip_flexors"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 1,
+    "instructions": "Brace your core into a neutral spine and perform the movement using your bodyweight. Breathe steadily throughout and do not let your lower back arch off the floor.",
+    "cues": [
+      "Ribs down",
+      "Exhale on effort",
+      "No lower-back arch"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 20,
+      "max": 40
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_dead_bug",
+    "name": "Dead Bug",
+    "slug": "dead-bug",
+    "movementPattern": "core",
+    "primaryMuscles": [
+      "abs"
+    ],
+    "secondaryMuscles": [
+      "hip_flexors"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 1,
+    "instructions": "Brace your core into a neutral spine and perform the movement using your bodyweight. Breathe steadily throughout and do not let your lower back arch off the floor.",
+    "cues": [
+      "Ribs down",
+      "Exhale on effort",
+      "No lower-back arch"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_bird_dog",
+    "name": "Bird Dog",
+    "slug": "bird-dog",
+    "movementPattern": "core",
+    "primaryMuscles": [
+      "abs",
+      "lower_back"
+    ],
+    "secondaryMuscles": [
+      "glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 1,
+    "instructions": "Brace your core into a neutral spine and perform the movement using your bodyweight. Breathe steadily throughout and do not let your lower back arch off the floor.",
+    "cues": [
+      "Ribs down",
+      "Exhale on effort",
+      "No lower-back arch"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_cable_woodchopper",
+    "name": "Cable Woodchopper",
+    "slug": "cable-woodchopper",
+    "movementPattern": "core",
+    "primaryMuscles": [
+      "obliques",
+      "abs"
+    ],
+    "secondaryMuscles": [
+      "shoulders"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": 2,
+    "instructions": "Brace your core into a neutral spine and perform the movement using a cable stack. Breathe steadily throughout and do not let your lower back arch off the floor.",
+    "cues": [
+      "Ribs down",
+      "Exhale on effort",
+      "No lower-back arch"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_ab_wheel_rollout",
+    "name": "Ab Wheel Rollout",
+    "slug": "ab-wheel-rollout",
+    "movementPattern": "core",
+    "primaryMuscles": [
+      "abs"
+    ],
+    "secondaryMuscles": [
+      "shoulders",
+      "lower_back"
+    ],
+    "equipment": [
+      "other"
+    ],
+    "difficulty": 4,
+    "instructions": "Brace your core into a neutral spine and perform the movement using the equipment. Breathe steadily throughout and do not let your lower back arch off the floor. This is an advanced variation — build the base movement first and stop if form breaks down.",
+    "cues": [
+      "Ribs down",
+      "Exhale on effort",
+      "No lower-back arch"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 5,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_russian_twist",
+    "name": "Russian Twist",
+    "slug": "russian-twist",
+    "movementPattern": "core",
+    "primaryMuscles": [
+      "obliques",
+      "abs"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": 2,
+    "instructions": "Brace your core into a neutral spine and perform the movement using a pair of dumbbells. Breathe steadily throughout and do not let your lower back arch off the floor.",
+    "cues": [
+      "Ribs down",
+      "Exhale on effort",
+      "No lower-back arch"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 12,
+      "max": 20
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_cable_crunch",
+    "name": "Cable Crunch",
+    "slug": "cable-crunch",
+    "movementPattern": "core",
+    "primaryMuscles": [
+      "abs"
+    ],
+    "secondaryMuscles": [
+      "obliques"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": 2,
+    "instructions": "Brace your core into a neutral spine and perform the movement using a cable stack. Breathe steadily throughout and do not let your lower back arch off the floor.",
+    "cues": [
+      "Ribs down",
+      "Exhale on effort",
+      "No lower-back arch"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_weighted_sit_up",
+    "name": "Weighted Sit-Up",
+    "slug": "weighted-sit-up",
+    "movementPattern": "core",
+    "primaryMuscles": [
+      "abs",
+      "hip_flexors"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": 2,
+    "instructions": "Brace your core into a neutral spine and perform the movement using a pair of dumbbells. Breathe steadily throughout and do not let your lower back arch off the floor.",
+    "cues": [
+      "Ribs down",
+      "Exhale on effort",
+      "No lower-back arch"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_band_pallof_press",
+    "name": "Band Pallof Press",
+    "slug": "band-pallof-press",
+    "movementPattern": "core",
+    "primaryMuscles": [
+      "obliques",
+      "abs"
+    ],
+    "secondaryMuscles": [
+      "shoulders"
+    ],
+    "equipment": [
+      "band"
+    ],
+    "difficulty": 2,
+    "instructions": "Brace your core into a neutral spine and perform the movement using a resistance band. Breathe steadily throughout and do not let your lower back arch off the floor.",
+    "cues": [
+      "Ribs down",
+      "Exhale on effort",
+      "No lower-back arch"
+    ],
+    "isCustom": false,
+    "loadType": "band",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_mountain_climbers",
+    "name": "Mountain Climbers",
+    "slug": "mountain-climbers",
+    "movementPattern": "core",
+    "primaryMuscles": [
+      "abs",
+      "hip_flexors"
+    ],
+    "secondaryMuscles": [
+      "shoulders"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 2,
+    "instructions": "Brace your core into a neutral spine and perform the movement using your bodyweight. Breathe steadily throughout and do not let your lower back arch off the floor.",
+    "cues": [
+      "Ribs down",
+      "Exhale on effort",
+      "No lower-back arch"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 20,
+      "max": 40
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_machine_ab_crunch",
+    "name": "Machine Ab Crunch",
+    "slug": "machine-ab-crunch",
+    "movementPattern": "core",
+    "primaryMuscles": [
+      "abs"
+    ],
+    "secondaryMuscles": [
+      "obliques"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": 1,
+    "instructions": "Brace your core into a neutral spine and perform the movement using the machine. Breathe steadily throughout and do not let your lower back arch off the floor.",
+    "cues": [
+      "Ribs down",
+      "Exhale on effort",
+      "No lower-back arch"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 12,
+      "max": 20
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_kettlebell_windmill",
+    "name": "Kettlebell Windmill",
+    "slug": "kettlebell-windmill",
+    "movementPattern": "core",
+    "primaryMuscles": [
+      "obliques",
+      "shoulders"
+    ],
+    "secondaryMuscles": [
+      "hamstrings"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": 3,
+    "instructions": "Brace your core into a neutral spine and perform the movement using a kettlebell. Breathe steadily throughout and do not let your lower back arch off the floor.",
+    "cues": [
+      "Ribs down",
+      "Exhale on effort",
+      "No lower-back arch"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 6,
+      "max": 10
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_medicine_ball_slam",
+    "name": "Medicine Ball Slam",
+    "slug": "medicine-ball-slam",
+    "movementPattern": "core",
+    "primaryMuscles": [
+      "abs",
+      "shoulders"
+    ],
+    "secondaryMuscles": [
+      "obliques"
+    ],
+    "equipment": [
+      "other"
+    ],
+    "difficulty": 3,
+    "instructions": "Brace your core into a neutral spine and perform the movement using the equipment. Breathe steadily throughout and do not let your lower back arch off the floor.",
+    "cues": [
+      "Ribs down",
+      "Exhale on effort",
+      "No lower-back arch"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_dumbbell_bicep_curl",
+    "name": "Dumbbell Bicep Curl",
+    "slug": "dumbbell-bicep-curl",
+    "movementPattern": "isolation",
+    "primaryMuscles": [
+      "biceps"
+    ],
+    "secondaryMuscles": [
+      "forearms"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": 1,
+    "instructions": "Isolate the target muscle using a pair of dumbbells, moving through a full range of motion on a controlled tempo. Avoid using momentum or swinging the weight to move it.",
+    "cues": [
+      "Full range of motion",
+      "Controlled tempo",
+      "No momentum"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_barbell_bicep_curl",
+    "name": "Barbell Bicep Curl",
+    "slug": "barbell-bicep-curl",
+    "movementPattern": "isolation",
+    "primaryMuscles": [
+      "biceps"
+    ],
+    "secondaryMuscles": [
+      "forearms"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": 1,
+    "instructions": "Isolate the target muscle using a barbell, moving through a full range of motion on a controlled tempo. Avoid using momentum or swinging the weight to move it.",
+    "cues": [
+      "Full range of motion",
+      "Controlled tempo",
+      "No momentum"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_cable_tricep_pushdown",
+    "name": "Cable Tricep Pushdown",
+    "slug": "cable-tricep-pushdown",
+    "movementPattern": "isolation",
+    "primaryMuscles": [
+      "triceps"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": 1,
+    "instructions": "Isolate the target muscle using a cable stack, moving through a full range of motion on a controlled tempo. Avoid using momentum or swinging the weight to move it.",
+    "cues": [
+      "Full range of motion",
+      "Controlled tempo",
+      "No momentum"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_band_tricep_pushdown",
+    "name": "Band Tricep Pushdown",
+    "slug": "band-tricep-pushdown",
+    "movementPattern": "isolation",
+    "primaryMuscles": [
+      "triceps"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "band"
+    ],
+    "difficulty": 1,
+    "instructions": "Isolate the target muscle using a resistance band, moving through a full range of motion on a controlled tempo. Avoid using momentum or swinging the weight to move it.",
+    "cues": [
+      "Full range of motion",
+      "Controlled tempo",
+      "No momentum"
+    ],
+    "isCustom": false,
+    "loadType": "band",
+    "defaultRepRange": {
+      "min": 12,
+      "max": 20
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_dumbbell_lateral_raise",
+    "name": "Dumbbell Lateral Raise",
+    "slug": "dumbbell-lateral-raise",
+    "movementPattern": "isolation",
+    "primaryMuscles": [
+      "side_delts"
+    ],
+    "secondaryMuscles": [
+      "traps"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": 1,
+    "instructions": "Isolate the target muscle using a pair of dumbbells, moving through a full range of motion on a controlled tempo. Avoid using momentum or swinging the weight to move it.",
+    "cues": [
+      "Full range of motion",
+      "Controlled tempo",
+      "No momentum"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 12,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_band_lateral_raise",
+    "name": "Band Lateral Raise",
+    "slug": "band-lateral-raise",
+    "movementPattern": "isolation",
+    "primaryMuscles": [
+      "side_delts"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "band"
+    ],
+    "difficulty": 1,
+    "instructions": "Isolate the target muscle using a resistance band, moving through a full range of motion on a controlled tempo. Avoid using momentum or swinging the weight to move it.",
+    "cues": [
+      "Full range of motion",
+      "Controlled tempo",
+      "No momentum"
+    ],
+    "isCustom": false,
+    "loadType": "band",
+    "defaultRepRange": {
+      "min": 12,
+      "max": 20
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_machine_lateral_raise",
+    "name": "Machine Lateral Raise",
+    "slug": "machine-lateral-raise",
+    "movementPattern": "isolation",
+    "primaryMuscles": [
+      "side_delts"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": 1,
+    "instructions": "Isolate the target muscle using the machine, moving through a full range of motion on a controlled tempo. Avoid using momentum or swinging the weight to move it.",
+    "cues": [
+      "Full range of motion",
+      "Controlled tempo",
+      "No momentum"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_cable_fly",
+    "name": "Cable Fly",
+    "slug": "cable-fly",
+    "movementPattern": "isolation",
+    "primaryMuscles": [
+      "chest"
+    ],
+    "secondaryMuscles": [
+      "front_delts"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": 2,
+    "instructions": "Isolate the target muscle using a cable stack, moving through a full range of motion on a controlled tempo. Avoid using momentum or swinging the weight to move it.",
+    "cues": [
+      "Full range of motion",
+      "Controlled tempo",
+      "No momentum"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_pec_deck_fly",
+    "name": "Pec Deck Fly",
+    "slug": "pec-deck-fly",
+    "movementPattern": "isolation",
+    "primaryMuscles": [
+      "chest"
+    ],
+    "secondaryMuscles": [
+      "front_delts"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": 1,
+    "instructions": "Isolate the target muscle using the machine, moving through a full range of motion on a controlled tempo. Avoid using momentum or swinging the weight to move it.",
+    "cues": [
+      "Full range of motion",
+      "Controlled tempo",
+      "No momentum"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_leg_extension",
+    "name": "Leg Extension",
+    "slug": "leg-extension",
+    "movementPattern": "isolation",
+    "primaryMuscles": [
+      "quads"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": 1,
+    "instructions": "Isolate the target muscle using the machine, moving through a full range of motion on a controlled tempo. Avoid using momentum or swinging the weight to move it.",
+    "cues": [
+      "Full range of motion",
+      "Controlled tempo",
+      "No momentum"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_leg_curl",
+    "name": "Leg Curl",
+    "slug": "leg-curl",
+    "movementPattern": "isolation",
+    "primaryMuscles": [
+      "hamstrings"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": 1,
+    "instructions": "Isolate the target muscle using the machine, moving through a full range of motion on a controlled tempo. Avoid using momentum or swinging the weight to move it.",
+    "cues": [
+      "Full range of motion",
+      "Controlled tempo",
+      "No momentum"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_calf_raise",
+    "name": "Calf Raise",
+    "slug": "calf-raise",
+    "movementPattern": "isolation",
+    "primaryMuscles": [
+      "calves"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": 1,
+    "instructions": "Isolate the target muscle using the machine, moving through a full range of motion on a controlled tempo. Avoid using momentum or swinging the weight to move it.",
+    "cues": [
+      "Full range of motion",
+      "Controlled tempo",
+      "No momentum"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 12,
+      "max": 20
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_dumbbell_calf_raise",
+    "name": "Dumbbell Calf Raise",
+    "slug": "dumbbell-calf-raise",
+    "movementPattern": "isolation",
+    "primaryMuscles": [
+      "calves"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": 1,
+    "instructions": "Isolate the target muscle using a pair of dumbbells, moving through a full range of motion on a controlled tempo. Avoid using momentum or swinging the weight to move it.",
+    "cues": [
+      "Full range of motion",
+      "Controlled tempo",
+      "No momentum"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 12,
+      "max": 20
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_standing_calf_raise",
+    "name": "Standing Calf Raise",
+    "slug": "standing-calf-raise",
+    "movementPattern": "isolation",
+    "primaryMuscles": [
+      "calves"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 1,
+    "instructions": "Isolate the target muscle using your bodyweight, moving through a full range of motion on a controlled tempo. Avoid using momentum or swinging the weight to move it.",
+    "cues": [
+      "Full range of motion",
+      "Controlled tempo",
+      "No momentum"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 15,
+      "max": 25
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_band_bicep_curl",
+    "name": "Band Bicep Curl",
+    "slug": "band-bicep-curl",
+    "movementPattern": "isolation",
+    "primaryMuscles": [
+      "biceps"
+    ],
+    "secondaryMuscles": [
+      "forearms"
+    ],
+    "equipment": [
+      "band"
+    ],
+    "difficulty": 1,
+    "instructions": "Isolate the target muscle using a resistance band, moving through a full range of motion on a controlled tempo. Avoid using momentum or swinging the weight to move it.",
+    "cues": [
+      "Full range of motion",
+      "Controlled tempo",
+      "No momentum"
+    ],
+    "isCustom": false,
+    "loadType": "band",
+    "defaultRepRange": {
+      "min": 12,
+      "max": 20
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_overhead_tricep_extension",
+    "name": "Overhead Tricep Extension",
+    "slug": "overhead-tricep-extension",
+    "movementPattern": "isolation",
+    "primaryMuscles": [
+      "triceps"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": 2,
+    "instructions": "Isolate the target muscle using a pair of dumbbells, moving through a full range of motion on a controlled tempo. Avoid using momentum or swinging the weight to move it.",
+    "cues": [
+      "Full range of motion",
+      "Controlled tempo",
+      "No momentum"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_skull_crusher",
+    "name": "Skull Crusher",
+    "slug": "skull-crusher",
+    "movementPattern": "isolation",
+    "primaryMuscles": [
+      "triceps"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": 2,
+    "instructions": "Isolate the target muscle using a barbell, moving through a full range of motion on a controlled tempo. Avoid using momentum or swinging the weight to move it.",
+    "cues": [
+      "Full range of motion",
+      "Controlled tempo",
+      "No momentum"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_cable_rear_delt_fly",
+    "name": "Cable Rear Delt Fly",
+    "slug": "cable-rear-delt-fly",
+    "movementPattern": "isolation",
+    "primaryMuscles": [
+      "rear_delts"
+    ],
+    "secondaryMuscles": [
+      "upper_back"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": 2,
+    "instructions": "Isolate the target muscle using a cable stack, moving through a full range of motion on a controlled tempo. Avoid using momentum or swinging the weight to move it.",
+    "cues": [
+      "Full range of motion",
+      "Controlled tempo",
+      "No momentum"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 12,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_preacher_curl",
+    "name": "Preacher Curl",
+    "slug": "preacher-curl",
+    "movementPattern": "isolation",
+    "primaryMuscles": [
+      "biceps"
+    ],
+    "secondaryMuscles": [
+      "forearms"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": 2,
+    "instructions": "Isolate the target muscle using a barbell, moving through a full range of motion on a controlled tempo. Avoid using momentum or swinging the weight to move it.",
+    "cues": [
+      "Full range of motion",
+      "Controlled tempo",
+      "No momentum"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_hammer_curl",
+    "name": "Hammer Curl",
+    "slug": "hammer-curl",
+    "movementPattern": "isolation",
+    "primaryMuscles": [
+      "biceps",
+      "forearms"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": 1,
+    "instructions": "Isolate the target muscle using a pair of dumbbells, moving through a full range of motion on a controlled tempo. Avoid using momentum or swinging the weight to move it.",
+    "cues": [
+      "Full range of motion",
+      "Controlled tempo",
+      "No momentum"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_machine_bicep_curl",
+    "name": "Machine Bicep Curl",
+    "slug": "machine-bicep-curl",
+    "movementPattern": "isolation",
+    "primaryMuscles": [
+      "biceps"
+    ],
+    "secondaryMuscles": [
+      "forearms"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": 1,
+    "instructions": "Isolate the target muscle using the machine, moving through a full range of motion on a controlled tempo. Avoid using momentum or swinging the weight to move it.",
+    "cues": [
+      "Full range of motion",
+      "Controlled tempo",
+      "No momentum"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_kettlebell_halo",
+    "name": "Kettlebell Halo",
+    "slug": "kettlebell-halo",
+    "movementPattern": "isolation",
+    "primaryMuscles": [
+      "shoulders"
+    ],
+    "secondaryMuscles": [
+      "abs"
+    ],
+    "equipment": [
+      "kettlebell"
+    ],
+    "difficulty": 2,
+    "instructions": "Isolate the target muscle using a kettlebell, moving through a full range of motion on a controlled tempo. Avoid using momentum or swinging the weight to move it.",
+    "cues": [
+      "Full range of motion",
+      "Controlled tempo",
+      "No momentum"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 6,
+      "max": 10
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_barbell_shrug",
+    "name": "Barbell Shrug",
+    "slug": "barbell-shrug",
+    "movementPattern": "isolation",
+    "primaryMuscles": [
+      "traps"
+    ],
+    "secondaryMuscles": [
+      "forearms"
+    ],
+    "equipment": [
+      "barbell"
+    ],
+    "difficulty": 1,
+    "instructions": "Isolate the target muscle using a barbell, moving through a full range of motion on a controlled tempo. Avoid using momentum or swinging the weight to move it.",
+    "cues": [
+      "Full range of motion",
+      "Controlled tempo",
+      "No momentum"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_dumbbell_shrug",
+    "name": "Dumbbell Shrug",
+    "slug": "dumbbell-shrug",
+    "movementPattern": "isolation",
+    "primaryMuscles": [
+      "traps"
+    ],
+    "secondaryMuscles": [
+      "forearms"
+    ],
+    "equipment": [
+      "dumbbell"
+    ],
+    "difficulty": 1,
+    "instructions": "Isolate the target muscle using a pair of dumbbells, moving through a full range of motion on a controlled tempo. Avoid using momentum or swinging the weight to move it.",
+    "cues": [
+      "Full range of motion",
+      "Controlled tempo",
+      "No momentum"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_reverse_pec_deck_fly",
+    "name": "Reverse Pec Deck Fly",
+    "slug": "reverse-pec-deck-fly",
+    "movementPattern": "isolation",
+    "primaryMuscles": [
+      "rear_delts"
+    ],
+    "secondaryMuscles": [
+      "upper_back"
+    ],
+    "equipment": [
+      "machine"
+    ],
+    "difficulty": 1,
+    "instructions": "Isolate the target muscle using the machine, moving through a full range of motion on a controlled tempo. Avoid using momentum or swinging the weight to move it.",
+    "cues": [
+      "Full range of motion",
+      "Controlled tempo",
+      "No momentum"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 12,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_cable_crossover",
+    "name": "Cable Crossover",
+    "slug": "cable-crossover",
+    "movementPattern": "isolation",
+    "primaryMuscles": [
+      "chest"
+    ],
+    "secondaryMuscles": [
+      "front_delts"
+    ],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": 2,
+    "instructions": "Isolate the target muscle using a cable stack, moving through a full range of motion on a controlled tempo. Avoid using momentum or swinging the weight to move it.",
+    "cues": [
+      "Full range of motion",
+      "Controlled tempo",
+      "No momentum"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_cable_kickback",
+    "name": "Cable Kickback",
+    "slug": "cable-kickback",
+    "movementPattern": "isolation",
+    "primaryMuscles": [
+      "glutes"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "cable"
+    ],
+    "difficulty": 1,
+    "instructions": "Isolate the target muscle using a cable stack, moving through a full range of motion on a controlled tempo. Avoid using momentum or swinging the weight to move it.",
+    "cues": [
+      "Full range of motion",
+      "Controlled tempo",
+      "No momentum"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 12,
+      "max": 20
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_band_lateral_walk",
+    "name": "Band Lateral Walk",
+    "slug": "band-lateral-walk",
+    "movementPattern": "isolation",
+    "primaryMuscles": [
+      "abductors",
+      "glutes"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "band"
+    ],
+    "difficulty": 1,
+    "instructions": "Isolate the target muscle using a resistance band, moving through a full range of motion on a controlled tempo. Avoid using momentum or swinging the weight to move it.",
+    "cues": [
+      "Full range of motion",
+      "Controlled tempo",
+      "No momentum"
+    ],
+    "isCustom": false,
+    "loadType": "band",
+    "defaultRepRange": {
+      "min": 12,
+      "max": 20
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_indian_clubs_swing",
+    "name": "Indian Clubs Swing",
+    "slug": "indian-clubs-swing",
+    "movementPattern": "isolation",
+    "primaryMuscles": [
+      "shoulders",
+      "forearms"
+    ],
+    "secondaryMuscles": [
+      "abs"
+    ],
+    "equipment": [
+      "other"
+    ],
+    "difficulty": 2,
+    "instructions": "Isolate the target muscle using the equipment, moving through a full range of motion on a controlled tempo. Avoid using momentum or swinging the weight to move it.",
+    "cues": [
+      "Full range of motion",
+      "Controlled tempo",
+      "No momentum"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_mace_swing",
+    "name": "Mace Swing",
+    "slug": "mace-swing",
+    "movementPattern": "isolation",
+    "primaryMuscles": [
+      "shoulders",
+      "abs"
+    ],
+    "secondaryMuscles": [
+      "forearms"
+    ],
+    "equipment": [
+      "other"
+    ],
+    "difficulty": 3,
+    "instructions": "Isolate the target muscle using the equipment, moving through a full range of motion on a controlled tempo. Avoid using momentum or swinging the weight to move it.",
+    "cues": [
+      "Full range of motion",
+      "Controlled tempo",
+      "No momentum"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 6,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_neck_curl",
+    "name": "Neck Curl",
+    "slug": "neck-curl",
+    "movementPattern": "isolation",
+    "primaryMuscles": [
+      "neck"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "other"
+    ],
+    "difficulty": 1,
+    "instructions": "Isolate the target muscle using the equipment, moving through a full range of motion on a controlled tempo. Avoid using momentum or swinging the weight to move it.",
+    "cues": [
+      "Full range of motion",
+      "Controlled tempo",
+      "No momentum"
+    ],
+    "isCustom": false,
+    "loadType": "external",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_treadmill_running",
+    "name": "Treadmill Running",
+    "slug": "treadmill-running",
+    "movementPattern": "cardio",
+    "primaryMuscles": [
+      "cardiovascular"
+    ],
+    "secondaryMuscles": [
+      "quads",
+      "calves"
+    ],
+    "equipment": [
+      "cardio"
+    ],
+    "difficulty": 2,
+    "instructions": "Work at a steady, sustainable effort using the cardio machine, keeping your posture upright and your breathing rhythmic. Increase pace, resistance or distance gradually as conditioning improves.",
+    "cues": [
+      "Steady rhythm",
+      "Upright posture",
+      "Progress pace gradually"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 30
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_stationary_bike",
+    "name": "Stationary Bike",
+    "slug": "stationary-bike",
+    "movementPattern": "cardio",
+    "primaryMuscles": [
+      "cardiovascular"
+    ],
+    "secondaryMuscles": [
+      "quads"
+    ],
+    "equipment": [
+      "cardio"
+    ],
+    "difficulty": 1,
+    "instructions": "Work at a steady, sustainable effort using the cardio machine, keeping your posture upright and your breathing rhythmic. Increase pace, resistance or distance gradually as conditioning improves.",
+    "cues": [
+      "Steady rhythm",
+      "Upright posture",
+      "Progress pace gradually"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 30
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_rowing_machine",
+    "name": "Rowing Machine",
+    "slug": "rowing-machine",
+    "movementPattern": "cardio",
+    "primaryMuscles": [
+      "cardiovascular"
+    ],
+    "secondaryMuscles": [
+      "lats",
+      "quads"
+    ],
+    "equipment": [
+      "cardio"
+    ],
+    "difficulty": 2,
+    "instructions": "Work at a steady, sustainable effort using the cardio machine, keeping your posture upright and your breathing rhythmic. Increase pace, resistance or distance gradually as conditioning improves.",
+    "cues": [
+      "Steady rhythm",
+      "Upright posture",
+      "Progress pace gradually"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 25
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_elliptical_trainer",
+    "name": "Elliptical Trainer",
+    "slug": "elliptical-trainer",
+    "movementPattern": "cardio",
+    "primaryMuscles": [
+      "cardiovascular"
+    ],
+    "secondaryMuscles": [
+      "quads",
+      "glutes"
+    ],
+    "equipment": [
+      "cardio"
+    ],
+    "difficulty": 1,
+    "instructions": "Work at a steady, sustainable effort using the cardio machine, keeping your posture upright and your breathing rhythmic. Increase pace, resistance or distance gradually as conditioning improves.",
+    "cues": [
+      "Steady rhythm",
+      "Upright posture",
+      "Progress pace gradually"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 30
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_stair_climber_machine",
+    "name": "Stair Climber Machine",
+    "slug": "stair-climber-machine",
+    "movementPattern": "cardio",
+    "primaryMuscles": [
+      "cardiovascular"
+    ],
+    "secondaryMuscles": [
+      "quads",
+      "glutes"
+    ],
+    "equipment": [
+      "cardio"
+    ],
+    "difficulty": 2,
+    "instructions": "Work at a steady, sustainable effort using the cardio machine, keeping your posture upright and your breathing rhythmic. Increase pace, resistance or distance gradually as conditioning improves.",
+    "cues": [
+      "Steady rhythm",
+      "Upright posture",
+      "Progress pace gradually"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 20
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_assault_bike",
+    "name": "Assault Bike",
+    "slug": "assault-bike",
+    "movementPattern": "cardio",
+    "primaryMuscles": [
+      "cardiovascular"
+    ],
+    "secondaryMuscles": [
+      "quads",
+      "shoulders"
+    ],
+    "equipment": [
+      "cardio"
+    ],
+    "difficulty": 3,
+    "instructions": "Work at a steady, sustainable effort using the cardio machine, keeping your posture upright and your breathing rhythmic. Increase pace, resistance or distance gradually as conditioning improves.",
+    "cues": [
+      "Steady rhythm",
+      "Upright posture",
+      "Progress pace gradually"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 5,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_ski_erg",
+    "name": "Ski Erg",
+    "slug": "ski-erg",
+    "movementPattern": "cardio",
+    "primaryMuscles": [
+      "cardiovascular"
+    ],
+    "secondaryMuscles": [
+      "lats",
+      "triceps"
+    ],
+    "equipment": [
+      "cardio"
+    ],
+    "difficulty": 2,
+    "instructions": "Work at a steady, sustainable effort using the cardio machine, keeping your posture upright and your breathing rhythmic. Increase pace, resistance or distance gradually as conditioning improves.",
+    "cues": [
+      "Steady rhythm",
+      "Upright posture",
+      "Progress pace gradually"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 5,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_swimming",
+    "name": "Swimming",
+    "slug": "swimming",
+    "movementPattern": "cardio",
+    "primaryMuscles": [
+      "cardiovascular"
+    ],
+    "secondaryMuscles": [
+      "lats",
+      "shoulders"
+    ],
+    "equipment": [
+      "cardio"
+    ],
+    "difficulty": 2,
+    "instructions": "Work at a steady, sustainable effort using the cardio machine, keeping your posture upright and your breathing rhythmic. Increase pace, resistance or distance gradually as conditioning improves.",
+    "cues": [
+      "Steady rhythm",
+      "Upright posture",
+      "Progress pace gradually"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 15,
+      "max": 40
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_outdoor_cycling",
+    "name": "Outdoor Cycling",
+    "slug": "outdoor-cycling",
+    "movementPattern": "cardio",
+    "primaryMuscles": [
+      "cardiovascular"
+    ],
+    "secondaryMuscles": [
+      "quads"
+    ],
+    "equipment": [
+      "cardio"
+    ],
+    "difficulty": 1,
+    "instructions": "Work at a steady, sustainable effort using the cardio machine, keeping your posture upright and your breathing rhythmic. Increase pace, resistance or distance gradually as conditioning improves.",
+    "cues": [
+      "Steady rhythm",
+      "Upright posture",
+      "Progress pace gradually"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 20,
+      "max": 60
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_jump_rope",
+    "name": "Jump Rope",
+    "slug": "jump-rope",
+    "movementPattern": "cardio",
+    "primaryMuscles": [
+      "cardiovascular",
+      "calves"
+    ],
+    "secondaryMuscles": [
+      "forearms"
+    ],
+    "equipment": [
+      "cardio",
+      "other"
+    ],
+    "difficulty": 2,
+    "instructions": "Work at a steady, sustainable effort using the cardio machine or the equipment, keeping your posture upright and your breathing rhythmic. Increase pace, resistance or distance gradually as conditioning improves.",
+    "cues": [
+      "Steady rhythm",
+      "Upright posture",
+      "Progress pace gradually"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 5,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_burpees",
+    "name": "Burpees",
+    "slug": "burpees",
+    "movementPattern": "cardio",
+    "primaryMuscles": [
+      "cardiovascular",
+      "chest"
+    ],
+    "secondaryMuscles": [
+      "quads",
+      "abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 3,
+    "instructions": "Work at a steady, sustainable effort using your bodyweight, keeping your posture upright and your breathing rhythmic. Increase pace, resistance or distance gradually as conditioning improves.",
+    "cues": [
+      "Steady rhythm",
+      "Upright posture",
+      "Progress pace gradually"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 8,
+      "max": 20
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_jumping_jacks",
+    "name": "Jumping Jacks",
+    "slug": "jumping-jacks",
+    "movementPattern": "cardio",
+    "primaryMuscles": [
+      "cardiovascular"
+    ],
+    "secondaryMuscles": [
+      "calves"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 1,
+    "instructions": "Work at a steady, sustainable effort using your bodyweight, keeping your posture upright and your breathing rhythmic. Increase pace, resistance or distance gradually as conditioning improves.",
+    "cues": [
+      "Steady rhythm",
+      "Upright posture",
+      "Progress pace gradually"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 20,
+      "max": 60
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_high_knees",
+    "name": "High Knees",
+    "slug": "high-knees",
+    "movementPattern": "cardio",
+    "primaryMuscles": [
+      "cardiovascular",
+      "hip_flexors"
+    ],
+    "secondaryMuscles": [
+      "calves"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 1,
+    "instructions": "Work at a steady, sustainable effort using your bodyweight, keeping your posture upright and your breathing rhythmic. Increase pace, resistance or distance gradually as conditioning improves.",
+    "cues": [
+      "Steady rhythm",
+      "Upright posture",
+      "Progress pace gradually"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 20,
+      "max": 40
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_skater_hops",
+    "name": "Skater Hops",
+    "slug": "skater-hops",
+    "movementPattern": "cardio",
+    "primaryMuscles": [
+      "cardiovascular",
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "abductors"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 2,
+    "instructions": "Work at a steady, sustainable effort using your bodyweight, keeping your posture upright and your breathing rhythmic. Increase pace, resistance or distance gradually as conditioning improves.",
+    "cues": [
+      "Steady rhythm",
+      "Upright posture",
+      "Progress pace gradually"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 20,
+      "max": 40
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_shuttle_runs",
+    "name": "Shuttle Runs",
+    "slug": "shuttle-runs",
+    "movementPattern": "cardio",
+    "primaryMuscles": [
+      "cardiovascular",
+      "quads"
+    ],
+    "secondaryMuscles": [
+      "calves"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 3,
+    "instructions": "Work at a steady, sustainable effort using your bodyweight, keeping your posture upright and your breathing rhythmic. Increase pace, resistance or distance gradually as conditioning improves.",
+    "cues": [
+      "Steady rhythm",
+      "Upright posture",
+      "Progress pace gradually"
+    ],
+    "isCustom": false,
+    "loadType": "distance",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 30
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_stair_sprints",
+    "name": "Stair Sprints",
+    "slug": "stair-sprints",
+    "movementPattern": "cardio",
+    "primaryMuscles": [
+      "cardiovascular",
+      "quads"
+    ],
+    "secondaryMuscles": [
+      "glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 3,
+    "instructions": "Work at a steady, sustainable effort using your bodyweight, keeping your posture upright and your breathing rhythmic. Increase pace, resistance or distance gradually as conditioning improves.",
+    "cues": [
+      "Steady rhythm",
+      "Upright posture",
+      "Progress pace gradually"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 5,
+      "max": 12
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_broad_jump",
+    "name": "Broad Jump",
+    "slug": "broad-jump",
+    "movementPattern": "cardio",
+    "primaryMuscles": [
+      "quads",
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "calves"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 3,
+    "instructions": "Work at a steady, sustainable effort using your bodyweight, keeping your posture upright and your breathing rhythmic. Increase pace, resistance or distance gradually as conditioning improves.",
+    "cues": [
+      "Steady rhythm",
+      "Upright posture",
+      "Progress pace gradually"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 5,
+      "max": 10
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_box_jump",
+    "name": "Box Jump",
+    "slug": "box-jump",
+    "movementPattern": "cardio",
+    "primaryMuscles": [
+      "quads",
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "calves"
+    ],
+    "equipment": [
+      "other"
+    ],
+    "difficulty": 3,
+    "instructions": "Work at a steady, sustainable effort using the equipment, keeping your posture upright and your breathing rhythmic. Increase pace, resistance or distance gradually as conditioning improves.",
+    "cues": [
+      "Steady rhythm",
+      "Upright posture",
+      "Progress pace gradually"
+    ],
+    "isCustom": false,
+    "loadType": "bodyweight",
+    "defaultRepRange": {
+      "min": 5,
+      "max": 10
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_battle_ropes",
+    "name": "Battle Ropes",
+    "slug": "battle-ropes",
+    "movementPattern": "cardio",
+    "primaryMuscles": [
+      "cardiovascular",
+      "shoulders"
+    ],
+    "secondaryMuscles": [
+      "forearms"
+    ],
+    "equipment": [
+      "cardio",
+      "other"
+    ],
+    "difficulty": 3,
+    "instructions": "Work at a steady, sustainable effort using the cardio machine or the equipment, keeping your posture upright and your breathing rhythmic. Increase pace, resistance or distance gradually as conditioning improves.",
+    "cues": [
+      "Steady rhythm",
+      "Upright posture",
+      "Progress pace gradually"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 5,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_shadow_boxing",
+    "name": "Shadow Boxing",
+    "slug": "shadow-boxing",
+    "movementPattern": "cardio",
+    "primaryMuscles": [
+      "cardiovascular",
+      "shoulders"
+    ],
+    "secondaryMuscles": [
+      "abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 2,
+    "instructions": "Work at a steady, sustainable effort using your bodyweight, keeping your posture upright and your breathing rhythmic. Increase pace, resistance or distance gradually as conditioning improves.",
+    "cues": [
+      "Steady rhythm",
+      "Upright posture",
+      "Progress pace gradually"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 20
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_sled_push",
+    "name": "Sled Push",
+    "slug": "sled-push",
+    "movementPattern": "cardio",
+    "primaryMuscles": [
+      "quads",
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "calves"
+    ],
+    "equipment": [
+      "other"
+    ],
+    "difficulty": 4,
+    "instructions": "Work at a steady, sustainable effort using the equipment, keeping your posture upright and your breathing rhythmic. Increase pace, resistance or distance gradually as conditioning improves. This is an advanced variation — build the base movement first and stop if form breaks down.",
+    "cues": [
+      "Steady rhythm",
+      "Upright posture",
+      "Progress pace gradually"
+    ],
+    "isCustom": false,
+    "loadType": "distance",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 30
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_frog_jump",
+    "name": "Frog Jump",
+    "slug": "frog-jump",
+    "movementPattern": "cardio",
+    "primaryMuscles": [
+      "quads",
+      "glutes"
+    ],
+    "secondaryMuscles": [
+      "calves"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 2,
+    "instructions": "Work at a steady, sustainable effort using your bodyweight, keeping your posture upright and your breathing rhythmic. Increase pace, resistance or distance gradually as conditioning improves.",
+    "cues": [
+      "Steady rhythm",
+      "Upright posture",
+      "Progress pace gradually"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 20
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_cat_cow_stretch",
+    "name": "Cat-Cow Stretch",
+    "slug": "cat-cow-stretch",
+    "movementPattern": "mobility",
+    "primaryMuscles": [
+      "spine"
+    ],
+    "secondaryMuscles": [
+      "abs"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 1,
+    "instructions": "Ease slowly into the stretch or drill using your bodyweight and hold or repeat as directed, breathing deeply throughout. Back off immediately if you feel sharp or pinching pain.",
+    "cues": [
+      "Breathe deeply",
+      "Ease off sharp pain",
+      "Move slowly"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 30,
+      "max": 60
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_world_s_greatest_stretch",
+    "name": "World's Greatest Stretch",
+    "slug": "world-s-greatest-stretch",
+    "movementPattern": "mobility",
+    "primaryMuscles": [
+      "hips",
+      "spine"
+    ],
+    "secondaryMuscles": [
+      "hamstrings"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 2,
+    "instructions": "Ease slowly into the stretch or drill using your bodyweight and hold or repeat as directed, breathing deeply throughout. Back off immediately if you feel sharp or pinching pain.",
+    "cues": [
+      "Breathe deeply",
+      "Ease off sharp pain",
+      "Move slowly"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 30,
+      "max": 60
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_hip_flexor_stretch",
+    "name": "Hip Flexor Stretch",
+    "slug": "hip-flexor-stretch",
+    "movementPattern": "mobility",
+    "primaryMuscles": [
+      "hip_flexors"
+    ],
+    "secondaryMuscles": [
+      "quads"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 1,
+    "instructions": "Ease slowly into the stretch or drill using your bodyweight and hold or repeat as directed, breathing deeply throughout. Back off immediately if you feel sharp or pinching pain.",
+    "cues": [
+      "Breathe deeply",
+      "Ease off sharp pain",
+      "Move slowly"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 20,
+      "max": 45
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_90_90_hip_stretch",
+    "name": "90/90 Hip Stretch",
+    "slug": "90-90-hip-stretch",
+    "movementPattern": "mobility",
+    "primaryMuscles": [
+      "hips"
+    ],
+    "secondaryMuscles": [
+      "glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 1,
+    "instructions": "Ease slowly into the stretch or drill using your bodyweight and hold or repeat as directed, breathing deeply throughout. Back off immediately if you feel sharp or pinching pain.",
+    "cues": [
+      "Breathe deeply",
+      "Ease off sharp pain",
+      "Move slowly"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 30,
+      "max": 60
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_thoracic_spine_rotation",
+    "name": "Thoracic Spine Rotation",
+    "slug": "thoracic-spine-rotation",
+    "movementPattern": "mobility",
+    "primaryMuscles": [
+      "spine"
+    ],
+    "secondaryMuscles": [
+      "shoulders"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 1,
+    "instructions": "Ease slowly into the stretch or drill using your bodyweight and hold or repeat as directed, breathing deeply throughout. Back off immediately if you feel sharp or pinching pain.",
+    "cues": [
+      "Breathe deeply",
+      "Ease off sharp pain",
+      "Move slowly"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 30,
+      "max": 60
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_band_shoulder_dislocate",
+    "name": "Band Shoulder Dislocate",
+    "slug": "band-shoulder-dislocate",
+    "movementPattern": "mobility",
+    "primaryMuscles": [
+      "shoulders"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "band"
+    ],
+    "difficulty": 1,
+    "instructions": "Ease slowly into the stretch or drill using a resistance band and hold or repeat as directed, breathing deeply throughout. Back off immediately if you feel sharp or pinching pain.",
+    "cues": [
+      "Breathe deeply",
+      "Ease off sharp pain",
+      "Move slowly"
+    ],
+    "isCustom": false,
+    "loadType": "band",
+    "defaultRepRange": {
+      "min": 10,
+      "max": 15
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_ankle_dorsiflexion_stretch",
+    "name": "Ankle Dorsiflexion Stretch",
+    "slug": "ankle-dorsiflexion-stretch",
+    "movementPattern": "mobility",
+    "primaryMuscles": [
+      "ankles"
+    ],
+    "secondaryMuscles": [
+      "calves"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 1,
+    "instructions": "Ease slowly into the stretch or drill using your bodyweight and hold or repeat as directed, breathing deeply throughout. Back off immediately if you feel sharp or pinching pain.",
+    "cues": [
+      "Breathe deeply",
+      "Ease off sharp pain",
+      "Move slowly"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 30,
+      "max": 60
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_deep_squat_hold",
+    "name": "Deep Squat Hold",
+    "slug": "deep-squat-hold",
+    "movementPattern": "mobility",
+    "primaryMuscles": [
+      "hips",
+      "ankles"
+    ],
+    "secondaryMuscles": [
+      "quads"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 2,
+    "instructions": "Ease slowly into the stretch or drill using your bodyweight and hold or repeat as directed, breathing deeply throughout. Back off immediately if you feel sharp or pinching pain.",
+    "cues": [
+      "Breathe deeply",
+      "Ease off sharp pain",
+      "Move slowly"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 30,
+      "max": 90
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_foam_roll_quads",
+    "name": "Foam Roll Quads",
+    "slug": "foam-roll-quads",
+    "movementPattern": "mobility",
+    "primaryMuscles": [
+      "quads"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "other"
+    ],
+    "difficulty": 1,
+    "instructions": "Ease slowly into the stretch or drill using the equipment and hold or repeat as directed, breathing deeply throughout. Back off immediately if you feel sharp or pinching pain.",
+    "cues": [
+      "Breathe deeply",
+      "Ease off sharp pain",
+      "Move slowly"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 30,
+      "max": 60
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_foam_roll_upper_back",
+    "name": "Foam Roll Upper Back",
+    "slug": "foam-roll-upper-back",
+    "movementPattern": "mobility",
+    "primaryMuscles": [
+      "upper_back"
+    ],
+    "secondaryMuscles": [
+      "spine"
+    ],
+    "equipment": [
+      "other"
+    ],
+    "difficulty": 1,
+    "instructions": "Ease slowly into the stretch or drill using the equipment and hold or repeat as directed, breathing deeply throughout. Back off immediately if you feel sharp or pinching pain.",
+    "cues": [
+      "Breathe deeply",
+      "Ease off sharp pain",
+      "Move slowly"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 30,
+      "max": 60
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_foam_roll_it_band",
+    "name": "Foam Roll IT Band",
+    "slug": "foam-roll-it-band",
+    "movementPattern": "mobility",
+    "primaryMuscles": [
+      "abductors"
+    ],
+    "secondaryMuscles": [
+      "quads"
+    ],
+    "equipment": [
+      "other"
+    ],
+    "difficulty": 2,
+    "instructions": "Ease slowly into the stretch or drill using the equipment and hold or repeat as directed, breathing deeply throughout. Back off immediately if you feel sharp or pinching pain.",
+    "cues": [
+      "Breathe deeply",
+      "Ease off sharp pain",
+      "Move slowly"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 30,
+      "max": 60
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_arm_circles",
+    "name": "Arm Circles",
+    "slug": "arm-circles",
+    "movementPattern": "mobility",
+    "primaryMuscles": [
+      "shoulders"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 1,
+    "instructions": "Ease slowly into the stretch or drill using your bodyweight and hold or repeat as directed, breathing deeply throughout. Back off immediately if you feel sharp or pinching pain.",
+    "cues": [
+      "Breathe deeply",
+      "Ease off sharp pain",
+      "Move slowly"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 20,
+      "max": 40
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_standing_hamstring_stretch",
+    "name": "Standing Hamstring Stretch",
+    "slug": "standing-hamstring-stretch",
+    "movementPattern": "mobility",
+    "primaryMuscles": [
+      "hamstrings"
+    ],
+    "secondaryMuscles": [
+      "lower_back"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 1,
+    "instructions": "Ease slowly into the stretch or drill using your bodyweight and hold or repeat as directed, breathing deeply throughout. Back off immediately if you feel sharp or pinching pain.",
+    "cues": [
+      "Breathe deeply",
+      "Ease off sharp pain",
+      "Move slowly"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 20,
+      "max": 45
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_pigeon_pose",
+    "name": "Pigeon Pose",
+    "slug": "pigeon-pose",
+    "movementPattern": "mobility",
+    "primaryMuscles": [
+      "hips",
+      "glutes"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 2,
+    "instructions": "Ease slowly into the stretch or drill using your bodyweight and hold or repeat as directed, breathing deeply throughout. Back off immediately if you feel sharp or pinching pain.",
+    "cues": [
+      "Breathe deeply",
+      "Ease off sharp pain",
+      "Move slowly"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 30,
+      "max": 60
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_wrist_mobility_flow",
+    "name": "Wrist Mobility Flow",
+    "slug": "wrist-mobility-flow",
+    "movementPattern": "mobility",
+    "primaryMuscles": [
+      "forearms"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 1,
+    "instructions": "Ease slowly into the stretch or drill using your bodyweight and hold or repeat as directed, breathing deeply throughout. Back off immediately if you feel sharp or pinching pain.",
+    "cues": [
+      "Breathe deeply",
+      "Ease off sharp pain",
+      "Move slowly"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 20,
+      "max": 40
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_wall_angels",
+    "name": "Wall Angels",
+    "slug": "wall-angels",
+    "movementPattern": "mobility",
+    "primaryMuscles": [
+      "shoulders",
+      "upper_back"
+    ],
+    "secondaryMuscles": [
+      "spine"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 1,
+    "instructions": "Ease slowly into the stretch or drill using your bodyweight and hold or repeat as directed, breathing deeply throughout. Back off immediately if you feel sharp or pinching pain.",
+    "cues": [
+      "Breathe deeply",
+      "Ease off sharp pain",
+      "Move slowly"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 20,
+      "max": 40
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_thread_the_needle",
+    "name": "Thread the Needle",
+    "slug": "thread-the-needle",
+    "movementPattern": "mobility",
+    "primaryMuscles": [
+      "spine",
+      "shoulders"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 1,
+    "instructions": "Ease slowly into the stretch or drill using your bodyweight and hold or repeat as directed, breathing deeply throughout. Back off immediately if you feel sharp or pinching pain.",
+    "cues": [
+      "Breathe deeply",
+      "Ease off sharp pain",
+      "Move slowly"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 20,
+      "max": 40
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_standing_quad_stretch",
+    "name": "Standing Quad Stretch",
+    "slug": "standing-quad-stretch",
+    "movementPattern": "mobility",
+    "primaryMuscles": [
+      "quads"
+    ],
+    "secondaryMuscles": [
+      "hip_flexors"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 1,
+    "instructions": "Ease slowly into the stretch or drill using your bodyweight and hold or repeat as directed, breathing deeply throughout. Back off immediately if you feel sharp or pinching pain.",
+    "cues": [
+      "Breathe deeply",
+      "Ease off sharp pain",
+      "Move slowly"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 20,
+      "max": 45
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_couch_stretch",
+    "name": "Couch Stretch",
+    "slug": "couch-stretch",
+    "movementPattern": "mobility",
+    "primaryMuscles": [
+      "hip_flexors",
+      "quads"
+    ],
+    "secondaryMuscles": [],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 2,
+    "instructions": "Ease slowly into the stretch or drill using your bodyweight and hold or repeat as directed, breathing deeply throughout. Back off immediately if you feel sharp or pinching pain.",
+    "cues": [
+      "Breathe deeply",
+      "Ease off sharp pain",
+      "Move slowly"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 30,
+      "max": 60
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_scorpion_stretch",
+    "name": "Scorpion Stretch",
+    "slug": "scorpion-stretch",
+    "movementPattern": "mobility",
+    "primaryMuscles": [
+      "spine",
+      "hips"
+    ],
+    "secondaryMuscles": [
+      "glutes"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 2,
+    "instructions": "Ease slowly into the stretch or drill using your bodyweight and hold or repeat as directed, breathing deeply throughout. Back off immediately if you feel sharp or pinching pain.",
+    "cues": [
+      "Breathe deeply",
+      "Ease off sharp pain",
+      "Move slowly"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 20,
+      "max": 40
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_band_distraction_hip_stretch",
+    "name": "Band Distraction Hip Stretch",
+    "slug": "band-distraction-hip-stretch",
+    "movementPattern": "mobility",
+    "primaryMuscles": [
+      "hips"
+    ],
+    "secondaryMuscles": [
+      "hip_flexors"
+    ],
+    "equipment": [
+      "band"
+    ],
+    "difficulty": 2,
+    "instructions": "Ease slowly into the stretch or drill using a resistance band and hold or repeat as directed, breathing deeply throughout. Back off immediately if you feel sharp or pinching pain.",
+    "cues": [
+      "Breathe deeply",
+      "Ease off sharp pain",
+      "Move slowly"
+    ],
+    "isCustom": false,
+    "loadType": "band",
+    "defaultRepRange": {
+      "min": 20,
+      "max": 40
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_malasana_squat_hold",
+    "name": "Malasana Squat Hold",
+    "slug": "malasana-squat-hold",
+    "movementPattern": "mobility",
+    "primaryMuscles": [
+      "hips",
+      "ankles"
+    ],
+    "secondaryMuscles": [
+      "adductors"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 1,
+    "instructions": "Ease slowly into the stretch or drill using your bodyweight and hold or repeat as directed, breathing deeply throughout. Back off immediately if you feel sharp or pinching pain.",
+    "cues": [
+      "Breathe deeply",
+      "Ease off sharp pain",
+      "Move slowly"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 30,
+      "max": 90
+    },
+    "archived": false
+  },
+  {
+    "id": "ex_surya_namaskar_flow",
+    "name": "Surya Namaskar Flow",
+    "slug": "surya-namaskar-flow",
+    "movementPattern": "mobility",
+    "primaryMuscles": [
+      "spine",
+      "shoulders"
+    ],
+    "secondaryMuscles": [
+      "hamstrings"
+    ],
+    "equipment": [
+      "bodyweight"
+    ],
+    "difficulty": 2,
+    "instructions": "Ease slowly into the stretch or drill using your bodyweight and hold or repeat as directed, breathing deeply throughout. Back off immediately if you feel sharp or pinching pain.",
+    "cues": [
+      "Breathe deeply",
+      "Ease off sharp pain",
+      "Move slowly"
+    ],
+    "isCustom": false,
+    "loadType": "time",
+    "defaultRepRange": {
+      "min": 60,
+      "max": 180
+    },
+    "archived": false
+  }
+]

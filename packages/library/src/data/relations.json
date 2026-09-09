@@ -1,0 +1,1808 @@
+[
+  {
+    "fromId": "ex_wall_push_up",
+    "toId": "ex_knee_push_up",
+    "kind": "progression",
+    "note": "Push-up progression ladder"
+  },
+  {
+    "fromId": "ex_knee_push_up",
+    "toId": "ex_wall_push_up",
+    "kind": "regression",
+    "note": "Push-up progression ladder"
+  },
+  {
+    "fromId": "ex_knee_push_up",
+    "toId": "ex_incline_push_up",
+    "kind": "progression",
+    "note": "Push-up progression ladder"
+  },
+  {
+    "fromId": "ex_incline_push_up",
+    "toId": "ex_knee_push_up",
+    "kind": "regression",
+    "note": "Push-up progression ladder"
+  },
+  {
+    "fromId": "ex_incline_push_up",
+    "toId": "ex_push_up",
+    "kind": "progression",
+    "note": "Push-up progression ladder"
+  },
+  {
+    "fromId": "ex_push_up",
+    "toId": "ex_incline_push_up",
+    "kind": "regression",
+    "note": "Push-up progression ladder"
+  },
+  {
+    "fromId": "ex_push_up",
+    "toId": "ex_decline_push_up",
+    "kind": "progression",
+    "note": "Push-up progression ladder"
+  },
+  {
+    "fromId": "ex_decline_push_up",
+    "toId": "ex_push_up",
+    "kind": "regression",
+    "note": "Push-up progression ladder"
+  },
+  {
+    "fromId": "ex_decline_push_up",
+    "toId": "ex_diamond_push_up",
+    "kind": "progression",
+    "note": "Push-up progression ladder"
+  },
+  {
+    "fromId": "ex_diamond_push_up",
+    "toId": "ex_decline_push_up",
+    "kind": "regression",
+    "note": "Push-up progression ladder"
+  },
+  {
+    "fromId": "ex_diamond_push_up",
+    "toId": "ex_archer_push_up",
+    "kind": "progression",
+    "note": "Push-up progression ladder"
+  },
+  {
+    "fromId": "ex_archer_push_up",
+    "toId": "ex_diamond_push_up",
+    "kind": "regression",
+    "note": "Push-up progression ladder"
+  },
+  {
+    "fromId": "ex_archer_push_up",
+    "toId": "ex_pseudo_planche_push_up",
+    "kind": "progression",
+    "note": "Push-up progression ladder"
+  },
+  {
+    "fromId": "ex_pseudo_planche_push_up",
+    "toId": "ex_archer_push_up",
+    "kind": "regression",
+    "note": "Push-up progression ladder"
+  },
+  {
+    "fromId": "ex_pseudo_planche_push_up",
+    "toId": "ex_ring_push_up",
+    "kind": "progression",
+    "note": "Push-up progression ladder"
+  },
+  {
+    "fromId": "ex_ring_push_up",
+    "toId": "ex_pseudo_planche_push_up",
+    "kind": "regression",
+    "note": "Push-up progression ladder"
+  },
+  {
+    "fromId": "ex_scapular_pull_up",
+    "toId": "ex_negative_pull_up",
+    "kind": "progression",
+    "note": "Pull-up progression ladder"
+  },
+  {
+    "fromId": "ex_negative_pull_up",
+    "toId": "ex_scapular_pull_up",
+    "kind": "regression",
+    "note": "Pull-up progression ladder"
+  },
+  {
+    "fromId": "ex_negative_pull_up",
+    "toId": "ex_australian_pull_up",
+    "kind": "progression",
+    "note": "Pull-up progression ladder"
+  },
+  {
+    "fromId": "ex_australian_pull_up",
+    "toId": "ex_negative_pull_up",
+    "kind": "regression",
+    "note": "Pull-up progression ladder"
+  },
+  {
+    "fromId": "ex_australian_pull_up",
+    "toId": "ex_band_assisted_pull_up",
+    "kind": "progression",
+    "note": "Pull-up progression ladder"
+  },
+  {
+    "fromId": "ex_band_assisted_pull_up",
+    "toId": "ex_australian_pull_up",
+    "kind": "regression",
+    "note": "Pull-up progression ladder"
+  },
+  {
+    "fromId": "ex_band_assisted_pull_up",
+    "toId": "ex_assisted_pull_up_machine",
+    "kind": "progression",
+    "note": "Pull-up progression ladder"
+  },
+  {
+    "fromId": "ex_assisted_pull_up_machine",
+    "toId": "ex_band_assisted_pull_up",
+    "kind": "regression",
+    "note": "Pull-up progression ladder"
+  },
+  {
+    "fromId": "ex_assisted_pull_up_machine",
+    "toId": "ex_chin_up",
+    "kind": "progression",
+    "note": "Pull-up progression ladder"
+  },
+  {
+    "fromId": "ex_chin_up",
+    "toId": "ex_assisted_pull_up_machine",
+    "kind": "regression",
+    "note": "Pull-up progression ladder"
+  },
+  {
+    "fromId": "ex_chin_up",
+    "toId": "ex_pull_up",
+    "kind": "progression",
+    "note": "Pull-up progression ladder"
+  },
+  {
+    "fromId": "ex_pull_up",
+    "toId": "ex_chin_up",
+    "kind": "regression",
+    "note": "Pull-up progression ladder"
+  },
+  {
+    "fromId": "ex_pull_up",
+    "toId": "ex_towel_pull_up",
+    "kind": "progression",
+    "note": "Pull-up progression ladder"
+  },
+  {
+    "fromId": "ex_towel_pull_up",
+    "toId": "ex_pull_up",
+    "kind": "regression",
+    "note": "Pull-up progression ladder"
+  },
+  {
+    "fromId": "ex_wall_sit",
+    "toId": "ex_bodyweight_squat",
+    "kind": "progression",
+    "note": "Squat progression ladder"
+  },
+  {
+    "fromId": "ex_bodyweight_squat",
+    "toId": "ex_wall_sit",
+    "kind": "regression",
+    "note": "Squat progression ladder"
+  },
+  {
+    "fromId": "ex_bodyweight_squat",
+    "toId": "ex_goblet_squat",
+    "kind": "progression",
+    "note": "Squat progression ladder"
+  },
+  {
+    "fromId": "ex_goblet_squat",
+    "toId": "ex_bodyweight_squat",
+    "kind": "regression",
+    "note": "Squat progression ladder"
+  },
+  {
+    "fromId": "ex_goblet_squat",
+    "toId": "ex_dumbbell_squat",
+    "kind": "progression",
+    "note": "Squat progression ladder"
+  },
+  {
+    "fromId": "ex_dumbbell_squat",
+    "toId": "ex_goblet_squat",
+    "kind": "regression",
+    "note": "Squat progression ladder"
+  },
+  {
+    "fromId": "ex_dumbbell_squat",
+    "toId": "ex_kettlebell_front_squat",
+    "kind": "progression",
+    "note": "Squat progression ladder"
+  },
+  {
+    "fromId": "ex_kettlebell_front_squat",
+    "toId": "ex_dumbbell_squat",
+    "kind": "regression",
+    "note": "Squat progression ladder"
+  },
+  {
+    "fromId": "ex_kettlebell_front_squat",
+    "toId": "ex_barbell_back_squat",
+    "kind": "progression",
+    "note": "Squat progression ladder"
+  },
+  {
+    "fromId": "ex_barbell_back_squat",
+    "toId": "ex_kettlebell_front_squat",
+    "kind": "regression",
+    "note": "Squat progression ladder"
+  },
+  {
+    "fromId": "ex_barbell_back_squat",
+    "toId": "ex_barbell_front_squat",
+    "kind": "progression",
+    "note": "Squat progression ladder"
+  },
+  {
+    "fromId": "ex_barbell_front_squat",
+    "toId": "ex_barbell_back_squat",
+    "kind": "regression",
+    "note": "Squat progression ladder"
+  },
+  {
+    "fromId": "ex_barbell_front_squat",
+    "toId": "ex_overhead_squat",
+    "kind": "progression",
+    "note": "Squat progression ladder"
+  },
+  {
+    "fromId": "ex_overhead_squat",
+    "toId": "ex_barbell_front_squat",
+    "kind": "regression",
+    "note": "Squat progression ladder"
+  },
+  {
+    "fromId": "ex_overhead_squat",
+    "toId": "ex_pistol_squat",
+    "kind": "progression",
+    "note": "Squat progression ladder"
+  },
+  {
+    "fromId": "ex_pistol_squat",
+    "toId": "ex_overhead_squat",
+    "kind": "regression",
+    "note": "Squat progression ladder"
+  },
+  {
+    "fromId": "ex_glute_bridge",
+    "toId": "ex_single_leg_glute_bridge",
+    "kind": "progression",
+    "note": "Hinge progression ladder"
+  },
+  {
+    "fromId": "ex_single_leg_glute_bridge",
+    "toId": "ex_glute_bridge",
+    "kind": "regression",
+    "note": "Hinge progression ladder"
+  },
+  {
+    "fromId": "ex_single_leg_glute_bridge",
+    "toId": "ex_barbell_hip_thrust",
+    "kind": "progression",
+    "note": "Hinge progression ladder"
+  },
+  {
+    "fromId": "ex_barbell_hip_thrust",
+    "toId": "ex_single_leg_glute_bridge",
+    "kind": "regression",
+    "note": "Hinge progression ladder"
+  },
+  {
+    "fromId": "ex_barbell_hip_thrust",
+    "toId": "ex_romanian_deadlift",
+    "kind": "progression",
+    "note": "Hinge progression ladder"
+  },
+  {
+    "fromId": "ex_romanian_deadlift",
+    "toId": "ex_barbell_hip_thrust",
+    "kind": "regression",
+    "note": "Hinge progression ladder"
+  },
+  {
+    "fromId": "ex_romanian_deadlift",
+    "toId": "ex_dumbbell_romanian_deadlift",
+    "kind": "progression",
+    "note": "Hinge progression ladder"
+  },
+  {
+    "fromId": "ex_dumbbell_romanian_deadlift",
+    "toId": "ex_romanian_deadlift",
+    "kind": "regression",
+    "note": "Hinge progression ladder"
+  },
+  {
+    "fromId": "ex_dumbbell_romanian_deadlift",
+    "toId": "ex_barbell_deadlift",
+    "kind": "progression",
+    "note": "Hinge progression ladder"
+  },
+  {
+    "fromId": "ex_barbell_deadlift",
+    "toId": "ex_dumbbell_romanian_deadlift",
+    "kind": "regression",
+    "note": "Hinge progression ladder"
+  },
+  {
+    "fromId": "ex_barbell_deadlift",
+    "toId": "ex_sumo_deadlift",
+    "kind": "progression",
+    "note": "Hinge progression ladder"
+  },
+  {
+    "fromId": "ex_sumo_deadlift",
+    "toId": "ex_barbell_deadlift",
+    "kind": "regression",
+    "note": "Hinge progression ladder"
+  },
+  {
+    "fromId": "ex_sumo_deadlift",
+    "toId": "ex_kettlebell_deadlift",
+    "kind": "progression",
+    "note": "Hinge progression ladder"
+  },
+  {
+    "fromId": "ex_kettlebell_deadlift",
+    "toId": "ex_sumo_deadlift",
+    "kind": "regression",
+    "note": "Hinge progression ladder"
+  },
+  {
+    "fromId": "ex_kettlebell_deadlift",
+    "toId": "ex_kettlebell_swing",
+    "kind": "progression",
+    "note": "Hinge progression ladder"
+  },
+  {
+    "fromId": "ex_kettlebell_swing",
+    "toId": "ex_kettlebell_deadlift",
+    "kind": "regression",
+    "note": "Hinge progression ladder"
+  },
+  {
+    "fromId": "ex_kettlebell_swing",
+    "toId": "ex_kettlebell_snatch",
+    "kind": "progression",
+    "note": "Hinge progression ladder"
+  },
+  {
+    "fromId": "ex_kettlebell_snatch",
+    "toId": "ex_kettlebell_swing",
+    "kind": "regression",
+    "note": "Hinge progression ladder"
+  },
+  {
+    "fromId": "ex_bodyweight_lunge",
+    "toId": "ex_step_up",
+    "kind": "progression",
+    "note": "Lunge progression ladder"
+  },
+  {
+    "fromId": "ex_step_up",
+    "toId": "ex_bodyweight_lunge",
+    "kind": "regression",
+    "note": "Lunge progression ladder"
+  },
+  {
+    "fromId": "ex_step_up",
+    "toId": "ex_dumbbell_walking_lunge",
+    "kind": "progression",
+    "note": "Lunge progression ladder"
+  },
+  {
+    "fromId": "ex_dumbbell_walking_lunge",
+    "toId": "ex_step_up",
+    "kind": "regression",
+    "note": "Lunge progression ladder"
+  },
+  {
+    "fromId": "ex_dumbbell_walking_lunge",
+    "toId": "ex_bulgarian_split_squat",
+    "kind": "progression",
+    "note": "Lunge progression ladder"
+  },
+  {
+    "fromId": "ex_bulgarian_split_squat",
+    "toId": "ex_dumbbell_walking_lunge",
+    "kind": "regression",
+    "note": "Lunge progression ladder"
+  },
+  {
+    "fromId": "ex_bulgarian_split_squat",
+    "toId": "ex_barbell_reverse_lunge",
+    "kind": "progression",
+    "note": "Lunge progression ladder"
+  },
+  {
+    "fromId": "ex_barbell_reverse_lunge",
+    "toId": "ex_bulgarian_split_squat",
+    "kind": "regression",
+    "note": "Lunge progression ladder"
+  },
+  {
+    "fromId": "ex_barbell_reverse_lunge",
+    "toId": "ex_cossack_squat",
+    "kind": "progression",
+    "note": "Lunge progression ladder"
+  },
+  {
+    "fromId": "ex_cossack_squat",
+    "toId": "ex_barbell_reverse_lunge",
+    "kind": "regression",
+    "note": "Lunge progression ladder"
+  },
+  {
+    "fromId": "ex_floor_press",
+    "toId": "ex_dumbbell_bench_press",
+    "kind": "progression",
+    "note": "Bench press progression ladder"
+  },
+  {
+    "fromId": "ex_dumbbell_bench_press",
+    "toId": "ex_floor_press",
+    "kind": "regression",
+    "note": "Bench press progression ladder"
+  },
+  {
+    "fromId": "ex_dumbbell_bench_press",
+    "toId": "ex_barbell_bench_press",
+    "kind": "progression",
+    "note": "Bench press progression ladder"
+  },
+  {
+    "fromId": "ex_barbell_bench_press",
+    "toId": "ex_dumbbell_bench_press",
+    "kind": "regression",
+    "note": "Bench press progression ladder"
+  },
+  {
+    "fromId": "ex_barbell_bench_press",
+    "toId": "ex_incline_barbell_bench_press",
+    "kind": "progression",
+    "note": "Bench press progression ladder"
+  },
+  {
+    "fromId": "ex_incline_barbell_bench_press",
+    "toId": "ex_barbell_bench_press",
+    "kind": "regression",
+    "note": "Bench press progression ladder"
+  },
+  {
+    "fromId": "ex_incline_barbell_bench_press",
+    "toId": "ex_incline_dumbbell_press",
+    "kind": "progression",
+    "note": "Bench press progression ladder"
+  },
+  {
+    "fromId": "ex_incline_dumbbell_press",
+    "toId": "ex_incline_barbell_bench_press",
+    "kind": "regression",
+    "note": "Bench press progression ladder"
+  },
+  {
+    "fromId": "ex_band_overhead_press",
+    "toId": "ex_seated_machine_shoulder_press",
+    "kind": "progression",
+    "note": "Overhead press progression ladder"
+  },
+  {
+    "fromId": "ex_seated_machine_shoulder_press",
+    "toId": "ex_band_overhead_press",
+    "kind": "regression",
+    "note": "Overhead press progression ladder"
+  },
+  {
+    "fromId": "ex_seated_machine_shoulder_press",
+    "toId": "ex_dumbbell_shoulder_press",
+    "kind": "progression",
+    "note": "Overhead press progression ladder"
+  },
+  {
+    "fromId": "ex_dumbbell_shoulder_press",
+    "toId": "ex_seated_machine_shoulder_press",
+    "kind": "regression",
+    "note": "Overhead press progression ladder"
+  },
+  {
+    "fromId": "ex_dumbbell_shoulder_press",
+    "toId": "ex_arnold_press",
+    "kind": "progression",
+    "note": "Overhead press progression ladder"
+  },
+  {
+    "fromId": "ex_arnold_press",
+    "toId": "ex_dumbbell_shoulder_press",
+    "kind": "regression",
+    "note": "Overhead press progression ladder"
+  },
+  {
+    "fromId": "ex_arnold_press",
+    "toId": "ex_barbell_overhead_press",
+    "kind": "progression",
+    "note": "Overhead press progression ladder"
+  },
+  {
+    "fromId": "ex_barbell_overhead_press",
+    "toId": "ex_arnold_press",
+    "kind": "regression",
+    "note": "Overhead press progression ladder"
+  },
+  {
+    "fromId": "ex_barbell_overhead_press",
+    "toId": "ex_push_press",
+    "kind": "progression",
+    "note": "Overhead press progression ladder"
+  },
+  {
+    "fromId": "ex_push_press",
+    "toId": "ex_barbell_overhead_press",
+    "kind": "regression",
+    "note": "Overhead press progression ladder"
+  },
+  {
+    "fromId": "ex_pike_push_up",
+    "toId": "ex_handstand_push_up",
+    "kind": "progression",
+    "note": "Vertical push bodyweight ladder"
+  },
+  {
+    "fromId": "ex_handstand_push_up",
+    "toId": "ex_pike_push_up",
+    "kind": "regression",
+    "note": "Vertical push bodyweight ladder"
+  },
+  {
+    "fromId": "ex_band_row",
+    "toId": "ex_machine_row",
+    "kind": "progression",
+    "note": "Row progression ladder"
+  },
+  {
+    "fromId": "ex_machine_row",
+    "toId": "ex_band_row",
+    "kind": "regression",
+    "note": "Row progression ladder"
+  },
+  {
+    "fromId": "ex_machine_row",
+    "toId": "ex_seated_cable_row",
+    "kind": "progression",
+    "note": "Row progression ladder"
+  },
+  {
+    "fromId": "ex_seated_cable_row",
+    "toId": "ex_machine_row",
+    "kind": "regression",
+    "note": "Row progression ladder"
+  },
+  {
+    "fromId": "ex_seated_cable_row",
+    "toId": "ex_dumbbell_row",
+    "kind": "progression",
+    "note": "Row progression ladder"
+  },
+  {
+    "fromId": "ex_dumbbell_row",
+    "toId": "ex_seated_cable_row",
+    "kind": "regression",
+    "note": "Row progression ladder"
+  },
+  {
+    "fromId": "ex_dumbbell_row",
+    "toId": "ex_barbell_bent_over_row",
+    "kind": "progression",
+    "note": "Row progression ladder"
+  },
+  {
+    "fromId": "ex_barbell_bent_over_row",
+    "toId": "ex_dumbbell_row",
+    "kind": "regression",
+    "note": "Row progression ladder"
+  },
+  {
+    "fromId": "ex_barbell_bent_over_row",
+    "toId": "ex_t_bar_row",
+    "kind": "progression",
+    "note": "Row progression ladder"
+  },
+  {
+    "fromId": "ex_t_bar_row",
+    "toId": "ex_barbell_bent_over_row",
+    "kind": "regression",
+    "note": "Row progression ladder"
+  },
+  {
+    "fromId": "ex_t_bar_row",
+    "toId": "ex_meadows_row",
+    "kind": "progression",
+    "note": "Row progression ladder"
+  },
+  {
+    "fromId": "ex_meadows_row",
+    "toId": "ex_t_bar_row",
+    "kind": "regression",
+    "note": "Row progression ladder"
+  },
+  {
+    "fromId": "ex_kneeling_band_pulldown",
+    "toId": "ex_straight_arm_pulldown",
+    "kind": "progression",
+    "note": "Lat pulldown progression ladder"
+  },
+  {
+    "fromId": "ex_straight_arm_pulldown",
+    "toId": "ex_kneeling_band_pulldown",
+    "kind": "regression",
+    "note": "Lat pulldown progression ladder"
+  },
+  {
+    "fromId": "ex_straight_arm_pulldown",
+    "toId": "ex_lat_pulldown",
+    "kind": "progression",
+    "note": "Lat pulldown progression ladder"
+  },
+  {
+    "fromId": "ex_lat_pulldown",
+    "toId": "ex_straight_arm_pulldown",
+    "kind": "regression",
+    "note": "Lat pulldown progression ladder"
+  },
+  {
+    "fromId": "ex_lat_pulldown",
+    "toId": "ex_neutral_grip_pulldown",
+    "kind": "progression",
+    "note": "Lat pulldown progression ladder"
+  },
+  {
+    "fromId": "ex_neutral_grip_pulldown",
+    "toId": "ex_lat_pulldown",
+    "kind": "regression",
+    "note": "Lat pulldown progression ladder"
+  },
+  {
+    "fromId": "ex_dead_bug",
+    "toId": "ex_bird_dog",
+    "kind": "progression",
+    "note": "Core hold progression ladder"
+  },
+  {
+    "fromId": "ex_bird_dog",
+    "toId": "ex_dead_bug",
+    "kind": "regression",
+    "note": "Core hold progression ladder"
+  },
+  {
+    "fromId": "ex_bird_dog",
+    "toId": "ex_plank",
+    "kind": "progression",
+    "note": "Core hold progression ladder"
+  },
+  {
+    "fromId": "ex_plank",
+    "toId": "ex_bird_dog",
+    "kind": "regression",
+    "note": "Core hold progression ladder"
+  },
+  {
+    "fromId": "ex_plank",
+    "toId": "ex_side_plank",
+    "kind": "progression",
+    "note": "Core hold progression ladder"
+  },
+  {
+    "fromId": "ex_side_plank",
+    "toId": "ex_plank",
+    "kind": "regression",
+    "note": "Core hold progression ladder"
+  },
+  {
+    "fromId": "ex_side_plank",
+    "toId": "ex_hollow_body_hold",
+    "kind": "progression",
+    "note": "Core hold progression ladder"
+  },
+  {
+    "fromId": "ex_hollow_body_hold",
+    "toId": "ex_side_plank",
+    "kind": "regression",
+    "note": "Core hold progression ladder"
+  },
+  {
+    "fromId": "ex_hollow_body_hold",
+    "toId": "ex_l_sit_hold",
+    "kind": "progression",
+    "note": "Core hold progression ladder"
+  },
+  {
+    "fromId": "ex_l_sit_hold",
+    "toId": "ex_hollow_body_hold",
+    "kind": "regression",
+    "note": "Core hold progression ladder"
+  },
+  {
+    "fromId": "ex_flutter_kicks",
+    "toId": "ex_reverse_crunch",
+    "kind": "progression",
+    "note": "Leg raise progression ladder"
+  },
+  {
+    "fromId": "ex_reverse_crunch",
+    "toId": "ex_flutter_kicks",
+    "kind": "regression",
+    "note": "Leg raise progression ladder"
+  },
+  {
+    "fromId": "ex_reverse_crunch",
+    "toId": "ex_v_up",
+    "kind": "progression",
+    "note": "Leg raise progression ladder"
+  },
+  {
+    "fromId": "ex_v_up",
+    "toId": "ex_reverse_crunch",
+    "kind": "regression",
+    "note": "Leg raise progression ladder"
+  },
+  {
+    "fromId": "ex_v_up",
+    "toId": "ex_hanging_leg_raise",
+    "kind": "progression",
+    "note": "Leg raise progression ladder"
+  },
+  {
+    "fromId": "ex_hanging_leg_raise",
+    "toId": "ex_v_up",
+    "kind": "regression",
+    "note": "Leg raise progression ladder"
+  },
+  {
+    "fromId": "ex_farmer_s_carry",
+    "toId": "ex_kettlebell_suitcase_carry",
+    "kind": "progression",
+    "note": "Loaded carry progression ladder"
+  },
+  {
+    "fromId": "ex_kettlebell_suitcase_carry",
+    "toId": "ex_farmer_s_carry",
+    "kind": "regression",
+    "note": "Loaded carry progression ladder"
+  },
+  {
+    "fromId": "ex_kettlebell_suitcase_carry",
+    "toId": "ex_front_loaded_carry",
+    "kind": "progression",
+    "note": "Loaded carry progression ladder"
+  },
+  {
+    "fromId": "ex_front_loaded_carry",
+    "toId": "ex_kettlebell_suitcase_carry",
+    "kind": "regression",
+    "note": "Loaded carry progression ladder"
+  },
+  {
+    "fromId": "ex_front_loaded_carry",
+    "toId": "ex_double_kettlebell_carry",
+    "kind": "progression",
+    "note": "Loaded carry progression ladder"
+  },
+  {
+    "fromId": "ex_double_kettlebell_carry",
+    "toId": "ex_front_loaded_carry",
+    "kind": "regression",
+    "note": "Loaded carry progression ladder"
+  },
+  {
+    "fromId": "ex_double_kettlebell_carry",
+    "toId": "ex_overhead_carry",
+    "kind": "progression",
+    "note": "Loaded carry progression ladder"
+  },
+  {
+    "fromId": "ex_overhead_carry",
+    "toId": "ex_double_kettlebell_carry",
+    "kind": "regression",
+    "note": "Loaded carry progression ladder"
+  },
+  {
+    "fromId": "ex_overhead_carry",
+    "toId": "ex_barbell_zercher_carry",
+    "kind": "progression",
+    "note": "Loaded carry progression ladder"
+  },
+  {
+    "fromId": "ex_barbell_zercher_carry",
+    "toId": "ex_overhead_carry",
+    "kind": "regression",
+    "note": "Loaded carry progression ladder"
+  },
+  {
+    "fromId": "ex_barbell_zercher_carry",
+    "toId": "ex_sandbag_carry",
+    "kind": "progression",
+    "note": "Loaded carry progression ladder"
+  },
+  {
+    "fromId": "ex_sandbag_carry",
+    "toId": "ex_barbell_zercher_carry",
+    "kind": "regression",
+    "note": "Loaded carry progression ladder"
+  },
+  {
+    "fromId": "ex_sandbag_carry",
+    "toId": "ex_trap_bar_carry",
+    "kind": "progression",
+    "note": "Loaded carry progression ladder"
+  },
+  {
+    "fromId": "ex_trap_bar_carry",
+    "toId": "ex_sandbag_carry",
+    "kind": "regression",
+    "note": "Loaded carry progression ladder"
+  },
+  {
+    "fromId": "ex_bench_dip",
+    "toId": "ex_machine_assisted_dip",
+    "kind": "progression",
+    "note": "Dip progression ladder"
+  },
+  {
+    "fromId": "ex_machine_assisted_dip",
+    "toId": "ex_bench_dip",
+    "kind": "regression",
+    "note": "Dip progression ladder"
+  },
+  {
+    "fromId": "ex_machine_assisted_dip",
+    "toId": "ex_parallel_bar_dip",
+    "kind": "progression",
+    "note": "Dip progression ladder"
+  },
+  {
+    "fromId": "ex_parallel_bar_dip",
+    "toId": "ex_machine_assisted_dip",
+    "kind": "regression",
+    "note": "Dip progression ladder"
+  },
+  {
+    "fromId": "ex_parallel_bar_dip",
+    "toId": "ex_ring_dip",
+    "kind": "progression",
+    "note": "Dip progression ladder"
+  },
+  {
+    "fromId": "ex_ring_dip",
+    "toId": "ex_parallel_bar_dip",
+    "kind": "regression",
+    "note": "Dip progression ladder"
+  },
+  {
+    "fromId": "ex_band_bicep_curl",
+    "toId": "ex_machine_bicep_curl",
+    "kind": "progression",
+    "note": "Biceps curl progression ladder"
+  },
+  {
+    "fromId": "ex_machine_bicep_curl",
+    "toId": "ex_band_bicep_curl",
+    "kind": "regression",
+    "note": "Biceps curl progression ladder"
+  },
+  {
+    "fromId": "ex_machine_bicep_curl",
+    "toId": "ex_dumbbell_bicep_curl",
+    "kind": "progression",
+    "note": "Biceps curl progression ladder"
+  },
+  {
+    "fromId": "ex_dumbbell_bicep_curl",
+    "toId": "ex_machine_bicep_curl",
+    "kind": "regression",
+    "note": "Biceps curl progression ladder"
+  },
+  {
+    "fromId": "ex_dumbbell_bicep_curl",
+    "toId": "ex_hammer_curl",
+    "kind": "progression",
+    "note": "Biceps curl progression ladder"
+  },
+  {
+    "fromId": "ex_hammer_curl",
+    "toId": "ex_dumbbell_bicep_curl",
+    "kind": "regression",
+    "note": "Biceps curl progression ladder"
+  },
+  {
+    "fromId": "ex_hammer_curl",
+    "toId": "ex_barbell_bicep_curl",
+    "kind": "progression",
+    "note": "Biceps curl progression ladder"
+  },
+  {
+    "fromId": "ex_barbell_bicep_curl",
+    "toId": "ex_hammer_curl",
+    "kind": "regression",
+    "note": "Biceps curl progression ladder"
+  },
+  {
+    "fromId": "ex_barbell_bicep_curl",
+    "toId": "ex_preacher_curl",
+    "kind": "progression",
+    "note": "Biceps curl progression ladder"
+  },
+  {
+    "fromId": "ex_preacher_curl",
+    "toId": "ex_barbell_bicep_curl",
+    "kind": "regression",
+    "note": "Biceps curl progression ladder"
+  },
+  {
+    "fromId": "ex_standing_calf_raise",
+    "toId": "ex_dumbbell_calf_raise",
+    "kind": "progression",
+    "note": "Calf raise progression ladder"
+  },
+  {
+    "fromId": "ex_dumbbell_calf_raise",
+    "toId": "ex_standing_calf_raise",
+    "kind": "regression",
+    "note": "Calf raise progression ladder"
+  },
+  {
+    "fromId": "ex_dumbbell_calf_raise",
+    "toId": "ex_calf_raise",
+    "kind": "progression",
+    "note": "Calf raise progression ladder"
+  },
+  {
+    "fromId": "ex_calf_raise",
+    "toId": "ex_dumbbell_calf_raise",
+    "kind": "regression",
+    "note": "Calf raise progression ladder"
+  },
+  {
+    "fromId": "ex_high_knees",
+    "toId": "ex_jump_rope",
+    "kind": "progression",
+    "note": "Conditioning progression ladder"
+  },
+  {
+    "fromId": "ex_jump_rope",
+    "toId": "ex_high_knees",
+    "kind": "regression",
+    "note": "Conditioning progression ladder"
+  },
+  {
+    "fromId": "ex_jump_rope",
+    "toId": "ex_shuttle_runs",
+    "kind": "progression",
+    "note": "Conditioning progression ladder"
+  },
+  {
+    "fromId": "ex_shuttle_runs",
+    "toId": "ex_jump_rope",
+    "kind": "regression",
+    "note": "Conditioning progression ladder"
+  },
+  {
+    "fromId": "ex_shuttle_runs",
+    "toId": "ex_stair_sprints",
+    "kind": "progression",
+    "note": "Conditioning progression ladder"
+  },
+  {
+    "fromId": "ex_stair_sprints",
+    "toId": "ex_shuttle_runs",
+    "kind": "regression",
+    "note": "Conditioning progression ladder"
+  },
+  {
+    "fromId": "ex_stair_sprints",
+    "toId": "ex_box_jump",
+    "kind": "progression",
+    "note": "Conditioning progression ladder"
+  },
+  {
+    "fromId": "ex_box_jump",
+    "toId": "ex_stair_sprints",
+    "kind": "regression",
+    "note": "Conditioning progression ladder"
+  },
+  {
+    "fromId": "ex_box_jump",
+    "toId": "ex_broad_jump",
+    "kind": "progression",
+    "note": "Conditioning progression ladder"
+  },
+  {
+    "fromId": "ex_broad_jump",
+    "toId": "ex_box_jump",
+    "kind": "regression",
+    "note": "Conditioning progression ladder"
+  },
+  {
+    "fromId": "ex_stationary_bike",
+    "toId": "ex_rowing_machine",
+    "kind": "progression",
+    "note": "Cardio machine intensity ladder"
+  },
+  {
+    "fromId": "ex_rowing_machine",
+    "toId": "ex_stationary_bike",
+    "kind": "regression",
+    "note": "Cardio machine intensity ladder"
+  },
+  {
+    "fromId": "ex_rowing_machine",
+    "toId": "ex_assault_bike",
+    "kind": "progression",
+    "note": "Cardio machine intensity ladder"
+  },
+  {
+    "fromId": "ex_assault_bike",
+    "toId": "ex_rowing_machine",
+    "kind": "regression",
+    "note": "Cardio machine intensity ladder"
+  },
+  {
+    "fromId": "ex_assault_bike",
+    "toId": "ex_ski_erg",
+    "kind": "progression",
+    "note": "Cardio machine intensity ladder"
+  },
+  {
+    "fromId": "ex_ski_erg",
+    "toId": "ex_assault_bike",
+    "kind": "regression",
+    "note": "Cardio machine intensity ladder"
+  },
+  {
+    "fromId": "ex_hip_flexor_stretch",
+    "toId": "ex_90_90_hip_stretch",
+    "kind": "progression",
+    "note": "Hip mobility progression"
+  },
+  {
+    "fromId": "ex_90_90_hip_stretch",
+    "toId": "ex_hip_flexor_stretch",
+    "kind": "regression",
+    "note": "Hip mobility progression"
+  },
+  {
+    "fromId": "ex_90_90_hip_stretch",
+    "toId": "ex_pigeon_pose",
+    "kind": "progression",
+    "note": "Hip mobility progression"
+  },
+  {
+    "fromId": "ex_pigeon_pose",
+    "toId": "ex_90_90_hip_stretch",
+    "kind": "regression",
+    "note": "Hip mobility progression"
+  },
+  {
+    "fromId": "ex_pigeon_pose",
+    "toId": "ex_couch_stretch",
+    "kind": "progression",
+    "note": "Hip mobility progression"
+  },
+  {
+    "fromId": "ex_couch_stretch",
+    "toId": "ex_pigeon_pose",
+    "kind": "regression",
+    "note": "Hip mobility progression"
+  },
+  {
+    "fromId": "ex_couch_stretch",
+    "toId": "ex_band_distraction_hip_stretch",
+    "kind": "progression",
+    "note": "Hip mobility progression"
+  },
+  {
+    "fromId": "ex_band_distraction_hip_stretch",
+    "toId": "ex_couch_stretch",
+    "kind": "regression",
+    "note": "Hip mobility progression"
+  },
+  {
+    "fromId": "ex_arm_circles",
+    "toId": "ex_wall_angels",
+    "kind": "progression",
+    "note": "Shoulder mobility progression"
+  },
+  {
+    "fromId": "ex_wall_angels",
+    "toId": "ex_arm_circles",
+    "kind": "regression",
+    "note": "Shoulder mobility progression"
+  },
+  {
+    "fromId": "ex_wall_angels",
+    "toId": "ex_band_shoulder_dislocate",
+    "kind": "progression",
+    "note": "Shoulder mobility progression"
+  },
+  {
+    "fromId": "ex_band_shoulder_dislocate",
+    "toId": "ex_wall_angels",
+    "kind": "regression",
+    "note": "Shoulder mobility progression"
+  },
+  {
+    "fromId": "ex_band_shoulder_dislocate",
+    "toId": "ex_thoracic_spine_rotation",
+    "kind": "progression",
+    "note": "Shoulder mobility progression"
+  },
+  {
+    "fromId": "ex_thoracic_spine_rotation",
+    "toId": "ex_band_shoulder_dislocate",
+    "kind": "regression",
+    "note": "Shoulder mobility progression"
+  },
+  {
+    "fromId": "ex_barbell_back_squat",
+    "toId": "ex_barbell_front_squat",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_barbell_front_squat",
+    "toId": "ex_barbell_back_squat",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_incline_dumbbell_press",
+    "toId": "ex_dumbbell_bench_press",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_dumbbell_bench_press",
+    "toId": "ex_incline_dumbbell_press",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_sumo_deadlift",
+    "toId": "ex_barbell_deadlift",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_barbell_deadlift",
+    "toId": "ex_sumo_deadlift",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_decline_push_up",
+    "toId": "ex_diamond_push_up",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_diamond_push_up",
+    "toId": "ex_decline_push_up",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_goblet_squat",
+    "toId": "ex_kettlebell_front_squat",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_kettlebell_front_squat",
+    "toId": "ex_goblet_squat",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_dumbbell_row",
+    "toId": "ex_renegade_row",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_renegade_row",
+    "toId": "ex_dumbbell_row",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_seated_cable_row",
+    "toId": "ex_chest_supported_row",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_chest_supported_row",
+    "toId": "ex_seated_cable_row",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_lat_pulldown",
+    "toId": "ex_neutral_grip_pulldown",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_neutral_grip_pulldown",
+    "toId": "ex_lat_pulldown",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_hammer_curl",
+    "toId": "ex_dumbbell_bicep_curl",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_dumbbell_bicep_curl",
+    "toId": "ex_hammer_curl",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_cable_fly",
+    "toId": "ex_pec_deck_fly",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_pec_deck_fly",
+    "toId": "ex_cable_fly",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_plank",
+    "toId": "ex_side_plank",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_side_plank",
+    "toId": "ex_plank",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_mountain_climbers",
+    "toId": "ex_high_knees",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_high_knees",
+    "toId": "ex_mountain_climbers",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_burpees",
+    "toId": "ex_mountain_climbers",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_mountain_climbers",
+    "toId": "ex_burpees",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_face_pull",
+    "toId": "ex_band_face_pull",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_band_face_pull",
+    "toId": "ex_face_pull",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_barbell_bicep_curl",
+    "toId": "ex_preacher_curl",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_preacher_curl",
+    "toId": "ex_barbell_bicep_curl",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_dumbbell_lateral_raise",
+    "toId": "ex_band_lateral_raise",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_band_lateral_raise",
+    "toId": "ex_dumbbell_lateral_raise",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_cable_tricep_pushdown",
+    "toId": "ex_band_tricep_pushdown",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_band_tricep_pushdown",
+    "toId": "ex_cable_tricep_pushdown",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_barbell_overhead_press",
+    "toId": "ex_landmine_press",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_landmine_press",
+    "toId": "ex_barbell_overhead_press",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_romanian_deadlift",
+    "toId": "ex_single_leg_romanian_deadlift",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_single_leg_romanian_deadlift",
+    "toId": "ex_romanian_deadlift",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_kettlebell_swing",
+    "toId": "ex_kettlebell_clean",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_kettlebell_clean",
+    "toId": "ex_kettlebell_swing",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_cat_cow_stretch",
+    "toId": "ex_thread_the_needle",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_thread_the_needle",
+    "toId": "ex_cat_cow_stretch",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_world_s_greatest_stretch",
+    "toId": "ex_scorpion_stretch",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_scorpion_stretch",
+    "toId": "ex_world_s_greatest_stretch",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_foam_roll_quads",
+    "toId": "ex_foam_roll_it_band",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_foam_roll_it_band",
+    "toId": "ex_foam_roll_quads",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_jump_rope",
+    "toId": "ex_jumping_jacks",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_jumping_jacks",
+    "toId": "ex_jump_rope",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_battle_ropes",
+    "toId": "ex_assault_bike",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_assault_bike",
+    "toId": "ex_battle_ropes",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_bear_crawl",
+    "toId": "ex_crab_walk",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_crab_walk",
+    "toId": "ex_bear_crawl",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_curtsy_lunge",
+    "toId": "ex_lateral_lunge",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_lateral_lunge",
+    "toId": "ex_curtsy_lunge",
+    "kind": "variation",
+    "note": null
+  },
+  {
+    "fromId": "ex_zercher_squat",
+    "toId": "ex_barbell_zercher_carry",
+    "kind": "variation",
+    "note": "Zercher position carryover"
+  },
+  {
+    "fromId": "ex_barbell_zercher_carry",
+    "toId": "ex_zercher_squat",
+    "kind": "variation",
+    "note": "Zercher position carryover"
+  },
+  {
+    "fromId": "ex_trap_bar_deadlift",
+    "toId": "ex_trap_bar_carry",
+    "kind": "variation",
+    "note": "Same implement, different demand"
+  },
+  {
+    "fromId": "ex_trap_bar_carry",
+    "toId": "ex_trap_bar_deadlift",
+    "kind": "variation",
+    "note": "Same implement, different demand"
+  },
+  {
+    "fromId": "ex_barbell_back_squat",
+    "toId": "ex_goblet_squat",
+    "kind": "substitution",
+    "note": "No barbell / rack available"
+  },
+  {
+    "fromId": "ex_goblet_squat",
+    "toId": "ex_bodyweight_squat",
+    "kind": "substitution",
+    "note": "No load available"
+  },
+  {
+    "fromId": "ex_barbell_bench_press",
+    "toId": "ex_push_up",
+    "kind": "substitution",
+    "note": "No bench or barbell available"
+  },
+  {
+    "fromId": "ex_dumbbell_bench_press",
+    "toId": "ex_push_up",
+    "kind": "substitution",
+    "note": "No dumbbells available"
+  },
+  {
+    "fromId": "ex_pull_up",
+    "toId": "ex_lat_pulldown",
+    "kind": "substitution",
+    "note": "No pull-up bar available"
+  },
+  {
+    "fromId": "ex_pull_up",
+    "toId": "ex_band_assisted_pull_up",
+    "kind": "substitution",
+    "note": "Not yet strong enough for a full rep"
+  },
+  {
+    "fromId": "ex_barbell_deadlift",
+    "toId": "ex_kettlebell_deadlift",
+    "kind": "substitution",
+    "note": "No barbell available"
+  },
+  {
+    "fromId": "ex_barbell_bent_over_row",
+    "toId": "ex_band_row",
+    "kind": "substitution",
+    "note": "No barbell available"
+  },
+  {
+    "fromId": "ex_barbell_overhead_press",
+    "toId": "ex_dumbbell_shoulder_press",
+    "kind": "substitution",
+    "note": "No barbell available"
+  },
+  {
+    "fromId": "ex_leg_press",
+    "toId": "ex_bodyweight_squat",
+    "kind": "substitution",
+    "note": "No machine available"
+  },
+  {
+    "fromId": "ex_hack_squat",
+    "toId": "ex_goblet_squat",
+    "kind": "substitution",
+    "note": "No machine available"
+  },
+  {
+    "fromId": "ex_cable_tricep_pushdown",
+    "toId": "ex_band_tricep_pushdown",
+    "kind": "substitution",
+    "note": "No cable stack available"
+  },
+  {
+    "fromId": "ex_seated_cable_row",
+    "toId": "ex_band_row",
+    "kind": "substitution",
+    "note": "No cable stack available"
+  },
+  {
+    "fromId": "ex_lat_pulldown",
+    "toId": "ex_band_assisted_pull_up",
+    "kind": "substitution",
+    "note": "No cable stack available"
+  },
+  {
+    "fromId": "ex_machine_chest_press",
+    "toId": "ex_push_up",
+    "kind": "substitution",
+    "note": "No machine available"
+  },
+  {
+    "fromId": "ex_kettlebell_swing",
+    "toId": "ex_barbell_hip_thrust",
+    "kind": "substitution",
+    "note": "No kettlebell available"
+  },
+  {
+    "fromId": "ex_barbell_hip_thrust",
+    "toId": "ex_glute_bridge",
+    "kind": "substitution",
+    "note": "No barbell available"
+  },
+  {
+    "fromId": "ex_dumbbell_bicep_curl",
+    "toId": "ex_band_bicep_curl",
+    "kind": "substitution",
+    "note": "No dumbbells available"
+  },
+  {
+    "fromId": "ex_dumbbell_lateral_raise",
+    "toId": "ex_band_lateral_raise",
+    "kind": "substitution",
+    "note": "No dumbbells available"
+  },
+  {
+    "fromId": "ex_cable_fly",
+    "toId": "ex_band_chest_press",
+    "kind": "substitution",
+    "note": "No cable stack available"
+  },
+  {
+    "fromId": "ex_cable_chest_press",
+    "toId": "ex_band_chest_press",
+    "kind": "substitution",
+    "note": "No cable stack available"
+  },
+  {
+    "fromId": "ex_t_bar_row",
+    "toId": "ex_barbell_bent_over_row",
+    "kind": "substitution",
+    "note": "No landmine attachment available"
+  },
+  {
+    "fromId": "ex_barbell_front_squat",
+    "toId": "ex_kettlebell_front_squat",
+    "kind": "substitution",
+    "note": "No barbell available"
+  },
+  {
+    "fromId": "ex_romanian_deadlift",
+    "toId": "ex_dumbbell_romanian_deadlift",
+    "kind": "substitution",
+    "note": "No barbell available"
+  },
+  {
+    "fromId": "ex_barbell_reverse_lunge",
+    "toId": "ex_dumbbell_walking_lunge",
+    "kind": "substitution",
+    "note": "No barbell available"
+  },
+  {
+    "fromId": "ex_skull_crusher",
+    "toId": "ex_overhead_tricep_extension",
+    "kind": "substitution",
+    "note": "No EZ bar available"
+  },
+  {
+    "fromId": "ex_preacher_curl",
+    "toId": "ex_dumbbell_bicep_curl",
+    "kind": "substitution",
+    "note": "No preacher bench available"
+  },
+  {
+    "fromId": "ex_face_pull",
+    "toId": "ex_band_face_pull",
+    "kind": "substitution",
+    "note": "No cable stack available"
+  },
+  {
+    "fromId": "ex_assisted_pull_up_machine",
+    "toId": "ex_band_assisted_pull_up",
+    "kind": "substitution",
+    "note": "No assisted pull-up machine available"
+  },
+  {
+    "fromId": "ex_back_extension",
+    "toId": "ex_good_morning",
+    "kind": "substitution",
+    "note": "No back extension bench available"
+  },
+  {
+    "fromId": "ex_leg_extension",
+    "toId": "ex_bodyweight_squat",
+    "kind": "substitution",
+    "note": "No machine available"
+  },
+  {
+    "fromId": "ex_leg_curl",
+    "toId": "ex_single_leg_romanian_deadlift",
+    "kind": "substitution",
+    "note": "No machine available"
+  },
+  {
+    "fromId": "ex_calf_raise",
+    "toId": "ex_standing_calf_raise",
+    "kind": "substitution",
+    "note": "No machine available"
+  },
+  {
+    "fromId": "ex_rowing_machine",
+    "toId": "ex_assault_bike",
+    "kind": "substitution",
+    "note": "No rowing machine available"
+  },
+  {
+    "fromId": "ex_treadmill_running",
+    "toId": "ex_outdoor_cycling",
+    "kind": "substitution",
+    "note": "No treadmill available"
+  },
+  {
+    "fromId": "ex_stationary_bike",
+    "toId": "ex_jump_rope",
+    "kind": "substitution",
+    "note": "No bike available"
+  },
+  {
+    "fromId": "ex_ab_wheel_rollout",
+    "toId": "ex_plank",
+    "kind": "substitution",
+    "note": "No ab wheel available"
+  },
+  {
+    "fromId": "ex_battle_ropes",
+    "toId": "ex_burpees",
+    "kind": "substitution",
+    "note": "No battle ropes available"
+  },
+  {
+    "fromId": "ex_sled_push",
+    "toId": "ex_box_jump",
+    "kind": "substitution",
+    "note": "No sled available"
+  },
+  {
+    "fromId": "ex_farmer_s_carry",
+    "toId": "ex_kettlebell_suitcase_carry",
+    "kind": "substitution",
+    "note": "No pair of dumbbells available"
+  },
+  {
+    "fromId": "ex_parallel_bar_dip",
+    "toId": "ex_bench_dip",
+    "kind": "substitution",
+    "note": "No dip bars available"
+  },
+  {
+    "fromId": "ex_machine_row",
+    "toId": "ex_band_row",
+    "kind": "substitution",
+    "note": "No machine available"
+  },
+  {
+    "fromId": "ex_machine_lateral_raise",
+    "toId": "ex_dumbbell_lateral_raise",
+    "kind": "substitution",
+    "note": "No machine available"
+  },
+  {
+    "fromId": "ex_hanging_leg_raise",
+    "toId": "ex_reverse_crunch",
+    "kind": "substitution",
+    "note": "No pull-up bar available"
+  },
+  {
+    "fromId": "ex_smith_machine_squat",
+    "toId": "ex_barbell_back_squat",
+    "kind": "substitution",
+    "note": "No Smith machine available"
+  },
+  {
+    "fromId": "ex_cable_crossover",
+    "toId": "ex_cable_fly",
+    "kind": "substitution",
+    "note": "Different cable stack setup"
+  },
+  {
+    "fromId": "ex_meadows_row",
+    "toId": "ex_t_bar_row",
+    "kind": "substitution",
+    "note": "No landmine attachment available"
+  },
+  {
+    "fromId": "ex_kettlebell_snatch",
+    "toId": "ex_kettlebell_swing",
+    "kind": "substitution",
+    "note": "Not yet confident overhead"
+  },
+  {
+    "fromId": "ex_ski_erg",
+    "toId": "ex_rowing_machine",
+    "kind": "substitution",
+    "note": "No ski erg available"
+  },
+  {
+    "fromId": "ex_bulgarian_split_squat",
+    "toId": "ex_dumbbell_walking_lunge",
+    "kind": "substitution",
+    "note": "No bench available"
+  },
+  {
+    "fromId": "ex_overhead_squat",
+    "toId": "ex_barbell_front_squat",
+    "kind": "substitution",
+    "note": "Shoulder mobility not ready for overhead load"
+  }
+]
