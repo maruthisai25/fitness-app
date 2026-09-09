@@ -41,6 +41,11 @@ export default defineConfig({
   },
   test: {
     name: 'web',
+    // Component tests for the food log and the body metrics form (DESIGN.md
+    // §10) run against @testing-library/react, which needs a DOM.
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: ['./src/test/setup.ts'],
     // `e2e/` holds Playwright specs (DESIGN.md §10). They are run by
     // `pnpm test:e2e`; vitest — including the workspace run that lists
     // `apps/web` as a project — must never collect them.

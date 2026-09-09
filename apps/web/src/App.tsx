@@ -4,11 +4,16 @@ import { NavLink, Route, Routes } from 'react-router';
 
 import { useDb } from './db/provider';
 import { DESTINATIONS } from './destinations';
+import { EatSection } from './eat/EatSection';
 import { OnboardingFlow } from './onboarding/OnboardingFlow';
 import { Placeholder } from './Placeholder';
+import { ProgressSection } from './progress/ProgressSection';
 import { themeColor } from './theme/cssVars';
 import { fontSize } from './theme/typeScale';
 import { YouSection } from './you/YouSection';
+
+/** Destinations that own a real section already; the rest still show a placeholder. */
+const ROUTED_PATHS = new Set(['/you', '/eat', '/progress']);
 
 /**
  * Phase 0 shell — DESIGN.md §7.1 sidebar with the five destinations, gated
@@ -76,14 +81,18 @@ export function App(): ReactNode {
 
       <main style={{ flex: 1, minWidth: 0 }}>
         <Routes>
-          {DESTINATIONS.filter((destination) => destination.path !== '/you').map((destination) => (
-            <Route
-              key={destination.path}
-              path={destination.path}
-              element={<Placeholder title={destination.label} blurb={destination.blurb} />}
-            />
-          ))}
+          {DESTINATIONS.filter((destination) => !ROUTED_PATHS.has(destination.path)).map(
+            (destination) => (
+              <Route
+                key={destination.path}
+                path={destination.path}
+                element={<Placeholder title={destination.label} blurb={destination.blurb} />}
+              />
+            ),
+          )}
           <Route path="/you/*" element={<YouSection />} />
+          <Route path="/eat/*" element={<EatSection />} />
+          <Route path="/progress/*" element={<ProgressSection />} />
           <Route
             path="*"
             element={<Placeholder title="Not found" blurb="That screen does not exist yet." />}
