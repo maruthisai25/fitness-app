@@ -17,6 +17,7 @@ export default function YouLayout() {
       <Stack.Screen name="profile" options={{ title: 'Profile' }} />
       <Stack.Screen name="goals" options={{ title: 'Goals' }} />
       <Stack.Screen name="equipment" options={{ title: 'Equipment' }} />
+      <Stack.Screen name="memories" options={{ title: 'Memories' }} />
       <Stack.Screen name="settings" options={{ title: 'Settings' }} />
       <Stack.Screen name="export" options={{ title: 'Export data' }} />
       <Stack.Screen name="import" options={{ title: 'Import data' }} />

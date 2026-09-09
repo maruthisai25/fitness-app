@@ -1,8 +1,13 @@
+import { API_KEY_STORE_KEY, isAiError } from '@vigor/ai';
 import type { Settings, UnitSystem } from '@vigor/core';
+import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
 
 import { useRepos, usePlatform } from '../../../src/db/AppDataProvider';
+import { useInvalidate } from '../../../src/data/queries';
+import { AI_API_KEY_QUERY_KEY, useAiClient } from '../../../src/ai/useAiClient';
+import { useAiPreferences, useSetAiPreferences } from '../../../src/ai/preferences';
 import {
   Button,
   ChoiceRow,
@@ -17,6 +22,8 @@ import {
   TextField,
   ToggleRow,
 } from '../../../src/ui/components';
+import { Caption } from '../../../src/ui/kit';
+import { space } from '../../../src/ui/tokens';
 
 const UNIT_OPTIONS: readonly { value: UnitSystem; label: string }[] = [
   { value: 'metric', label: 'Metric' },
@@ -33,12 +40,14 @@ const FAST_MODEL_OPTIONS: readonly { value: string; label: string }[] = [
   { value: 'claude-sonnet-5', label: 'Claude Sonnet 5' },
 ];
 
-/** Matches the key name written by the onboarding API-key screen. */
-const ANTHROPIC_API_KEY_REF = 'anthropic-api-key';
-
 export default function SettingsScreen() {
   const { settings: settingsRepo, profile: profileRepo } = useRepos();
   const { secureStore } = usePlatform();
+  const queryClient = useQueryClient();
+  const invalidate = useInvalidate();
+  const { client: aiClient } = useAiClient();
+  const preferences = useAiPreferences();
+  const setPreferences = useSetAiPreferences();
 
   const [settings, setSettings] = useState<Settings | null>(null);
   const [unitSystem, setUnitSystem] = useState<UnitSystem | null>(null);
@@ -46,12 +55,14 @@ export default function SettingsScreen() {
   const [apiKeyDraft, setApiKeyDraft] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [testResult, setTestResult] = useState<{ ok: boolean; message: string } | null>(null);
+  const [testing, setTesting] = useState(false);
 
   useEffect(() => {
     void Promise.all([
       settingsRepo.getAll(),
       profileRepo.get(),
-      secureStore.get(ANTHROPIC_API_KEY_REF),
+      secureStore.get(API_KEY_STORE_KEY),
     ]).then(([currentSettings, currentProfile, storedKey]) => {
       setSettings(currentSettings);
       setUnitSystem(currentProfile?.unitSystem ?? 'metric');
@@ -64,6 +75,10 @@ export default function SettingsScreen() {
     try {
       const next = await settingsRepo.setMany(patch);
       setSettings(next);
+      // Other screens read models/notifications through `useSettingsQuery()`
+      // (`@vigor/core/queries`'s shared cache) — keep it in step with this
+      // screen's own local state.
+      await invalidate('saveSettings');
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : 'Could not save that setting.');
     }
@@ -72,6 +87,7 @@ export default function SettingsScreen() {
   async function changeUnitSystem(next: UnitSystem) {
     setUnitSystem(next);
     await profileRepo.update({ unitSystem: next });
+    await invalidate('saveProfile');
   }
 
   async function saveApiKey() {
@@ -79,10 +95,12 @@ export default function SettingsScreen() {
     setSaving(true);
     setError(null);
     try {
-      await secureStore.set(ANTHROPIC_API_KEY_REF, apiKeyDraft.trim());
-      await updateSettings({ apiKeyRef: ANTHROPIC_API_KEY_REF });
+      await secureStore.set(API_KEY_STORE_KEY, apiKeyDraft.trim());
+      await updateSettings({ apiKeyRef: API_KEY_STORE_KEY });
       setHasApiKey(true);
       setApiKeyDraft('');
+      setTestResult(null);
+      await queryClient.invalidateQueries({ queryKey: AI_API_KEY_QUERY_KEY });
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : 'Could not save your API key.');
     } finally {
@@ -94,13 +112,39 @@ export default function SettingsScreen() {
     setSaving(true);
     setError(null);
     try {
-      await secureStore.remove(ANTHROPIC_API_KEY_REF);
+      await secureStore.remove(API_KEY_STORE_KEY);
       await updateSettings({ apiKeyRef: null });
       setHasApiKey(false);
+      setTestResult(null);
+      await queryClient.invalidateQueries({ queryKey: AI_API_KEY_QUERY_KEY });
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : 'Could not remove your API key.');
     } finally {
       setSaving(false);
+    }
+  }
+
+  /** The smallest possible request — DESIGN.md §7.1: reports success or the typed error. */
+  async function testConnection() {
+    if (!aiClient) {
+      setTestResult({ ok: false, message: 'Save an API key first.' });
+      return;
+    }
+    setTesting(true);
+    setTestResult(null);
+    try {
+      await aiClient.messages.countTokens({
+        model: aiClient.settings.fastModel,
+        messages: [{ role: 'user', content: 'ping' }],
+      });
+      setTestResult({ ok: true, message: 'Connected — your key works.' });
+    } catch (cause) {
+      setTestResult({
+        ok: false,
+        message: isAiError(cause) ? cause.userMessage : 'Could not reach Anthropic.',
+      });
+    } finally {
+      setTesting(false);
     }
   }
 
@@ -165,6 +209,27 @@ export default function SettingsScreen() {
             Opus 5 requests use the "fallbacks: default" beta, so a brief overload elsewhere is
             handled automatically.
           </FieldHint>
+        </View>
+        <ToggleRow
+          label="Server-side fallback"
+          hint="On by default (DESIGN.md §6.1). A policy decline on Opus 5 is re-run on Anthropic's fallback model inside the same request."
+          value={preferences.data?.serverSideFallback ?? true}
+          onValueChange={(value) => setPreferences.mutate({ serverSideFallback: value })}
+        />
+        <View style={{ padding: 16 }}>
+          <Button
+            label="Test connection"
+            variant="secondary"
+            onPress={() => void testConnection()}
+            loading={testing}
+            disabled={!aiClient}
+          />
+          {!aiClient ? <FieldHint>Save an API key above first.</FieldHint> : null}
+          {testResult ? (
+            <View style={{ marginTop: space.sm }}>
+              <Caption>{testResult.message}</Caption>
+            </View>
+          ) : null}
         </View>
       </Section>
 

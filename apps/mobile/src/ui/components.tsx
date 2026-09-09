@@ -53,13 +53,17 @@ interface ButtonProps {
   variant?: 'primary' | 'secondary' | 'danger';
   disabled?: boolean;
   loading?: boolean;
+  testID?: string;
 }
 
-export function Button({ label, onPress, variant = 'primary', disabled, loading }: ButtonProps) {
+export function Button({ label, onPress, variant = 'primary', disabled, loading, testID }: ButtonProps) {
   return (
     <Pressable
       onPress={onPress}
       disabled={disabled || loading}
+      testID={testID}
+      accessibilityRole="button"
+      accessibilityLabel={label}
       style={({ pressed }) => [
         styles.button,
         variant === 'secondary' && styles.buttonSecondary,

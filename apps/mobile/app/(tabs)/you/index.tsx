@@ -29,6 +29,14 @@ export default function YouMenuScreen() {
         />
       </Section>
 
+      <Section title="Coach">
+        <LinkRow
+          title="Memories"
+          subtitle="What the coach remembers about you"
+          onPress={() => router.push('/you/memories')}
+        />
+      </Section>
+
       <Section title="App">
         <LinkRow
           title="Settings"
