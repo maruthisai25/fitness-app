@@ -1,0 +1,30 @@
+# Line endings are normalised to LF in the repository and on checkout, on every
+# machine. Two developers on different platforms must not produce a diff by
+# saving a file, and `packages/db/src/migrations/generated.ts` embeds migration
+# SQL whose hash is checked at runtime (DESIGN.md §4) — a CRLF checkout there
+# would fail verification rather than merely churn.
+* text=auto eol=lf
+
+# Files git must never touch. Brand rasters are committed output of
+# `tooling/scripts/render-icons.mjs`; a line-ending pass would corrupt them.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.gif binary
+*.ico binary
+*.ttf binary
+*.otf binary
+*.woff binary
+*.woff2 binary
+*.wasm binary
+*.pdf binary
+*.mp4 binary
+
+# Generated, but still worth reading: a lockfile diff is how a supply-chain
+# change is spotted, so mark it generated without suppressing the diff.
+pnpm-lock.yaml linguist-generated=true
+
+# `.sql` migrations and the seed library are data, not prose.
+packages/db/migrations/** linguist-generated=true
+packages/library/src/data/** linguist-generated=true
