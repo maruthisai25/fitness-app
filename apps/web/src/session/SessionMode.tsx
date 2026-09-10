@@ -52,11 +52,6 @@ import { RestTimer } from './RestTimer';
 import { draftFor, useSessionStore, type SetDraft } from './sessionStore';
 import { SubstitutionSheet } from './SubstitutionSheet';
 
-/** Session mode's route, so other screens can link into it. */
-export function sessionPath(workoutId: Id): string {
-  return `/session/${workoutId}`;
-}
-
 export function SessionMode(): ReactNode {
   const { workoutId } = useParams<{ workoutId: string }>();
   const navigate = useNavigate();

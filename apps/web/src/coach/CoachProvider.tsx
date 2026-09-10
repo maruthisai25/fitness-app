@@ -17,7 +17,7 @@ import {
 import type { Id } from '@vigor/core';
 import type { Repositories } from '@vigor/db';
 import type { ReactNode } from 'react';
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, lazy, Suspense, useContext, useEffect, useMemo, useState } from 'react';
 
 import { AiGatewayProvider } from '../ai/context';
 import { AiJobRunnerProvider } from '../ai/jobRunner';
@@ -26,12 +26,26 @@ import { useProfile, useRepos } from '../data/hooks';
 import { useDb } from '../db/provider';
 import { webClock } from '../platform/clock';
 import { webNetworkStatus } from '../platform/network';
-import { CoachDock } from './ChatDock';
-import { SessionCoachSlot } from './SessionCoachSlot';
 import { CoachSlotProvider } from './slots';
-import { TodayInsightsSlot } from './TodayInsightsSlot';
-import { TodayPlanSlot } from './TodayPlanSlot';
 import { useAiClient } from './useAiClient';
+
+/**
+ * The chat rail and the three coach slots are fetched the first time they are
+ * rendered. They carry the whole conversation UI — the streamed transcript, the
+ * tool-result rendering, the quick actions — which nobody needs in the download
+ * that paints Today. Each slot renders `null` until its chunk lands, which is
+ * exactly what the slots already do while the coach is offline.
+ */
+const CoachDock = lazy(async () => ({ default: (await import('./ChatDock')).CoachDock }));
+const TodayPlanSlot = lazy(async () => ({
+  default: (await import('./TodayPlanSlot')).TodayPlanSlot,
+}));
+const TodayInsightsSlot = lazy(async () => ({
+  default: (await import('./TodayInsightsSlot')).TodayInsightsSlot,
+}));
+const SessionCoachSlot = lazy(async () => ({
+  default: (await import('./SessionCoachSlot')).SessionCoachSlot,
+}));
 
 export interface CoachContextValue {
   /** Null while there is no usable key — every screen falls back to offline. */
@@ -153,9 +167,21 @@ export function CoachProvider({ children }: { children: ReactNode }): ReactNode 
         <AiJobRunnerProvider>
           <CoachSlotProvider
             renderers={{
-              todayPlan: () => <TodayPlanSlot />,
-              todayInsights: () => <TodayInsightsSlot />,
-              sessionCoach: () => <SessionCoachSlot />,
+              todayPlan: () => (
+                <Suspense fallback={null}>
+                  <TodayPlanSlot />
+                </Suspense>
+              ),
+              todayInsights: () => (
+                <Suspense fallback={null}>
+                  <TodayInsightsSlot />
+                </Suspense>
+              ),
+              sessionCoach: () => (
+                <Suspense fallback={null}>
+                  <SessionCoachSlot />
+                </Suspense>
+              ),
             }}
           >
             {/*
@@ -168,7 +194,9 @@ export function CoachProvider({ children }: { children: ReactNode }): ReactNode 
              */}
             <div style={{ display: 'flex', minHeight: '100vh' }}>
               <div style={{ flex: 1, minWidth: 0 }}>{children}</div>
-              <CoachDock />
+              <Suspense fallback={null}>
+                <CoachDock />
+              </Suspense>
             </div>
           </CoachSlotProvider>
         </AiJobRunnerProvider>

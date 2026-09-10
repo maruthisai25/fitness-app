@@ -15,7 +15,7 @@ import { TodayQuickActions } from '../coach/TodayPlanSlot';
 import { Card, EmptyState, SectionHeading, Stat, WhyDisclosure } from '../components/ui';
 import { useExerciseIndex, useInvalidate, useRepos } from '../data/hooks';
 import { repRangeText } from '../lib/display';
-import { sessionPath } from '../session/SessionMode';
+import { sessionPath } from '../session/path';
 import { themeColor } from '../theme/cssVars';
 import { fontSize } from '../theme/typeScale';
 import { planAndSaveWorkout } from './plan';

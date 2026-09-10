@@ -15,7 +15,7 @@ import { Link } from 'react-router';
 
 import { Card, EmptyState, WhyDisclosure } from '../components/ui';
 import { useRepos } from '../data/hooks';
-import { sessionPath } from '../session/SessionMode';
+import { sessionPath } from '../session/path';
 import { themeColor } from '../theme/cssVars';
 import { fontSize } from '../theme/typeScale';
 import { useCoach } from './CoachProvider';

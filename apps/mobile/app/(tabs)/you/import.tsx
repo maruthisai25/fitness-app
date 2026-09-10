@@ -28,6 +28,20 @@ const MODE_OPTIONS: readonly { value: RestoreMode; label: string }[] = [
   { value: 'replace', label: 'Replace' },
 ];
 
+/**
+ * What the screen is doing while the buttons are disabled. Deriving the key
+ * from the passphrase is the slow step and it is slow by design — see
+ * `src/platform/exportCrypto.ts` — so it gets its own stage and its own line.
+ */
+type Stage = 'reading' | 'unlocking' | 'restoring';
+
+const STAGE_MESSAGE: Record<Stage, string> = {
+  reading: 'Reading the backup file…',
+  unlocking:
+    'Unlocking the file with your passphrase. This takes a few seconds on purpose: the same slow step is what anyone who steals the file has to pay for every guess.',
+  restoring: 'Writing every table back, in one transaction…',
+};
+
 export default function ImportScreen() {
   const { export: exportRepo } = useRepos();
   const { fileStore, crypto } = usePlatform();
@@ -35,7 +49,7 @@ export default function ImportScreen() {
   const [selectedRef, setSelectedRef] = useState<string | null>(null);
   const [passphrase, setPassphrase] = useState('');
   const [mode, setMode] = useState<RestoreMode>('merge');
-  const [busy, setBusy] = useState(false);
+  const [stage, setStage] = useState<Stage | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState<number | null>(null);
 
@@ -51,7 +65,7 @@ export default function ImportScreen() {
       setError('Choose a backup file first.');
       return;
     }
-    setBusy(true);
+    setStage('reading');
     setError(null);
     setDone(null);
     try {
@@ -60,7 +74,12 @@ export default function ImportScreen() {
         throw new Error('That backup file could not be read.');
       }
       const payload = JSON.parse(base64ToUtf8(base64)) as EncryptedPayload;
+      setStage('unlocking');
+      // A frame between setState and the derivation, so the message is on
+      // screen before the JavaScript thread disappears into PBKDF2.
+      await new Promise((resolve) => setTimeout(resolve, 0));
       const bundle = await crypto.decryptJson<ExportBundle>(payload, passphrase.trim());
+      setStage('restoring');
       // `restore` validates the schema version and the whole bundle before it
       // writes anything, and writes in one transaction (DESIGN.md §8).
       const result = await exportRepo.restore(bundle, { mode });
@@ -72,7 +91,7 @@ export default function ImportScreen() {
           : 'Could not restore that backup — check the passphrase and try again.',
       );
     } finally {
-      setBusy(false);
+      setStage(null);
     }
   }
 
@@ -97,6 +116,7 @@ export default function ImportScreen() {
               return (
                 <Pressable
                   key={file.ref}
+                  disabled={stage !== null}
                   onPress={() => setSelectedRef(file.ref)}
                   style={{
                     padding: space.lg,
@@ -125,6 +145,7 @@ export default function ImportScreen() {
             onChangeText={setPassphrase}
             secureTextEntry
             autoCapitalize="none"
+            editable={stage === null}
           />
           <FieldLabel>How to apply it</FieldLabel>
           <View style={{ marginBottom: 8 }}>
@@ -135,7 +156,13 @@ export default function ImportScreen() {
               ? 'Rows already on this device are kept; only ids this device does not have are added.'
               : 'Every table is cleared before the backup is written.'}
           </FieldHint>
-          <Button label="Restore" onPress={run} loading={busy} disabled={!selectedRef} />
+          <Button
+            label={stage === null ? 'Restore' : 'Working…'}
+            onPress={run}
+            loading={stage !== null}
+            disabled={!selectedRef}
+          />
+          {stage ? <FieldHint>{STAGE_MESSAGE[stage]}</FieldHint> : null}
         </View>
       </Section>
 

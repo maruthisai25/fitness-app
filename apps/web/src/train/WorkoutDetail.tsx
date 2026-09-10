@@ -21,7 +21,7 @@ import {
 import { useExerciseIndex, useUnitSystem, useWorkout } from '../data/hooks';
 import { loadText, loadUnit, loadValue, loggedLoadText, repUnitShort } from '../lib/display';
 import { formatDate, minutesBetween } from '../lib/localDate';
-import { sessionPath } from '../session/SessionMode';
+import { sessionPath } from '../session/path';
 import { volumeOf } from '../session/finish';
 import { themeColor } from '../theme/cssVars';
 import { fontSize } from '../theme/typeScale';

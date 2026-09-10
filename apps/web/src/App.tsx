@@ -1,22 +1,46 @@
 import { fontFamily, radius, space } from '@vigor/ui-tokens';
 import type { ReactNode } from 'react';
+import { lazy, Suspense } from 'react';
 import { NavLink, Route, Routes } from 'react-router';
 
 import { CoachProvider } from './coach/CoachProvider';
 import { useDb } from './db/provider';
 import { DESTINATIONS } from './destinations';
-import { EatSection } from './eat/EatSection';
 import { OnboardingFlow } from './onboarding/OnboardingFlow';
 import { Placeholder } from './Placeholder';
 import { useForegroundRunner } from './progress/foreground';
-import { ProgressSection } from './progress/ProgressSection';
 import { SafetyBanner } from './safety/SafetyBanner';
-import { SessionMode } from './session/SessionMode';
 import { themeColor } from './theme/cssVars';
 import { TodaySection } from './today/TodaySection';
-import { TrainSection } from './train/TrainSection';
 import { fontSize } from './theme/typeScale';
-import { YouSection } from './you/YouSection';
+
+/**
+ * Everything except Today and onboarding is fetched when it is first visited.
+ *
+ * Today is the landing screen and onboarding is the only thing a fresh install
+ * can show, so both stay in the first chunk — a spinner there would be a
+ * regression. The other four sections and session mode are each a navigation
+ * away, and the charts, the exercise library and the session store they drag in
+ * are what pushed the initial download past the 500 kB warning.
+ */
+const TrainSection = lazy(async () => ({ default: (await import('./train/TrainSection')).TrainSection }));
+const EatSection = lazy(async () => ({ default: (await import('./eat/EatSection')).EatSection }));
+const ProgressSection = lazy(async () => ({
+  default: (await import('./progress/ProgressSection')).ProgressSection,
+}));
+const YouSection = lazy(async () => ({ default: (await import('./you/YouSection')).YouSection }));
+const SessionMode = lazy(async () => ({
+  default: (await import('./session/SessionMode')).SessionMode,
+}));
+
+/** What a route shows for the moment its chunk is in flight. */
+function RouteLoading(): ReactNode {
+  return (
+    <p role="status" style={{ color: themeColor.textMuted, padding: space.xl }}>
+      Loading…
+    </p>
+  );
+}
 
 /**
  * DESIGN.md §7.1 — the five destinations in the web sidebar, gated on
@@ -37,10 +61,12 @@ export function App(): ReactNode {
 
   return (
     <CoachProvider>
-      <Routes>
-        <Route path="/session/:workoutId" element={<SessionMode />} />
-        <Route path="*" element={<AppShell />} />
-      </Routes>
+      <Suspense fallback={<RouteLoading />}>
+        <Routes>
+          <Route path="/session/:workoutId" element={<SessionMode />} />
+          <Route path="*" element={<AppShell />} />
+        </Routes>
+      </Suspense>
     </CoachProvider>
   );
 }
@@ -102,19 +128,23 @@ function AppShell(): ReactNode {
 
       <main style={{ flex: 1, minWidth: 0 }}>
         <SafetyBanner />
-        <Routes>
-          {/* All five destinations own a real section now (DESIGN.md §7.1);
-              `Placeholder` is only the not-found fallback below. */}
-          <Route path="/" element={<TodaySection />} />
-          <Route path="/train/*" element={<TrainSection />} />
-          <Route path="/you/*" element={<YouSection />} />
-          <Route path="/eat/*" element={<EatSection />} />
-          <Route path="/progress/*" element={<ProgressSection />} />
-          <Route
-            path="*"
-            element={<Placeholder title="Not found" blurb="That screen does not exist yet." />}
-          />
-        </Routes>
+        {/* A boundary per shell, not per route: switching sections keeps the
+            sidebar and the banner painted while the next chunk arrives. */}
+        <Suspense fallback={<RouteLoading />}>
+          <Routes>
+            {/* All five destinations own a real section now (DESIGN.md §7.1);
+                `Placeholder` is only the not-found fallback below. */}
+            <Route path="/" element={<TodaySection />} />
+            <Route path="/train/*" element={<TrainSection />} />
+            <Route path="/you/*" element={<YouSection />} />
+            <Route path="/eat/*" element={<EatSection />} />
+            <Route path="/progress/*" element={<ProgressSection />} />
+            <Route
+              path="*"
+              element={<Placeholder title="Not found" blurb="That screen does not exist yet." />}
+            />
+          </Routes>
+        </Suspense>
       </main>
     </div>
   );

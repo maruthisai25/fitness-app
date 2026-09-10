@@ -33,7 +33,7 @@ import {
 import { countFromText, loadFromText, loadUnit, loadValue, repUnitShort } from '../lib/display';
 import { incrementKgFor } from '../lib/increments';
 import { todayLocalDate } from '../lib/localDate';
-import { sessionPath } from '../session/SessionMode';
+import { sessionPath } from '../session/path';
 import { buildPlanDraft } from '../today/plan';
 import { themeColor } from '../theme/cssVars';
 import { fontSize } from '../theme/typeScale';
