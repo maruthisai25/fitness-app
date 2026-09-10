@@ -20,6 +20,7 @@ import type {
   GoalType,
   LocalDate,
   MacroTotals,
+  MealPlanConstraints,
   NutritionTargets,
   Profile,
   Rationale,
@@ -284,4 +285,98 @@ export function progressAgainstTarget(
 ): number | null {
   if (target == null || target <= 0) return null;
   return roundTo(consumed / target, 4);
+}
+
+// ---------------------------------------------------------------------------
+// Meal plan presets — DESIGN.md §6.4 ("respects targets per day"), §2.5
+// ---------------------------------------------------------------------------
+
+/**
+ * How the "Plan ahead" form steers a plan. A preset never invents a target:
+ * it nudges the day's own `nutrition_targets` before the coach plans against
+ * them, and pins the pantry-first constraint. Both shells drive the same
+ * function so a plan built on the phone and one built in the browser come out
+ * of the same arithmetic (DESIGN.md §2.5).
+ */
+export type MealPlanPreset = 'balanced' | 'high_protein' | 'calorie_controlled' | 'pantry_first';
+
+/** Presentation order, shared so the two shells offer the same list. */
+export const MEAL_PLAN_PRESETS: readonly MealPlanPreset[] = [
+  'balanced',
+  'high_protein',
+  'calorie_controlled',
+  'pantry_first',
+];
+
+/** High protein asks for a fifth more protein than the day's target. */
+export const HIGH_PROTEIN_TARGET_MULTIPLIER = 1.2;
+
+/** Calorie-controlled trims the day's calorie target by 15 %. */
+export const CALORIE_CONTROLLED_TARGET_MULTIPLIER = 0.85;
+
+/**
+ * The targets the plan is actually built against. Whole grams and whole
+ * kcal — a plan asking for 179.99 g of protein reads as noise, and the
+ * adjusted numbers are stored on the plan as `MealPlanConstraints`.
+ */
+export function presetAdjustedTargets(
+  targets: NutritionTargets,
+  preset: MealPlanPreset,
+): NutritionTargets {
+  switch (preset) {
+    case 'high_protein':
+      return { ...targets, proteinG: Math.round(targets.proteinG * HIGH_PROTEIN_TARGET_MULTIPLIER) };
+    case 'calorie_controlled':
+      return { ...targets, kcal: Math.round(targets.kcal * CALORIE_CONTROLLED_TARGET_MULTIPLIER) };
+    default:
+      return targets;
+  }
+}
+
+/**
+ * Pantry-first is the one preset that forces the inventory constraint on; the
+ * others leave it to the user, and a shell without a control for it passes
+ * its own default.
+ */
+export function presetPinsInventoryFirst(preset: MealPlanPreset): boolean {
+  return preset === 'pantry_first';
+}
+
+/** The "Plan ahead" form, as the user filled it in. */
+export interface MealPlanFormInput {
+  /** The day's active targets, before the preset touches them. */
+  targets: NutritionTargets;
+  preset: MealPlanPreset;
+  /** Dietary constraints carried by memories, e.g. `vegetarian`. */
+  dietary: readonly string[];
+  excludeIngredients: readonly string[];
+  /** Null = no limit. */
+  maxCookMinutes: number | null;
+  /** The user's own pantry-first choice; pantry-first overrides it. */
+  useInventoryFirst: boolean;
+}
+
+/** What the form asks the coach for, and what the plan is stored with. */
+export interface MealPlanRequest {
+  targets: NutritionTargets;
+  constraints: MealPlanConstraints;
+  useInventoryFirst: boolean;
+}
+
+/** Maps the form onto the request and the `meal_plans.constraints` row. */
+export function buildMealPlanRequest(input: MealPlanFormInput): MealPlanRequest {
+  const targets = presetAdjustedTargets(input.targets, input.preset);
+  const useInventoryFirst = presetPinsInventoryFirst(input.preset) || input.useInventoryFirst;
+  return {
+    targets,
+    useInventoryFirst,
+    constraints: {
+      kcalPerDay: targets.kcal,
+      proteinGPerDay: targets.proteinG,
+      dietary: [...input.dietary],
+      excludeIngredients: [...input.excludeIngredients],
+      maxCookMinutes: input.maxCookMinutes,
+      useInventoryFirst,
+    },
+  };
 }

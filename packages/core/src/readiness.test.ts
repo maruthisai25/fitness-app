@@ -6,8 +6,10 @@ import {
   READINESS_NORMAL_MIN,
   SHORT_SLEEP_PENALTY,
   assessReadiness,
+  orderSafetyEvents,
   readinessScore,
 } from './readiness';
+import type { SafetyEvent } from './types';
 
 beforeEach(() => {
   resetFixtureIds();
@@ -222,5 +224,60 @@ describe('partial and missing check-ins', () => {
         makeReadiness({ sleepQuality: 3, energy: 3, soreness: 3, fatigue: 3, stress: 3 }),
       ),
     ).toBe(50);
+  });
+});
+
+describe('safety event ordering — You → Safety', () => {
+  function event(overrides: Partial<SafetyEvent> & Pick<SafetyEvent, 'id' | 'date'>): SafetyEvent {
+    return {
+      kind: 'pain',
+      text: 'Left knee complained on the last set.',
+      source: 'session',
+      resolvedAt: null,
+      note: null,
+      ...overrides,
+    };
+  }
+
+  it('puts every open event ahead of every resolved one', () => {
+    const oldOpen = event({ id: 'a', date: '2026-01-01' });
+    const newResolved = event({
+      id: 'b',
+      date: '2026-06-01',
+      resolvedAt: '2026-06-02T00:00:00.000Z',
+    });
+
+    expect(orderSafetyEvents([newResolved, oldOpen]).map((row) => row.id)).toEqual(['a', 'b']);
+  });
+
+  it('orders each group newest date first', () => {
+    const ordered = orderSafetyEvents([
+      event({ id: 'open-old', date: '2026-01-01' }),
+      event({ id: 'resolved-new', date: '2026-04-01', resolvedAt: '2026-04-02T00:00:00.000Z' }),
+      event({ id: 'open-new', date: '2026-03-01' }),
+      event({ id: 'resolved-old', date: '2026-02-01', resolvedAt: '2026-02-02T00:00:00.000Z' }),
+    ]);
+
+    expect(ordered.map((row) => row.id)).toEqual([
+      'open-new',
+      'open-old',
+      'resolved-new',
+      'resolved-old',
+    ]);
+  });
+
+  it('breaks a same-day tie on id so the order is stable between renders', () => {
+    const ordered = orderSafetyEvents([
+      event({ id: 'evt-1', date: '2026-03-01' }),
+      event({ id: 'evt-2', date: '2026-03-01' }),
+    ]);
+    expect(ordered.map((row) => row.id)).toEqual(['evt-2', 'evt-1']);
+  });
+
+  it('does not mutate the array it was given', () => {
+    const rows = [event({ id: 'a', date: '2026-01-01' }), event({ id: 'b', date: '2026-02-01' })];
+    const copy = [...rows];
+    orderSafetyEvents(rows);
+    expect(rows).toEqual(copy);
   });
 });

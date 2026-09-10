@@ -16,6 +16,7 @@ import type {
   Rationale,
   Readiness,
   ReadinessModifier,
+  SafetyEvent,
   SafetyEventKind,
   SafetyEventSource,
   Scale1To5,
@@ -215,4 +216,20 @@ export function assessReadiness(
 /** Convenience for callers that only need the score, e.g. the check-in form. */
 export function readinessScore(readiness: Readiness): number | null {
   return assessReadiness(readiness).score;
+}
+
+/**
+ * Reading order for the safety history both shells show under You → Safety:
+ * anything still open first, because an open event is what holds progression
+ * back (DESIGN.md §2.6), then the resolved ones as a record. Newest first
+ * inside each group, with the id breaking ties so two events reported on the
+ * same day keep a stable order between renders.
+ */
+export function orderSafetyEvents(events: readonly SafetyEvent[]): SafetyEvent[] {
+  return [...events].sort((a, b) => {
+    const aOpen = a.resolvedAt == null;
+    const bOpen = b.resolvedAt == null;
+    if (aOpen !== bOpen) return aOpen ? -1 : 1;
+    return b.date.localeCompare(a.date) || b.id.localeCompare(a.id);
+  });
 }

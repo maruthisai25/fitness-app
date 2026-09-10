@@ -52,7 +52,14 @@ export interface GenerateMealPlanInput {
   days: number;
   targets: NutritionTargets;
   inventory: InventoryItem[];
+  /** Dietary constraints and dislikes from memories, e.g. `vegetarian`. */
   constraints: string[];
+  /** From the constraints form; null/undefined leaves cook time unconstrained. */
+  maxCookMinutes?: number | null;
+  /** Ingredients the plan must not use. */
+  excludeIngredients?: string[];
+  /** Defaults true — the pantry-first preset pins this on. */
+  useInventoryFirst?: boolean;
 }
 
 /**

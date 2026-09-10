@@ -1,5 +1,5 @@
 import { radius, space } from '@vigor/ui-tokens';
-import type { CSSProperties, ReactElement, ReactNode } from 'react';
+import type { CSSProperties, KeyboardEvent, ReactElement, ReactNode } from 'react';
 import { cloneElement, isValidElement, useId } from 'react';
 
 import { themeColor } from '../theme/cssVars';
@@ -75,6 +75,7 @@ const inputStyle: CSSProperties = {
 export function TextInput({
   value,
   onChange,
+  onKeyDown,
   placeholder,
   type = 'text',
   inputMode,
@@ -82,6 +83,8 @@ export function TextInput({
 }: {
   value: string;
   onChange: (v: string) => void;
+  /** For fields where Enter means something, e.g. adding a chip to a list. */
+  onKeyDown?: (event: KeyboardEvent<HTMLInputElement>) => void;
   placeholder?: string;
   type?: string;
   inputMode?: 'text' | 'numeric' | 'decimal';
@@ -91,6 +94,7 @@ export function TextInput({
     <input
       value={value}
       onChange={(e) => onChange(e.target.value)}
+      onKeyDown={onKeyDown}
       placeholder={placeholder}
       type={type}
       inputMode={inputMode}

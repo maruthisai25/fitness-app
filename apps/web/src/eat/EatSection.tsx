@@ -18,6 +18,7 @@ import { DayLog } from './DayLog';
 import { InventoryPanel } from './InventoryPanel';
 import { MealPlansPanel } from './MealPlansPanel';
 import { RecipeDetail, RecipesPanel } from './RecipesPanel';
+import { SavedMealsPanel } from './SavedMealsPanel';
 import { TargetsPanel } from './TargetsPanel';
 import { defaultSlotForHour, MEAL_SLOTS } from './mealSlots';
 
@@ -30,6 +31,7 @@ import { defaultSlotForHour, MEAL_SLOTS } from './mealSlots';
 const TABS = [
   { path: '/eat/day', label: 'Day' },
   { path: '/eat/add', label: 'Add food' },
+  { path: '/eat/saved', label: 'Saved meals' },
   { path: '/eat/targets', label: 'Targets' },
   { path: '/eat/inventory', label: 'Inventory' },
   { path: '/eat/recipes', label: 'Recipes' },
@@ -79,6 +81,7 @@ export function EatSection(): ReactNode {
           element={<DayLog date={date} onDateChange={setDate} today={today} />}
         />
         <Route path="add" element={<AddFoodRoute fallbackDate={date} />} />
+        <Route path="saved" element={<SavedMealsPanel today={today} />} />
         <Route path="targets" element={<TargetsPanel today={today} />} />
         <Route path="inventory" element={<InventoryPanel today={today} />} />
         <Route path="recipes" element={<RecipesPanel today={today} />} />

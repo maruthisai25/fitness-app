@@ -7,18 +7,22 @@
 import {
   activeTargetsFor,
   addDays,
+  buildMealPlanRequest,
+  MEAL_PLAN_PRESETS,
+  presetPinsInventoryFirst,
   type DayPlan,
   type DayPlanMeal,
   type LocalDate,
   type MealPlan,
+  type MealPlanPreset,
 } from '@vigor/core';
-import { space } from '@vigor/ui-tokens';
+import { radius, space } from '@vigor/ui-tokens';
 import type { ReactNode } from 'react';
 import { useState } from 'react';
 
 import { useAiGateway } from '../ai/context';
 import { isAiUnavailableError } from '../ai/gateway';
-import { Field, PrimaryButton, SecondaryButton, Select } from '../components/form';
+import { Field, PrimaryButton, SecondaryButton, Select, TextInput } from '../components/form';
 import { Card, EmptyState, LinkButton, Notice, Section, Stat } from '../components/ui';
 import { useDb } from '../db/provider';
 import { themeColor } from '../theme/cssVars';
@@ -34,6 +38,27 @@ import {
 } from './data';
 import { MEAL_SLOT_LABEL } from './mealSlots';
 
+/**
+ * Presets steer the same targets and constraints the planner already
+ * respects — no new engine, just different numbers going in. The arithmetic
+ * itself is `buildMealPlanRequest` in `@vigor/core`, shared with mobile
+ * (DESIGN.md §2.5); only the labels live here.
+ */
+const PRESET_LABEL: Record<MealPlanPreset, string> = {
+  balanced: 'Balanced',
+  high_protein: 'High protein (+20% protein)',
+  calorie_controlled: 'Calorie controlled (−15% kcal)',
+  pantry_first: 'Pantry-first (use what you have)',
+};
+
+/** A half-typed entry is no limit; only a real number becomes one. */
+function parseMaxCookMinutes(raw: string): number | null {
+  const trimmed = raw.trim();
+  if (trimmed.length === 0) return null;
+  const parsed = Number(trimmed);
+  return Number.isFinite(parsed) && parsed > 0 ? Math.max(1, Math.round(parsed)) : null;
+}
+
 export function MealPlansPanel({ today }: { today: LocalDate }): ReactNode {
   const gateway = useAiGateway();
   const plans = useMealPlans();
@@ -44,11 +69,35 @@ export function MealPlansPanel({ today }: { today: LocalDate }): ReactNode {
   const invalidate = useInvalidate();
 
   const [days, setDays] = useState('3');
+  const [preset, setPreset] = useState<MealPlanPreset>('balanced');
+  const [maxCookMinutes, setMaxCookMinutes] = useState('');
+  const [excludeIngredients, setExcludeIngredients] = useState<string[]>([]);
+  const [excludeDraft, setExcludeDraft] = useState('');
+  const [useInventoryFirst, setUseInventoryFirst] = useState(true);
   const [running, setRunning] = useState(false);
   const [problem, setProblem] = useState<string | null>(null);
 
   const targets = activeTargetsFor(today, targetsQuery.data ?? []);
   const available = gateway.isAvailable();
+  // Pantry-first pins the flag the prompt already reads (`constraintLines`
+  // in `packages/ai/src/tasks/recipes.ts`); other presets leave the toggle to
+  // the user.
+  const inventoryFirstPinned = presetPinsInventoryFirst(preset);
+  const useInventoryFirstEffective = inventoryFirstPinned || useInventoryFirst;
+
+  function addExcludeIngredient(): void {
+    const value = excludeDraft.trim();
+    if (!value || excludeIngredients.includes(value)) {
+      setExcludeDraft('');
+      return;
+    }
+    setExcludeIngredients([...excludeIngredients, value]);
+    setExcludeDraft('');
+  }
+
+  function removeExcludeIngredient(value: string): void {
+    setExcludeIngredients(excludeIngredients.filter((item) => item !== value));
+  }
 
   async function generate(): Promise<void> {
     if (!targets) return;
@@ -56,24 +105,29 @@ export function MealPlansPanel({ today }: { today: LocalDate }): ReactNode {
     setProblem(null);
     try {
       const dayCount = Math.min(7, Math.max(1, Number(days) || 1));
+      const dietary = constraintsFrom(memories.data ?? []);
+      const request = buildMealPlanRequest({
+        targets,
+        preset,
+        dietary,
+        excludeIngredients,
+        maxCookMinutes: parseMaxCookMinutes(maxCookMinutes),
+        useInventoryFirst,
+      });
       const plan = await gateway.generateMealPlan({
         days: dayCount,
-        targets,
+        targets: request.targets,
         inventory: inventory.data ?? [],
-        constraints: constraintsFrom(memories.data ?? []),
+        constraints: dietary,
+        maxCookMinutes: request.constraints.maxCookMinutes,
+        excludeIngredients: request.constraints.excludeIngredients,
+        useInventoryFirst: request.useInventoryFirst,
       });
       await repos.mealPlans.create({
         startDate: plan[0]?.date ?? today,
         plan,
         days: plan.length,
-        constraints: {
-          kcalPerDay: targets.kcal,
-          proteinGPerDay: targets.proteinG,
-          dietary: constraintsFrom(memories.data ?? []),
-          excludeIngredients: [],
-          maxCookMinutes: null,
-          useInventoryFirst: true,
-        },
+        constraints: request.constraints,
       });
       await invalidate('saveMealPlan');
     } catch (error) {
@@ -95,17 +149,135 @@ export function MealPlansPanel({ today }: { today: LocalDate }): ReactNode {
             The coach builds one day at a time against your targets, using what is already in the
             pantry before anything you would have to buy.
           </p>
-          <div style={{ maxWidth: 200 }}>
-            <Field label="How many days?">
-              <Select value={days} onChange={setDays}>
-                {[1, 2, 3, 4, 5, 6, 7].map((count) => (
-                  <option key={count} value={String(count)}>
-                    {count} day{count === 1 ? '' : 's'}
-                  </option>
-                ))}
-              </Select>
-            </Field>
+          <div style={{ display: 'flex', gap: space.md, flexWrap: 'wrap' }}>
+            <div style={{ maxWidth: 200 }}>
+              <Field label="How many days?">
+                <Select value={days} onChange={setDays}>
+                  {[1, 2, 3, 4, 5, 6, 7].map((count) => (
+                    <option key={count} value={String(count)}>
+                      {count} day{count === 1 ? '' : 's'}
+                    </option>
+                  ))}
+                </Select>
+              </Field>
+            </div>
+            <div style={{ maxWidth: 260 }}>
+              <Field label="Preset">
+                <Select value={preset} onChange={(value) => setPreset(value as MealPlanPreset)}>
+                  {MEAL_PLAN_PRESETS.map((option) => (
+                    <option key={option} value={option}>
+                      {PRESET_LABEL[option]}
+                    </option>
+                  ))}
+                </Select>
+              </Field>
+            </div>
+            <div style={{ maxWidth: 160 }}>
+              <Field label="Max cook minutes" hint="Leave blank for no limit">
+                <TextInput
+                  value={maxCookMinutes}
+                  onChange={setMaxCookMinutes}
+                  inputMode="numeric"
+                  placeholder="e.g. 30"
+                />
+              </Field>
+            </div>
           </div>
+
+          <div style={{ marginBottom: space.md }}>
+            <p
+              style={{
+                margin: `0 0 ${space.xs}px`,
+                fontSize: fontSize.label,
+                color: themeColor.textMuted,
+              }}
+            >
+              Exclude ingredients
+            </p>
+            {excludeIngredients.length > 0 && (
+              <div
+                style={{ display: 'flex', gap: space.xs, flexWrap: 'wrap', marginBottom: space.xs }}
+              >
+                {excludeIngredients.map((ingredient) => (
+                  <span
+                    key={ingredient}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: space.xs,
+                      padding: `${space.xs}px ${space.sm}px`,
+                      borderRadius: radius.pill,
+                      border: `1px solid ${themeColor.border}`,
+                      background: themeColor.surfaceRaised,
+                      color: themeColor.textMuted,
+                      fontSize: fontSize.label,
+                    }}
+                  >
+                    {ingredient}
+                    <button
+                      type="button"
+                      onClick={() => removeExcludeIngredient(ingredient)}
+                      aria-label={`Remove ${ingredient} from exclusions`}
+                      style={{
+                        border: 'none',
+                        background: 'none',
+                        color: themeColor.textMuted,
+                        cursor: 'pointer',
+                        fontSize: fontSize.label,
+                        lineHeight: 1,
+                        padding: 0,
+                      }}
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+              </div>
+            )}
+            <div
+              style={{ display: 'flex', gap: space.xs, flexWrap: 'wrap', alignItems: 'flex-end' }}
+            >
+              <Field label="Ingredient to exclude" hint="Enter adds it, or use the button">
+                <TextInput
+                  value={excludeDraft}
+                  onChange={setExcludeDraft}
+                  onKeyDown={(event) => {
+                    if (event.key !== 'Enter') return;
+                    event.preventDefault();
+                    addExcludeIngredient();
+                  }}
+                  placeholder="e.g. peanuts"
+                  style={{ minWidth: 160 }}
+                />
+              </Field>
+              <SecondaryButton
+                onClick={addExcludeIngredient}
+                disabled={excludeDraft.trim().length === 0}
+              >
+                Add
+              </SecondaryButton>
+            </div>
+          </div>
+
+          <label
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: space.xs,
+              color: themeColor.text,
+              fontSize: fontSize.label,
+              marginBottom: space.md,
+            }}
+          >
+            <input
+              type="checkbox"
+              checked={useInventoryFirstEffective}
+              disabled={inventoryFirstPinned}
+              onChange={(event) => setUseInventoryFirst(event.target.checked)}
+            />
+            Use pantry inventory first
+          </label>
+
           {!targets && (
             <Notice tone="warn">
               A plan needs targets to aim at. Set them in Eat → Targets first.

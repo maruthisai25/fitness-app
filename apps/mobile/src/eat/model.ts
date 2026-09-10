@@ -11,6 +11,7 @@ import {
   addMacros,
   buildDayNutrition,
   clampMacros,
+  MEAL_PLAN_PRESETS,
   queryKeys,
   sumConsumed,
   ZERO_MACROS,
@@ -20,6 +21,7 @@ import {
   type InventoryItem,
   type LocalDate,
   type MacroTotals,
+  type MealPlanPreset,
   type MealSlot,
   type Profile,
 } from '@vigor/core';
@@ -152,3 +154,19 @@ export async function loadFoodContext(repos: AppRepos): Promise<FoodContext> {
 export function foodRegionOf(profile: Profile | null | undefined): string {
   return profile?.foodRegion ?? 'generic';
 }
+
+// ---------------------------------------------------------------------------
+// Meal plan presets — labels only. The arithmetic (preset-adjusted targets,
+// the pantry-first rule and the stored `MealPlanConstraints`) is
+// `buildMealPlanRequest` in `@vigor/core`, shared with the web app.
+// ---------------------------------------------------------------------------
+
+const MEAL_PLAN_PRESET_LABEL: Record<MealPlanPreset, string> = {
+  balanced: 'Balanced',
+  high_protein: 'High protein',
+  calorie_controlled: 'Calorie-controlled',
+  pantry_first: 'Pantry-first',
+};
+
+export const MEAL_PLAN_PRESET_OPTIONS: readonly { value: MealPlanPreset; label: string }[] =
+  MEAL_PLAN_PRESETS.map((value) => ({ value, label: MEAL_PLAN_PRESET_LABEL[value] }));

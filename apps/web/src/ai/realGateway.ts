@@ -52,12 +52,17 @@ const DRAFT_RECIPE_ID = 'draft';
 /** The panels' free-text constraints, as `packages/ai` wants them. */
 function toConstraints(
   constraints: readonly string[],
-  timeMinutes?: number,
+  options: {
+    timeMinutes?: number | null;
+    excludeIngredients?: readonly string[];
+    useInventoryFirst?: boolean;
+  } = {},
 ): Partial<MealPlanConstraints> {
   return {
     dietary: [...constraints],
-    maxCookMinutes: timeMinutes ?? null,
-    useInventoryFirst: true,
+    maxCookMinutes: options.timeMinutes ?? null,
+    excludeIngredients: options.excludeIngredients ? [...options.excludeIngredients] : [],
+    useInventoryFirst: options.useInventoryFirst ?? true,
   };
 }
 
@@ -107,7 +112,7 @@ export function realGateway(client: AiClient | null, settings: RealGatewaySettin
         client,
         inventory: input.inventory,
         remaining: input.remaining,
-        constraints: toConstraints(input.constraints, input.timeMinutes),
+        constraints: toConstraints(input.constraints, { timeMinutes: input.timeMinutes }),
         preferences: input.preferences,
         region: settings.region,
         ...(input.timeMinutes == null ? {} : { timeMinutes: input.timeMinutes }),
@@ -132,7 +137,11 @@ export function realGateway(client: AiClient | null, settings: RealGatewaySettin
         days: input.days,
         targets: input.targets,
         inventory: input.inventory,
-        constraints: toConstraints(input.constraints),
+        constraints: toConstraints(input.constraints, {
+          timeMinutes: input.maxCookMinutes,
+          excludeIngredients: input.excludeIngredients,
+          useInventoryFirst: input.useInventoryFirst,
+        }),
       });
       if (result.plan.length === 0) {
         throw refused('generateMealPlan', 'build a plan', result.refusal?.message ?? null);

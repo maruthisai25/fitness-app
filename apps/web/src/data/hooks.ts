@@ -199,6 +199,20 @@ export function useOpenSafetyEvents(): UseQueryResult<SafetyEvent[]> {
   });
 }
 
+/**
+ * Every safety event, open and resolved — You → Safety (DESIGN.md §7.1). Same
+ * root as {@link useOpenSafetyEvents} with an extra key segment (the
+ * `useOpenWorkouts` pattern below), so `resolveSafety`/`reportSafety`'s prefix
+ * invalidation of `QUERY_ROOTS.safetyEvents` still reaches this query.
+ */
+export function useAllSafetyEvents(): UseQueryResult<SafetyEvent[]> {
+  const repos = useRepos();
+  return useQuery({
+    queryKey: [...queryKeys.safetyEvents(), 'all'],
+    queryFn: () => repos.safety.list({ includeResolved: true }),
+  });
+}
+
 export function useReadiness(date: LocalDate): UseQueryResult<Readiness | null> {
   const repos = useRepos();
   return useQuery({

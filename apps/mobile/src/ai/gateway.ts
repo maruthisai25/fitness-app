@@ -64,6 +64,12 @@ export interface GenerateMealPlanInput {
   targets: NutritionTargets;
   inventory: InventoryItem[];
   constraints: string[];
+  /** Ingredients the plan must not use — the "Plan ahead" form's exclusion chips. */
+  excludeIngredients?: string[];
+  /** Longest a single meal may take to cook, in minutes. Null/omitted = no limit. */
+  maxCookMinutes?: number | null;
+  /** Defaults true; the pantry-first preset pins it on. */
+  useInventoryFirst?: boolean;
 }
 
 export interface AiGateway {

@@ -8,7 +8,8 @@ export default function YouMenuScreen() {
     <Screen>
       <ScreenTitle>You</ScreenTitle>
       <ScreenBlurb>
-        Profile, goals, equipment, targets, memories, notifications, API key and export.
+        Profile, goals, equipment, targets, memories, safety events, notifications, API key and
+        export.
       </ScreenBlurb>
 
       <Section title="Training profile">
@@ -34,6 +35,14 @@ export default function YouMenuScreen() {
           title="Memories"
           subtitle="What the coach remembers about you"
           onPress={() => router.push('/you/memories')}
+        />
+      </Section>
+
+      <Section title="Safety">
+        <LinkRow
+          title="Safety events"
+          subtitle="Pain, injury, dizziness and fatigue reports, open and resolved"
+          onPress={() => router.push('/you/safety-events')}
         />
       </Section>
 

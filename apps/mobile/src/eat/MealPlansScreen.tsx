@@ -7,9 +7,17 @@
  */
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 
-import { queryKeys, type DayPlan, type DayPlanMeal, type MealPlan } from '@vigor/core';
+import {
+  buildMealPlanRequest,
+  presetPinsInventoryFirst,
+  queryKeys,
+  type DayPlan,
+  type DayPlanMeal,
+  type MealPlan,
+  type MealPlanPreset,
+} from '@vigor/core';
 
 import { isAiUnavailable, type AiGateway } from '../ai/gateway';
 import { useAiGateway } from '../ai/useAiGateway';
@@ -18,11 +26,14 @@ import { usePlatform, useRepos } from '../db/AppDataProvider';
 import { useReminderResync } from '../progress/useProgressForeground';
 import {
   Button,
+  ChoiceRow,
   ErrorBanner,
   LoadingScreen,
   Screen,
   ScreenBlurb,
   ScreenTitle,
+  TextField,
+  ToggleRow,
 } from '../ui/components';
 import {
   ActionRow,
@@ -35,13 +46,52 @@ import {
   EmptyState,
   InlineAction,
   ItemRow,
+  NumberField,
   Note,
   ErrorScreen,
 } from '../ui/primitives';
+import { color, fontSize, radius, space, TEXT_ACTION_HIT_SLOP } from '../ui/tokens';
 import { formatShortDate } from '../ui/DateStepper';
-import { MEAL_SLOT_LABEL, itemQuantityLabel, loadFoodContext, macroBreakdown } from './model';
+import {
+  MEAL_PLAN_PRESET_OPTIONS,
+  MEAL_SLOT_LABEL,
+  itemQuantityLabel,
+  loadFoodContext,
+  macroBreakdown,
+} from './model';
 
 const DAY_CHOICES = [1, 2, 3, 4, 5, 6, 7] as const;
+
+/** One excluded ingredient, removable by tapping it. */
+function ExcludedIngredientChip({ name, onRemove }: { name: string; onRemove: () => void }) {
+  return (
+    <Pressable
+      accessibilityRole="button"
+      accessibilityLabel={`Remove ${name} from exclusions`}
+      hitSlop={TEXT_ACTION_HIT_SLOP}
+      onPress={onRemove}
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: space.xs,
+        borderRadius: radius.pill,
+        borderWidth: 1,
+        borderColor: color.borderStrong,
+        paddingVertical: space.xs,
+        paddingHorizontal: space.md,
+      }}
+    >
+      <Text style={{ color: color.text, fontSize: fontSize.label }}>{name}</Text>
+      <Text
+        accessibilityElementsHidden
+        importantForAccessibility="no"
+        style={{ color: color.textMuted, fontSize: fontSize.label }}
+      >
+        ✕
+      </Text>
+    </Pressable>
+  );
+}
 
 export function MealPlansScreen({
   onNavigate,
@@ -64,40 +114,78 @@ export function MealPlansScreen({
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState<string | null>(null);
 
+  const [preset, setPreset] = useState<MealPlanPreset>('balanced');
+  const [maxCookMinutesText, setMaxCookMinutesText] = useState('');
+  const [excludeIngredients, setExcludeIngredients] = useState<string[]>([]);
+  const [excludeDraft, setExcludeDraft] = useState('');
+  // Pantry-first pins the constraint on; the other presets leave the choice
+  // here, and it starts on because shopping for a plan you cannot cook today
+  // is the worse default.
+  const [inventoryFirstChoice, setInventoryFirstChoice] = useState(true);
+  const inventoryFirstPinned = presetPinsInventoryFirst(preset);
+  const useInventoryFirst = inventoryFirstPinned || inventoryFirstChoice;
+
   const plans = useQuery({
     queryKey: queryKeys.mealPlans(),
     queryFn: () => repos.mealPlans.list(),
   });
+
+  function addExcludedIngredient(): void {
+    const value = excludeDraft.trim();
+    if (value.length === 0) return;
+    setExcludeIngredients((current) =>
+      current.some((item) => item.toLowerCase() === value.toLowerCase())
+        ? current
+        : [...current, value],
+    );
+    setExcludeDraft('');
+  }
+
+  function removeExcludedIngredient(name: string): void {
+    setExcludeIngredients((current) => current.filter((item) => item !== name));
+  }
+
+  /** A half-typed "12" survives; only a genuine number becomes a limit. */
+  function parsedMaxCookMinutes(): number | null {
+    const trimmed = maxCookMinutesText.trim();
+    if (trimmed.length === 0) return null;
+    const parsed = Number(trimmed);
+    return Number.isFinite(parsed) && parsed > 0 ? Math.round(parsed) : null;
+  }
 
   async function create(): Promise<void> {
     setBusy(true);
     setError(null);
     setStatus(null);
     try {
-      const targets = await repos.targets.getActive(today);
-      if (!targets) {
+      const baseTargets = await repos.targets.getActive(today);
+      if (!baseTargets) {
         setError('Set daily targets first — a plan without them has nothing to aim at.');
         return;
       }
       const context = await loadFoodContext(repos);
+      const request = buildMealPlanRequest({
+        targets: baseTargets,
+        preset,
+        dietary: context.constraints,
+        excludeIngredients,
+        maxCookMinutes: parsedMaxCookMinutes(),
+        useInventoryFirst,
+      });
       const plan = await gateway.generateMealPlan({
         days,
-        targets,
+        targets: request.targets,
         inventory: context.inventory,
         constraints: context.constraints,
+        excludeIngredients: request.constraints.excludeIngredients,
+        maxCookMinutes: request.constraints.maxCookMinutes,
+        useInventoryFirst: request.useInventoryFirst,
       });
       await repos.mealPlans.create({
         startDate: plan[0]?.date ?? today,
         days: plan.length || days,
         plan,
-        constraints: {
-          kcalPerDay: targets.kcal,
-          proteinGPerDay: targets.proteinG,
-          dietary: context.constraints,
-          excludeIngredients: [],
-          maxCookMinutes: null,
-          useInventoryFirst: true,
-        },
+        constraints: request.constraints,
       });
       invalidate('saveMealPlan');
       setStatus(`Planned ${plan.length} day${plan.length === 1 ? '' : 's'}.`);
@@ -165,7 +253,75 @@ export function MealPlansScreen({
                 />
               ))}
             </ChipRow>
-            <Button label="Build a plan" onPress={() => void create()} loading={busy} />
+
+            <View style={{ marginTop: space.lg }}>
+              <Caption>Preset</Caption>
+              <ChoiceRow value={preset} options={MEAL_PLAN_PRESET_OPTIONS} onChange={setPreset} />
+            </View>
+
+            <View style={{ marginTop: space.lg }}>
+              <NumberField
+                label="Max cook minutes"
+                testID="meal-plan-max-cook-minutes"
+                value={maxCookMinutesText}
+                onChangeText={setMaxCookMinutesText}
+                suffix="min"
+                hint="Longest a single meal may take, prep included. Leave blank for no limit."
+                placeholder="e.g. 30"
+              />
+            </View>
+
+            <View style={{ marginTop: space.lg }}>
+              <TextField
+                label="Exclude an ingredient"
+                testID="meal-plan-exclude-input"
+                value={excludeDraft}
+                onChangeText={setExcludeDraft}
+                placeholder="e.g. peanuts"
+                onSubmitEditing={addExcludedIngredient}
+                returnKeyType="done"
+              />
+              <Button
+                label="Add exclusion"
+                testID="meal-plan-exclude-add"
+                variant="secondary"
+                onPress={addExcludedIngredient}
+                disabled={excludeDraft.trim().length === 0}
+              />
+              {excludeIngredients.length > 0 ? (
+                <ChipRow>
+                  {excludeIngredients.map((name) => (
+                    <ExcludedIngredientChip
+                      key={name}
+                      name={name}
+                      onRemove={() => removeExcludedIngredient(name)}
+                    />
+                  ))}
+                </ChipRow>
+              ) : null}
+            </View>
+
+            <View style={{ marginTop: space.lg }}>
+              {inventoryFirstPinned ? (
+                <Note>Pantry-first always plans around what is already in the kitchen.</Note>
+              ) : (
+                <ToggleRow
+                  label="Use pantry inventory first"
+                  hint="Plan around what you already have before anything you would have to buy."
+                  value={inventoryFirstChoice}
+                  onValueChange={setInventoryFirstChoice}
+                />
+              )}
+            </View>
+
+            <View style={{ marginTop: space.lg }}>
+              <Button
+                label="Build a plan"
+                testID="meal-plan-build"
+                onPress={() => void create()}
+                loading={busy}
+              />
+            </View>
           </View>
         ) : (
           <View>

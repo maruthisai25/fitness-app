@@ -9,6 +9,7 @@ import { ExportImportPanel } from './ExportImportPanel';
 import { GoalsPanel } from './GoalsPanel';
 import { MemoriesPanel } from './MemoriesPanel';
 import { ProfilePanel } from './ProfilePanel';
+import { SafetyPanel } from './SafetyPanel';
 import { SettingsPanel } from './SettingsPanel';
 
 // Absolute paths, not relative ('profile', 'goals', …): a relative
@@ -22,6 +23,7 @@ const TABS = [
   { path: '/you/goals', label: 'Goals' },
   { path: '/you/equipment', label: 'Equipment' },
   { path: '/you/memories', label: 'Memories' },
+  { path: '/you/safety', label: 'Safety' },
   { path: '/you/settings', label: 'Settings' },
   { path: '/you/export', label: 'Export / Import' },
 ] as const;
@@ -72,6 +74,7 @@ export function YouSection(): ReactNode {
         <Route path="goals" element={<GoalsPanel />} />
         <Route path="equipment" element={<EquipmentPanel />} />
         <Route path="memories" element={<MemoriesPanel />} />
+        <Route path="safety" element={<SafetyPanel />} />
         <Route path="settings" element={<SettingsPanel />} />
         <Route path="export" element={<ExportImportPanel />} />
       </Routes>

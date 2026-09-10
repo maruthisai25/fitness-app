@@ -12,13 +12,17 @@ import {
   ACTIVITY_MULTIPLIERS,
   DEFAULT_AGE_YEARS,
   FIBER_G_PER_1000_KCAL,
+  MEAL_PLAN_PRESETS,
   PROTEIN_G_PER_KG,
   activeTargetsFor,
   addMacros,
   buildDayNutrition,
+  buildMealPlanRequest,
   clampMacros,
   computeInitialNutritionTargets,
   mifflinStJeorBmr,
+  presetAdjustedTargets,
+  presetPinsInventoryFirst,
   progressAgainstTarget,
   subtractMacros,
   sumConsumed,
@@ -264,5 +268,86 @@ describe('progressAgainstTarget', () => {
     expect(progressAgainstTarget(200, 150)).toBeCloseTo(1.3333, 3);
     expect(progressAgainstTarget(75, null)).toBeNull();
     expect(progressAgainstTarget(75, 0)).toBeNull();
+  });
+});
+
+describe('meal plan presets — DESIGN.md §6.4', () => {
+  const targets = makeTargets({ kcal: 2000, proteinG: 150 });
+
+  it('balanced plans against the targets exactly as they are set', () => {
+    expect(presetAdjustedTargets(targets, 'balanced')).toEqual(targets);
+  });
+
+  it('high protein asks for a fifth more protein and leaves the calories alone', () => {
+    const adjusted = presetAdjustedTargets(targets, 'high_protein');
+    expect(adjusted.proteinG).toBe(180);
+    expect(adjusted.kcal).toBe(2000);
+  });
+
+  it('calorie-controlled trims the calories 15 % and leaves the protein alone', () => {
+    const adjusted = presetAdjustedTargets(targets, 'calorie_controlled');
+    expect(adjusted.kcal).toBe(1700);
+    expect(adjusted.proteinG).toBe(150);
+  });
+
+  it('rounds to whole grams and whole kcal', () => {
+    const odd = makeTargets({ kcal: 2137, proteinG: 137 });
+    expect(presetAdjustedTargets(odd, 'high_protein').proteinG).toBe(164);
+    expect(presetAdjustedTargets(odd, 'calorie_controlled').kcal).toBe(1816);
+  });
+
+  it('pantry-first is the only preset that pins the inventory constraint', () => {
+    expect(MEAL_PLAN_PRESETS.filter(presetPinsInventoryFirst)).toEqual(['pantry_first']);
+  });
+
+  it('builds the request and the stored constraints from one form', () => {
+    const request = buildMealPlanRequest({
+      targets,
+      preset: 'high_protein',
+      dietary: ['vegetarian'],
+      excludeIngredients: ['peanuts'],
+      maxCookMinutes: 25,
+      useInventoryFirst: false,
+    });
+
+    expect(request.targets.proteinG).toBe(180);
+    expect(request.useInventoryFirst).toBe(false);
+    expect(request.constraints).toEqual({
+      kcalPerDay: 2000,
+      proteinGPerDay: 180,
+      dietary: ['vegetarian'],
+      excludeIngredients: ['peanuts'],
+      maxCookMinutes: 25,
+      useInventoryFirst: false,
+    });
+  });
+
+  it('pantry-first overrides a user who turned the inventory constraint off', () => {
+    const request = buildMealPlanRequest({
+      targets,
+      preset: 'pantry_first',
+      dietary: [],
+      excludeIngredients: [],
+      maxCookMinutes: null,
+      useInventoryFirst: false,
+    });
+
+    expect(request.useInventoryFirst).toBe(true);
+    expect(request.constraints.useInventoryFirst).toBe(true);
+    expect(request.constraints.maxCookMinutes).toBeNull();
+  });
+
+  it('copies the lists it is given rather than aliasing the caller arrays', () => {
+    const excludeIngredients = ['peanuts'];
+    const request = buildMealPlanRequest({
+      targets,
+      preset: 'balanced',
+      dietary: [],
+      excludeIngredients,
+      maxCookMinutes: null,
+      useInventoryFirst: true,
+    });
+    excludeIngredients.push('shellfish');
+    expect(request.constraints.excludeIngredients).toEqual(['peanuts']);
   });
 });
