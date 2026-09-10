@@ -18,7 +18,10 @@ export default defineConfig({
     trace: 'retain-on-failure',
   },
   webServer: {
-    command: 'pnpm run build && pnpm run preview -- --port 4173',
+    // `ensure-build.mjs` only rebuilds when `dist/` is missing or older than
+    // the source, then serves it — so a repeated `test:e2e` run skips
+    // straight to `vite preview` and stays quick.
+    command: 'node scripts/ensure-build.mjs',
     url: 'http://localhost:4173',
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

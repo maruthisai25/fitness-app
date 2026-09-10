@@ -82,6 +82,12 @@ function AppShell(): ReactNode {
         fontFamily: fontFamily.body,
       }}
     >
+      {/* Accessibility pass: the first focusable thing on every screen, so a
+          keyboard user never has to tab through the sidebar to reach the
+          page's own content. */}
+      <a href="#main-content" className="vg-skip-link">
+        Skip to content
+      </a>
       <nav
         aria-label="Primary"
         style={{
@@ -126,7 +132,7 @@ function AppShell(): ReactNode {
         </ul>
       </nav>
 
-      <main style={{ flex: 1, minWidth: 0 }}>
+      <main id="main-content" tabIndex={-1} style={{ flex: 1, minWidth: 0 }}>
         <SafetyBanner />
         {/* A boundary per shell, not per route: switching sections keeps the
             sidebar and the banner painted while the next chunk arrives. */}

@@ -11,13 +11,19 @@ import { MemoriesPanel } from './MemoriesPanel';
 import { ProfilePanel } from './ProfilePanel';
 import { SettingsPanel } from './SettingsPanel';
 
+// Absolute paths, not relative ('profile', 'goals', …): a relative
+// `<NavLink to>` resolves against the current URL, not this route's own
+// mount point — from anywhere but the `/you` index (e.g. already on
+// `/you/goals`) a relative link below would resolve to `/you/goals/settings`
+// and fall through to nothing, so every tab but the first click ever leaves
+// would silently no-op. Train's tabs use the same absolute style.
 const TABS = [
-  { path: 'profile', label: 'Profile' },
-  { path: 'goals', label: 'Goals' },
-  { path: 'equipment', label: 'Equipment' },
-  { path: 'memories', label: 'Memories' },
-  { path: 'settings', label: 'Settings' },
-  { path: 'export', label: 'Export / Import' },
+  { path: '/you/profile', label: 'Profile' },
+  { path: '/you/goals', label: 'Goals' },
+  { path: '/you/equipment', label: 'Equipment' },
+  { path: '/you/memories', label: 'Memories' },
+  { path: '/you/settings', label: 'Settings' },
+  { path: '/you/export', label: 'Export / Import' },
 ] as const;
 
 /** You — DESIGN.md §7.1: profile, goals, equipment, targets, settings, export/import. */

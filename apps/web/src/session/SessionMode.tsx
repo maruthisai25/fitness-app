@@ -97,6 +97,18 @@ export function SessionMode(): ReactNode {
     if (workoutId) begin(workoutId);
   }, [workoutId, begin]);
 
+  // Accessibility pass: full keyboard operation of the rest timer — Escape
+  // skips it from anywhere on the screen, not only when the "Skip rest"
+  // button itself has focus.
+  useEffect(() => {
+    if (restEndsAt == null) return;
+    const onKeyDown = (event: KeyboardEvent): void => {
+      if (event.key === 'Escape') stopRest();
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [restEndsAt, stopRest]);
+
   // Starting stamps `startedAt`, which the finish summary turns into duration.
   useEffect(() => {
     if (!workout || workout.status !== 'planned') return;
@@ -244,6 +256,9 @@ export function SessionMode(): ReactNode {
         flexDirection: 'column',
       }}
     >
+      <a href="#main-content" className="vg-skip-link">
+        Skip to content
+      </a>
       <header
         style={{
           display: 'flex',
@@ -283,7 +298,11 @@ export function SessionMode(): ReactNode {
         </button>
       </header>
 
-      <main style={{ flex: 1, width: '100%', maxWidth: 760, margin: '0 auto', padding: space.xl }}>
+      <main
+        id="main-content"
+        tabIndex={-1}
+        style={{ flex: 1, width: '100%', maxWidth: 760, margin: '0 auto', padding: space.xl }}
+      >
         {safetyActive && (
           <Card tone="safety" style={{ marginBottom: space.lg, borderColor: themeColor.bad }}>
             <strong style={{ color: themeColor.text }}>Safety event open</strong>
@@ -668,72 +687,98 @@ function SetRow({
 
   return (
     <Card>
-      <div style={{ display: 'flex', gap: space.md, flexWrap: 'wrap', alignItems: 'flex-end' }}>
-        <span
-          className="tabular"
-          style={{ fontFamily: fontFamily.display, fontSize: fontSize.subheading, minWidth: 64 }}
-        >
-          Set {number}
-        </span>
+      {/*
+        Accessibility pass: a real `<form>` so pressing Enter in any of the
+        boxes below confirms the set, same as clicking the button — no
+        per-field key handler needed, that is what a submit button is for.
+      */}
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          if (!busy) onConfirm();
+        }}
+      >
+        <div style={{ display: 'flex', gap: space.md, flexWrap: 'wrap', alignItems: 'flex-end' }}>
+          <span
+            className="tabular"
+            style={{ fontFamily: fontFamily.display, fontSize: fontSize.subheading, minWidth: 64 }}
+          >
+            Set {number}
+          </span>
 
-        <label style={{ display: 'block' }}>
-          <span style={fieldLabel}>{repLabel}</span>
-          <input
-            aria-label={`Set ${number} ${repLabel}`}
-            inputMode="numeric"
-            value={draft.reps}
-            onChange={(event) => onPatch({ reps: event.target.value })}
-            style={{ ...inputStyle, width: 92 }}
-          />
-        </label>
-
-        {loadable && (
           <label style={{ display: 'block' }}>
-            <span style={fieldLabel}>Load ({loadUnit(unitSystem)})</span>
+            <span style={fieldLabel}>{repLabel}</span>
             <input
-              aria-label={`Set ${number} load in ${loadUnit(unitSystem)}`}
-              inputMode="decimal"
-              value={draft.load}
-              onChange={(event) => onPatch({ load: event.target.value })}
-              style={{ ...inputStyle, width: 110 }}
+              aria-label={`Set ${number} ${repLabel}`}
+              inputMode="numeric"
+              value={draft.reps}
+              onChange={(event) => onPatch({ reps: event.target.value })}
+              onKeyDown={(event) => {
+                // Belt-and-braces alongside the <form>'s own submit-on-Enter:
+                // some test/embed environments dispatch a keydown without the
+                // browser's implicit-submission default action attached.
+                if (event.key === 'Enter' && !busy) {
+                  event.preventDefault();
+                  onConfirm();
+                }
+              }}
+              style={{ ...inputStyle, width: 92 }}
             />
           </label>
-        )}
 
-        <button
-          type="button"
-          disabled={busy}
-          onClick={onConfirm}
-          style={{ ...primaryButton, marginLeft: 'auto' }}
-        >
-          Confirm set {number}
-        </button>
-      </div>
+          {loadable && (
+            <label style={{ display: 'block' }}>
+              <span style={fieldLabel}>Load ({loadUnit(unitSystem)})</span>
+              <input
+                aria-label={`Set ${number} load in ${loadUnit(unitSystem)}`}
+                inputMode="decimal"
+                value={draft.load}
+                onChange={(event) => onPatch({ load: event.target.value })}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' && !busy) {
+                    event.preventDefault();
+                    onConfirm();
+                  }
+                }}
+                style={{ ...inputStyle, width: 110 }}
+              />
+            </label>
+          )}
 
-      <div
-        style={{ display: 'flex', gap: space.xs, flexWrap: 'wrap', marginTop: space.md }}
-        role="group"
-        aria-label={`Set ${number} RPE`}
-      >
-        <span style={{ ...fieldLabel, alignSelf: 'center' }}>RPE</span>
-        {RPE_CHOICES.map((value) => (
-          <Pill
-            key={value}
-            pressed={draft.rpe === value}
-            onClick={() => onPatch({ rpe: draft.rpe === value ? null : value })}
+          <button
+            type="submit"
+            disabled={busy}
+            style={{ ...primaryButton, marginLeft: 'auto' }}
           >
-            {value}
-          </Pill>
-        ))}
-      </div>
+            Confirm set {number}
+          </button>
+        </div>
 
-      <input
-        aria-label={`Set ${number} notes`}
-        placeholder="Notes — how did it move?"
-        value={draft.notes}
-        onChange={(event) => onPatch({ notes: event.target.value })}
-        style={{ ...inputStyle, width: '100%', marginTop: space.md }}
-      />
+        <div
+          style={{ display: 'flex', gap: space.xs, flexWrap: 'wrap', marginTop: space.md }}
+          role="group"
+          aria-label={`Set ${number} RPE`}
+        >
+          <span style={{ ...fieldLabel, alignSelf: 'center' }}>RPE</span>
+          {RPE_CHOICES.map((value) => (
+            <Pill
+              key={value}
+              pressed={draft.rpe === value}
+              onClick={() => onPatch({ rpe: draft.rpe === value ? null : value })}
+            >
+              {value}
+            </Pill>
+          ))}
+        </div>
+
+        <input
+          aria-label={`Set ${number} notes`}
+          placeholder="Notes — how did it move?"
+          value={draft.notes}
+          onChange={(event) => onPatch({ notes: event.target.value })}
+          style={{ ...inputStyle, width: '100%', marginTop: space.md }}
+        />
+      </form>
     </Card>
   );
 }

@@ -12,11 +12,6 @@ import { createCoachDeps, type AiClient, type CoachDeps } from '@vigor/ai';
 import { createFakeAiClient, jsonTurn } from '@vigor/ai/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-vi.mock('../db/provider', async () => {
-  const { useDbFromRef } = await import('../test/dbRef');
-  return { useDb: useDbFromRef };
-});
-
 // The runner reads the client and the connectivity answer out of the coach
 // context; this test supplies both directly instead of a real SecureStore.
 const coach = {
@@ -30,7 +25,7 @@ vi.mock('../coach/CoachProvider', () => ({
 
 import { AiJobRunnerProvider } from '../ai/jobRunner';
 import { DayLog } from '../eat/DayLog';
-import { createHarness, renderWithProviders } from '../test/harness';
+import { createHarness, renderWithProviders } from '../testing/harness';
 
 const DATE = '2026-09-10';
 
@@ -93,6 +88,7 @@ describe('the app’s AI job runner', () => {
     coach.client = createFakeAiClient({ responses: [ESTIMATE_REPLY] }).client;
 
     renderWithProviders(
+      harness,
       <AiJobRunnerProvider>
         <DayLog date={DATE} today={DATE} onDateChange={() => undefined} />
       </AiJobRunnerProvider>,
@@ -119,6 +115,7 @@ describe('the app’s AI job runner', () => {
     coach.client = null;
 
     renderWithProviders(
+      harness,
       <AiJobRunnerProvider>
         <DayLog date={DATE} today={DATE} onDateChange={() => undefined} />
       </AiJobRunnerProvider>,

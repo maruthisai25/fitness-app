@@ -1,5 +1,6 @@
 import { radius, space } from '@vigor/ui-tokens';
-import type { CSSProperties, ReactNode } from 'react';
+import type { CSSProperties, ReactElement, ReactNode } from 'react';
+import { cloneElement, isValidElement, useId } from 'react';
 
 import { themeColor } from '../theme/cssVars';
 import { fontSize } from '../theme/typeScale';
@@ -15,21 +16,38 @@ export function Field({
   hint?: string;
   children: ReactNode;
 }): ReactNode {
+  const hintId = useId();
+  // Accessibility pass: the hint sits outside the wrapping `<label>` and is
+  // linked with `aria-describedby` instead, so a screen reader announces the
+  // field's name once (from the label) and the hint once (as a description),
+  // rather than reading the hint as part of the name on every visit.
+  const control =
+    hint && isValidElement(children)
+      ? cloneElement(children as ReactElement<{ 'aria-describedby'?: string }>, {
+          'aria-describedby':
+            [(children.props as { 'aria-describedby'?: string })['aria-describedby'], hintId]
+              .filter(Boolean)
+              .join(' ') || undefined,
+        })
+      : children;
   return (
-    <label style={{ display: 'block', marginBottom: space.md }}>
-      <span
-        style={{
-          display: 'block',
-          fontSize: fontSize.label,
-          color: themeColor.textMuted,
-          marginBottom: space.xs,
-        }}
-      >
-        {label}
-      </span>
-      {children}
+    <div style={{ marginBottom: space.md }}>
+      <label style={{ display: 'block' }}>
+        <span
+          style={{
+            display: 'block',
+            fontSize: fontSize.label,
+            color: themeColor.textMuted,
+            marginBottom: space.xs,
+          }}
+        >
+          {label}
+        </span>
+        {control}
+      </label>
       {hint && (
         <span
+          id={hintId}
           style={{
             display: 'block',
             fontSize: fontSize.caption,
@@ -40,7 +58,7 @@ export function Field({
           {hint}
         </span>
       )}
-    </label>
+    </div>
   );
 }
 

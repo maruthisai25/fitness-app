@@ -13,11 +13,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type * as LocalDateModule from '../lib/localDate';
 
-vi.mock('../db/provider', async () => {
-  const { useDbFromRef } = await import('../test/dbRef');
-  return { useDb: useDbFromRef };
-});
-
 // Today is pinned so the assertions below are about the numbers, not the date
 // the suite happens to run on.
 vi.mock('../lib/localDate', async (importOriginal) => {
@@ -25,7 +20,7 @@ vi.mock('../lib/localDate', async (importOriginal) => {
   return { ...actual, todayLocalDate: () => '2026-09-10' };
 });
 
-import { createHarness, renderWithProviders } from '../test/harness';
+import { createHarness, renderWithProviders } from '../testing/harness';
 import { TodaySection } from '../today/TodaySection';
 
 const DATE = '2026-09-10';
@@ -75,7 +70,7 @@ describe('Today — nutrition card', () => {
       ],
     });
 
-    renderWithProviders(<TodaySection />);
+    renderWithProviders(harness, <TodaySection />);
 
     // 2400 − 400 kcal and 150 − 20 g protein, straight from `buildDayNutrition`.
     const calories = await screen.findByLabelText('Calories: 2000 kcal left of 2400');
@@ -89,7 +84,7 @@ describe('Today — nutrition card', () => {
   });
 
   it('says what to do instead when there are no targets yet', async () => {
-    renderWithProviders(<TodaySection />);
+    renderWithProviders(harness, <TodaySection />);
 
     expect(await screen.findByText(/No targets set yet/)).toBeDefined();
     expect(screen.getByText(/Eat → Targets/)).toBeDefined();

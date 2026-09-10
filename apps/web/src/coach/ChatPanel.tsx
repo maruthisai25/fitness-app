@@ -134,7 +134,9 @@ export function ChatPanel(): ReactNode {
             <ChatBlockView key={block.id} block={block} />
           ))}
           {live && (
-            <>
+            // Accessibility pass: assistive tech hears the streamed answer as
+            // it arrives, not only once the turn settles.
+            <div aria-live="polite" aria-atomic="false" style={{ display: 'grid', gap: space.sm }}>
               {live.toolCalls.map((call) => (
                 <ToolChip
                   key={call.toolUseId}
@@ -166,7 +168,7 @@ export function ChatPanel(): ReactNode {
               {busy && live.text.length === 0 && live.toolCalls.length === 0 && (
                 <p style={{ color: themeColor.textMuted, fontSize: fontSize.label }}>Thinking…</p>
               )}
-            </>
+            </div>
           )}
         </div>
         <div ref={bottomRef} />

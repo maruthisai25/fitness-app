@@ -11,14 +11,9 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-vi.mock('../db/provider', async () => {
-  const { useDbFromRef } = await import('../test/dbRef');
-  return { useDb: useDbFromRef };
-});
-
 import { AiUnavailableError, type AiGateway } from '../ai/gateway';
 import { AddFood } from '../eat/AddFood';
-import { createHarness, renderWithProviders } from '../test/harness';
+import { createHarness, renderWithProviders } from '../testing/harness';
 
 const DATE = '2026-09-10';
 
@@ -74,6 +69,7 @@ describe('Eat → Add food', () => {
     const user = userEvent.setup();
     const onLogged = vi.fn();
     renderWithProviders(
+      harness,
       <AddFood date={DATE} initialSlot="lunch" onLogged={onLogged} />,
       { gateway: gatewayReturning(PARSED) },
     );
@@ -106,7 +102,7 @@ describe('Eat → Add food', () => {
   it('queues the estimate for the coach when it is not connected', async () => {
     const user = userEvent.setup();
     // The unavailable gateway is the default, so this is the offline state.
-    renderWithProviders(<AddFood date={DATE} initialSlot="breakfast" onLogged={vi.fn()} />);
+    renderWithProviders(harness, <AddFood date={DATE} initialSlot="breakfast" onLogged={vi.fn()} />);
 
     expect(screen.getByText(/coach is not connected/i)).toBeTruthy();
 
@@ -138,7 +134,7 @@ describe('Eat → Add food', () => {
 
   it('falls back to manual entry when the coach is not connected', async () => {
     const user = userEvent.setup();
-    renderWithProviders(<AddFood date={DATE} initialSlot="breakfast" onLogged={vi.fn()} />);
+    renderWithProviders(harness, <AddFood date={DATE} initialSlot="breakfast" onLogged={vi.fn()} />);
 
     await user.click(screen.getByRole('button', { name: /enter it by hand instead/i }));
 
@@ -170,6 +166,22 @@ describe('Eat → Add food', () => {
     });
   });
 
+  it('exposes the describe-food box as a real label and announces the queued confirmation', async () => {
+    const user = userEvent.setup();
+    renderWithProviders(harness, <AddFood date={DATE} initialSlot="breakfast" onLogged={vi.fn()} />);
+
+    // Accessibility pass: the textarea has a real accessible name (from the
+    // `<Field>` wrapper's `<label>`), not just a placeholder.
+    const box = screen.getByLabelText('What did you eat?');
+    await user.type(box, 'two rotis and a bowl of dal');
+    await user.click(screen.getByRole('button', { name: /save it for the coach/i }));
+
+    // The confirmation is a role="status" region, so a screen reader hears
+    // it without the user having to go looking for it.
+    const confirmation = await screen.findByRole('status');
+    expect(confirmation.textContent).toMatch(/estimating/i);
+  });
+
   it('logs a saved meal in one tap and counts the use', async () => {
     const user = userEvent.setup();
     const saved = await harness.db.repos.savedMeals.create({
@@ -192,6 +204,7 @@ describe('Eat → Add food', () => {
     expect(saved.timesLogged).toBe(0);
 
     renderWithProviders(
+      harness,
       <AddFood date={DATE} initialSlot="snack" initialMode="saved" onLogged={vi.fn()} />,
     );
 

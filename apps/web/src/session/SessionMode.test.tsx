@@ -79,6 +79,33 @@ describe('session mode', () => {
     });
   });
 
+  it('is fully keyboard operable: Enter confirms a set, Escape skips the rest timer', async () => {
+    renderSession();
+    await screen.findByRole('heading', { name: 'Back Squat' });
+
+    const reps = await screen.findByLabelText('Set 1 reps');
+    fireEvent.change(reps, { target: { value: '10' } });
+    fireEvent.change(screen.getByLabelText('Set 1 load in kg'), { target: { value: '62.5' } });
+    // No click on the confirm button — Enter in a field submits the set's
+    // <form>, same as DESIGN.md's accessibility pass requires.
+    fireEvent.keyDown(reps, { key: 'Enter', code: 'Enter' });
+
+    await waitFor(async () => {
+      const sets = await harness.repos.sets.listForWorkout(workout.id);
+      expect(sets[0].completed).toBe(true);
+    });
+
+    // The rest timer that starts is an announced, keyboard-skippable region.
+    const timer = await screen.findByRole('timer');
+    expect(timer.getAttribute('aria-live')).toBe('polite');
+    expect(screen.getByText(/press escape to skip/i)).toBeTruthy();
+
+    fireEvent.keyDown(window, { key: 'Escape', code: 'Escape' });
+    await waitFor(() => {
+      expect(screen.queryByRole('timer')).toBeNull();
+    });
+  });
+
   it('replaces the exercise when the substitution sheet applies a pick', async () => {
     renderSession();
     await screen.findByRole('heading', { name: 'Back Squat' });

@@ -82,7 +82,7 @@ export default defineConfig({
     // mode and food log").
     environment: 'jsdom',
     globals: true,
-    setupFiles: ['./src/test/setup.ts'],
+    setupFiles: ['./src/testing/setup.ts'],
     // `e2e/` holds Playwright specs (DESIGN.md §10). They are run by
     // `pnpm test:e2e`; vitest — including the workspace run that lists
     // `apps/web` as a project — must never collect them.

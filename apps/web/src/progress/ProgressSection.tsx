@@ -21,14 +21,20 @@ import { RemindersPanel } from './RemindersPanel';
 import { ReviewDetail, ReviewsPanel } from './ReviewsPanel';
 import { StrengthPanel } from './StrengthPanel';
 
+// Absolute paths, not relative ('strength', 'body', …): a relative
+// `<NavLink to>` resolves against the current URL, not this route's own
+// mount point, so from anywhere but the `/progress` index a relative link
+// below would resolve one level too deep and fall through to the catch-all
+// redirect instead of the tab that was clicked. Train's tabs use the same
+// absolute style.
 const TABS = [
-  { path: 'strength', label: 'Strength' },
-  { path: 'body', label: 'Body' },
-  { path: 'photos', label: 'Photos' },
-  { path: 'consistency', label: 'Consistency' },
-  { path: 'insights', label: 'Insights' },
-  { path: 'reviews', label: 'Weekly review' },
-  { path: 'reminders', label: 'Reminders' },
+  { path: '/progress/strength', label: 'Strength' },
+  { path: '/progress/body', label: 'Body' },
+  { path: '/progress/photos', label: 'Photos' },
+  { path: '/progress/consistency', label: 'Consistency' },
+  { path: '/progress/insights', label: 'Insights' },
+  { path: '/progress/reviews', label: 'Weekly review' },
+  { path: '/progress/reminders', label: 'Reminders' },
 ] as const;
 
 export function ProgressSection(): ReactNode {

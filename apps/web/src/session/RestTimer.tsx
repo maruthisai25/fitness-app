@@ -83,6 +83,9 @@ export function RestTimer({
       <button type="button" onClick={onSkip} style={linkButton}>
         {done ? 'Clear' : 'Skip rest'}
       </button>
+      <span style={{ fontSize: fontSize.caption, color: themeColor.textFaint }}>
+        Press Escape to skip
+      </span>
       {!backgroundDelivery && (
         <span style={{ fontSize: fontSize.caption, color: themeColor.textFaint, width: '100%' }}>
           The rest alert only fires while this tab is open.

@@ -69,6 +69,64 @@ body,
   color: var(--vg-color-text);
 }
 
+/*
+ * No screen scrolls the page sideways at narrow widths (accessibility pass:
+ * "no horizontal page scroll at 360 px width"). Content that is genuinely
+ * wider than the viewport (tables, charts) scrolls inside its own
+ * `<ScrollX>` container instead — see `src/components/ui.tsx`.
+ */
+html,
+body {
+  overflow-x: hidden;
+}
+
+/*
+ * Visible focus rings from the tokens (accessibility pass). `:focus-visible`
+ * so a mouse click never paints a ring, only keyboard/AT navigation does.
+ */
+:focus-visible {
+  outline: 3px solid var(--vg-color-accent);
+  outline-offset: 2px;
+}
+
+/*
+ * Skip-to-content link (accessibility pass). Off-screen until it is focused,
+ * then the first thing a keyboard user reaches so the sidebar/nav on every
+ * screen never has to be tabbed through to get to the page's own content.
+ */
+.vg-skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translateY(-120%);
+  z-index: 1000;
+  padding: 12px 20px;
+  background: var(--vg-color-accent);
+  color: var(--vg-color-text-on-accent);
+  border-radius: 0 0 10px 0;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.vg-skip-link:focus {
+  transform: translateY(0);
+}
+
+/*
+ * Reduced motion (accessibility pass): every transition/animation collapses
+ * to effectively instant, and smooth scrolling is disabled.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* Every number that sits in a column is tabular (DESIGN.md §7.5). */
 .tabular {
   font-variant-numeric: tabular-nums;

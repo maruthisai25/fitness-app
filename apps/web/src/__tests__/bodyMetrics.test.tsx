@@ -10,15 +10,10 @@
 import { KG_PER_LB, CM_PER_IN } from '@vigor/core';
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-
-vi.mock('../db/provider', async () => {
-  const { useDbFromRef } = await import('../test/dbRef');
-  return { useDb: useDbFromRef };
-});
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { BodyPanel } from '../progress/BodyPanel';
-import { createHarness, renderWithProviders } from '../test/harness';
+import { createHarness, renderWithProviders } from '../testing/harness';
 
 const TODAY = '2026-09-10';
 
@@ -40,7 +35,7 @@ describe('Progress → Body', () => {
     });
 
     const user = userEvent.setup();
-    renderWithProviders(<BodyPanel today={TODAY} />);
+    renderWithProviders(harness, <BodyPanel today={TODAY} />);
 
     // The labels themselves prove which units the user is being asked for.
     const weightField = await screen.findByLabelText(/body weight \(lb\)/i);
@@ -70,7 +65,7 @@ describe('Progress → Body', () => {
     await harness.db.repos.profile.save({ displayName: 'Test profile', unitSystem: 'metric' });
 
     const user = userEvent.setup();
-    renderWithProviders(<BodyPanel today={TODAY} />);
+    renderWithProviders(harness, <BodyPanel today={TODAY} />);
 
     await user.type(await screen.findByLabelText(/body weight \(kg\)/i), '81.6');
     await user.click(screen.getByRole('button', { name: /save measurement/i }));
@@ -87,7 +82,7 @@ describe('Progress → Body', () => {
     await harness.db.repos.profile.save({ displayName: 'Test profile', unitSystem: 'metric' });
 
     const user = userEvent.setup();
-    renderWithProviders(<BodyPanel today={TODAY} />);
+    renderWithProviders(harness, <BodyPanel today={TODAY} />);
 
     // Morning: the scale and the chest tape.
     await user.type(await screen.findByLabelText(/body weight \(kg\)/i), '81.6');

@@ -21,13 +21,19 @@ import { RecipeDetail, RecipesPanel } from './RecipesPanel';
 import { TargetsPanel } from './TargetsPanel';
 import { defaultSlotForHour, MEAL_SLOTS } from './mealSlots';
 
+// Absolute paths, not relative ('day', 'add', …): a relative `<NavLink to>`
+// resolves against the current URL, not this route's own mount point, so
+// from anywhere but the `/eat` index (e.g. already on `/eat/day`) a relative
+// link below would resolve to `/eat/day/add` and fall through to the
+// catch-all redirect back to "day" — the tabs would only ever be able to
+// leave the index once. Train's tabs use the same absolute style.
 const TABS = [
-  { path: 'day', label: 'Day' },
-  { path: 'add', label: 'Add food' },
-  { path: 'targets', label: 'Targets' },
-  { path: 'inventory', label: 'Inventory' },
-  { path: 'recipes', label: 'Recipes' },
-  { path: 'plan', label: 'Meal plans' },
+  { path: '/eat/day', label: 'Day' },
+  { path: '/eat/add', label: 'Add food' },
+  { path: '/eat/targets', label: 'Targets' },
+  { path: '/eat/inventory', label: 'Inventory' },
+  { path: '/eat/recipes', label: 'Recipes' },
+  { path: '/eat/plan', label: 'Meal plans' },
 ] as const;
 
 export function EatSection(): ReactNode {

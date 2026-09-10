@@ -91,6 +91,53 @@ describe('ChatPanel', () => {
     expect(messages.some((message) => message.role === 'assistant')).toBe(true);
   });
 
+  it('announces the turn through an aria-live region the instant it starts', async () => {
+    const fake = createFakeAiClient({
+      turns: [
+        {
+          textChunks: ['On it', ', checking your history…'],
+          toolUses: [{ id: 'tool_1', name: 'get_workouts', input: { from: '2026-08-01', to: '2026-09-10' } }],
+        },
+        { text: 'You trained twice this week.' },
+      ],
+    });
+    const deps = createCoachDeps({ repos: harness.repos, clock: systemCoachClock() });
+
+    renderChat({
+      client: fake.client,
+      deps,
+      ready: true,
+      hasKey: true,
+      online: true,
+      reloadKey: () => undefined,
+      testConnection: async () => ({ ok: true }),
+      ensureConversation: async () => {
+        const conversation = await harness.repos.conversations.create();
+        return conversation.id;
+      },
+    });
+
+    const input = await screen.findByLabelText('Message the coach');
+    await waitFor(async () => {
+      expect((await harness.repos.conversations.list()).length).toBe(1);
+    });
+    fireEvent.change(input, { target: { value: 'What is on today?' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Send' }));
+
+    // Accessibility pass: the turn's live region mounts synchronously with
+    // the click (`send()` sets it before its first await), so assistive tech
+    // is told a turn is under way immediately, not only once it settles.
+    const live = document.querySelector('[aria-live="polite"]');
+    expect(live).not.toBeNull();
+    expect(live?.textContent).toMatch(/thinking/i);
+
+    // The turn still completes normally once the fake client's stream and
+    // tool round-trip resolve.
+    await waitFor(() => {
+      expect(screen.getByText('You trained twice this week.')).toBeTruthy();
+    });
+  });
+
   it('shows the no-key state and keeps the send box disabled', async () => {
     const deps = createCoachDeps({ repos: harness.repos, clock: systemCoachClock() });
     renderChat({
