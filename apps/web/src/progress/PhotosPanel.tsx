@@ -18,6 +18,7 @@ import { webFileStore } from '../platform/fileStore';
 import { themeColor } from '../theme/cssVars';
 import { fontSize } from '../theme/typeScale';
 import { useProgressPhotos } from './data';
+import { extensionOf, mimeForRef, photoRef } from './photoRefs';
 
 const VIEWS: readonly ProgressPhotoView[] = ['front', 'side', 'back'];
 
@@ -26,28 +27,6 @@ const VIEW_LABEL: Record<ProgressPhotoView, string> = {
   side: 'Side',
   back: 'Back',
 };
-
-const MIME_BY_EXTENSION: Record<string, string> = {
-  jpg: 'image/jpeg',
-  jpeg: 'image/jpeg',
-  png: 'image/png',
-  webp: 'image/webp',
-  heic: 'image/heic',
-};
-
-export function extensionOf(fileName: string, fallback = 'jpg'): string {
-  const match = /\.([a-z0-9]+)$/i.exec(fileName);
-  return match ? match[1].toLowerCase() : fallback;
-}
-
-export function mimeForRef(ref: string): string {
-  return MIME_BY_EXTENSION[extensionOf(ref)] ?? 'image/jpeg';
-}
-
-/** `photos/2026-09-10-front-<suffix>.jpg` — the sandbox-relative ref DESIGN.md §4.1 wants. */
-export function photoRef(date: LocalDate, view: ProgressPhotoView, suffix: string, ext: string): string {
-  return `photos/${date}-${view}-${suffix}.${ext}`;
-}
 
 async function fileToBase64(file: File): Promise<string> {
   const bytes = new Uint8Array(await file.arrayBuffer());
@@ -142,7 +121,13 @@ export function PhotosPanel({ today }: { today: LocalDate }): ReactNode {
 
       <Section title="Add a photo" style={{ marginTop: space.xl }}>
         <Card>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: space.md }}>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+              gap: space.md,
+            }}
+          >
             <Field label="Date">
               <input
                 type="date"
@@ -201,7 +186,9 @@ export function PhotosPanel({ today }: { today: LocalDate }): ReactNode {
           </EmptyState>
         ) : (
           <>
-            <div style={{ display: 'flex', gap: space.lg, flexWrap: 'wrap', marginBottom: space.md }}>
+            <div
+              style={{ display: 'flex', gap: space.lg, flexWrap: 'wrap', marginBottom: space.md }}
+            >
               <div style={{ minWidth: 160 }}>
                 <Field label="Then">
                   <Select value={leftDate ?? ''} onChange={(value) => setLeftDate(value)}>
@@ -305,7 +292,13 @@ function findPhoto(
   return photos.find((photo) => photo.date === date && photo.view === view) ?? null;
 }
 
-function ComparePane({ caption, photo }: { caption: string; photo: ProgressPhoto | null }): ReactNode {
+function ComparePane({
+  caption,
+  photo,
+}: {
+  caption: string;
+  photo: ProgressPhoto | null;
+}): ReactNode {
   return (
     <figure style={{ margin: 0 }}>
       {photo ? (

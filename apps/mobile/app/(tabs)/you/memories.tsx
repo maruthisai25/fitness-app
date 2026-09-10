@@ -4,9 +4,10 @@
  */
 import { useMemo, useState } from 'react';
 import { Alert, TextInput, View } from 'react-native';
-import type { Memory } from '@vigor/core';
+import type { Memory, MemoryDomain, MemoryKind } from '@vigor/core';
 
 import {
+  useCreateMemory,
   useForgetMemory,
   useMemoriesQuery,
   useRemoveMemory,
@@ -32,11 +33,109 @@ import {
   TextAction,
   TextField,
 } from '../../../src/ui/components';
-import { Body, Caption, Card, EmptyState, SectionHeading } from '../../../src/ui/kit';
+import { Body, Caption, Card, Chip, ChipRow, EmptyState, SectionHeading } from '../../../src/ui/kit';
 import { color, fontSize, radius, space } from '../../../src/ui/tokens';
 
 function confidencePct(value: number): string {
   return `${Math.round(value * 100)}%`;
+}
+
+/** The kinds a person reaches for, in that order — the coach can write any of them too. */
+const ADDABLE_KINDS: readonly MemoryKind[] = [
+  'preference',
+  'dislike',
+  'constraint',
+  'injury',
+  'goal_note',
+  'fact',
+  'behavior',
+];
+
+const ADDABLE_DOMAINS: readonly MemoryDomain[] = ['training', 'nutrition', 'general'];
+
+const KIND_PLACEHOLDER: Record<MemoryKind, string> = {
+  preference: 'I train best early in the morning',
+  dislike: 'I hate burpees',
+  constraint: 'No dairy',
+  injury: 'My left knee hates deep lunges',
+  behavior: 'I always skip Friday sessions',
+  goal_note: 'I want to deadlift 140 kg by spring',
+  fact: 'I work night shifts every other week',
+};
+
+/**
+ * Writing a memory by hand — DESIGN.md §8, `idea.md` §2.
+ *
+ * The coach was the only author until now, so a dietary restriction or a sore
+ * joint could not be recorded at all without an API key and a network. This
+ * writes through the repository, which is what `packages/core/planner` and
+ * `substitution` read, so it takes effect offline and straight away.
+ */
+function AddMemoryCard() {
+  const create = useCreateMemory();
+  const [kind, setKind] = useState<MemoryKind>('preference');
+  const [domain, setDomain] = useState<MemoryDomain>('training');
+  const [text, setText] = useState('');
+  const [saved, setSaved] = useState<string | null>(null);
+
+  async function add() {
+    const trimmed = text.trim();
+    if (trimmed.length === 0) return;
+    await create.mutateAsync({ kind, domain, text: trimmed });
+    setText('');
+    setSaved(trimmed);
+  }
+
+  return (
+    <Card title="Add a memory">
+      <Caption>
+        Anything durable the coach and the offline planner should work around — a preference, a
+        dislike, a dietary restriction, a joint that complains.
+      </Caption>
+      <ChipRow>
+        {ADDABLE_KINDS.map((option) => (
+          <Chip
+            key={option}
+            label={memoryKindLabel(option)}
+            selected={kind === option}
+            onPress={() => setKind(option)}
+          />
+        ))}
+      </ChipRow>
+      <ChipRow>
+        {ADDABLE_DOMAINS.map((option) => (
+          <Chip
+            key={option}
+            label={memoryDomainLabel(option)}
+            selected={domain === option}
+            onPress={() => setDomain(option)}
+          />
+        ))}
+      </ChipRow>
+      <View style={{ marginTop: space.sm }}>
+        <TextField
+          label="What should it remember?"
+          testID="add-memory-text"
+          placeholder={KIND_PLACEHOLDER[kind]}
+          value={text}
+          onChangeText={(value) => {
+            setText(value);
+            setSaved(null);
+          }}
+          multiline
+        />
+        <Button
+          label="Remember this"
+          testID="add-memory-save"
+          onPress={() => void add()}
+          loading={create.isPending}
+          disabled={text.trim().length === 0}
+        />
+        {saved ? <FieldHint>{`Remembered: ${saved}`}</FieldHint> : null}
+        {create.isError ? <ErrorBanner message="That memory could not be saved." /> : null}
+      </View>
+    </Card>
+  );
 }
 
 function MemoryRow({ memory }: { memory: Memory }) {
@@ -208,12 +307,15 @@ export default function MemoriesScreen() {
     <Screen>
       <ScreenTitle>Memories</ScreenTitle>
       <ScreenBlurb>
-        Everything the coach has stored about you — visible, editable and deletable, DESIGN.md §8.
+        Everything VigorEngine holds about you — what you write here and what the coach picks up in
+        chat — all visible, editable and deletable, DESIGN.md §8.
       </ScreenBlurb>
 
       <Card title="What the coach knows">
         <Body muted>{summary}</Body>
       </Card>
+
+      <AddMemoryCard />
 
       <View style={{ marginTop: space.lg }}>
         <TextField
@@ -232,7 +334,7 @@ export default function MemoriesScreen() {
           blurb={
             query.length > 0
               ? 'Try a different search.'
-              : 'Tell the coach a preference, a dislike or a constraint and it will show up here.'
+              : 'Write one in above, or tell the coach a preference, a dislike or a constraint in chat.'
           }
         />
       ) : (

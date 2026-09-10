@@ -1,11 +1,12 @@
 /**
- * Reminder settings — DESIGN.md §7.3.
+ * Reminder settings — DESIGN.md §7.3 and the six types of `idea.md` §24.
  *
- * Four local notifications, each with a time and each with a rule that can
- * keep it quiet: the workout reminder skips a day you already trained, the
- * meal-log reminder skips if you logged in the last three hours, the protein
- * reminder only fires after 18:00 with more than 40 g left, and the weekly
- * review fires on the day your week starts.
+ * Six local notifications, each with a time and each with a rule that can keep
+ * it quiet: the workout reminder skips a day you already trained, the
+ * missed-workout follow-up only looks at yesterday, the meal-log reminder skips
+ * if you logged in the last three hours, the protein reminder only fires after
+ * 18:00 with more than 40 g left, the weekly review fires on the day your week
+ * starts, and the measurement nudge waits a fortnight after your last one.
  *
  * The rules live in `packages/core/reminders`; this screen edits the times and
  * shows each rule's own explanation of what it decided.
@@ -64,6 +65,12 @@ const REMINDER_FIELDS: {
     hint: 'Stays quiet on a day you have already finished a session.',
   },
   {
+    key: 'missedWorkout',
+    kind: 'missed_workout',
+    label: 'Missed workout',
+    hint: 'The morning after a session you skipped or abandoned. Once, for yesterday only.',
+  },
+  {
     key: 'mealLog',
     kind: 'meal_log',
     label: 'Meal log',
@@ -80,6 +87,12 @@ const REMINDER_FIELDS: {
     kind: 'weekly_review',
     label: 'Weekly review',
     hint: 'Fires on your review day, once the previous week is ready and unread.',
+  },
+  {
+    key: 'measurement',
+    kind: 'measurement',
+    label: 'Progress measurement',
+    hint: 'Due once a fortnight has passed since your last weight or tape measurement.',
   },
 ];
 
@@ -105,19 +118,20 @@ export function RemindersScreen() {
   });
 
   const settings = state.data?.settings ?? null;
-  const times = drafts ?? {
-    workout: settings?.reminderTimes.workout ?? '',
-    mealLog: settings?.reminderTimes.mealLog ?? '',
-    protein: settings?.reminderTimes.protein ?? '',
-    weeklyReview: settings?.reminderTimes.weeklyReview ?? '',
-  };
+  const times =
+    drafts ??
+    Object.fromEntries(
+      REMINDER_FIELDS.map((field) => [field.key, settings?.reminderTimes[field.key] ?? '']),
+    );
 
   async function saveTimes(): Promise<void> {
     const next: ReminderTimes = {
       workout: null,
+      missedWorkout: null,
       mealLog: null,
       protein: null,
       weeklyReview: null,
+      measurement: null,
     };
     for (const field of REMINDER_FIELDS) {
       const raw = (times[field.key] ?? '').trim();

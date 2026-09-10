@@ -81,6 +81,11 @@ describe('Today — nutrition card', () => {
 
     // And the card is a way into Eat, not a dead end.
     expect(screen.getByLabelText('Open the Eat tab')).toBeDefined();
+    // "Quick log" (DESIGN.md §7.1) means the add-food form for today, in one
+    // navigation — not the day list with the form another tap away.
+    expect(screen.getByRole('link', { name: /log food/i }).getAttribute('href')).toBe(
+      `/eat/add?date=${DATE}`,
+    );
   });
 
   it('says what to do instead when there are no targets yet', async () => {

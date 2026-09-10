@@ -138,14 +138,17 @@ describe('settings', () => {
     await db.repos.settings.set('notificationsEnabled', true);
     await db.repos.settings.set('reminderTimes', {
       workout: '07:00',
+      missedWorkout: '08:00',
       mealLog: '13:00',
       protein: '18:00',
       weeklyReview: null,
+      measurement: null,
     });
     const all = await db.repos.settings.setMany({ weekStartsOn: 0, onboardingComplete: true });
 
     expect(all.notificationsEnabled).toBe(true);
     expect(all.reminderTimes.workout).toBe('07:00');
+    expect(all.reminderTimes.missedWorkout).toBe('08:00');
     expect(all.reminderTimes.weeklyReview).toBeNull();
     expect(all.weekStartsOn).toBe(0);
     expect(all.onboardingComplete).toBe(true);
@@ -153,6 +156,31 @@ describe('settings', () => {
 
     await db.repos.settings.reset('weekStartsOn');
     expect(await db.repos.settings.get('weekStartsOn')).toBe(DEFAULT_SETTINGS.weekStartsOn);
+  });
+
+  it('keeps the times a settings row written before the §24 slots existed carries', async () => {
+    // Exactly what a `reminderTimes` row looked like before `missedWorkout` and
+    // `measurement` were added. Losing the user's four chosen times over two
+    // new keys would be the worst possible upgrade.
+    await db.repos.settings.putEntries([
+      {
+        key: 'reminderTimes',
+        value: JSON.stringify({
+          workout: '07:00',
+          mealLog: '13:00',
+          protein: '18:00',
+          weeklyReview: '19:00',
+        }),
+      },
+    ]);
+
+    const times = await db.repos.settings.get('reminderTimes');
+    expect(times.workout).toBe('07:00');
+    expect(times.mealLog).toBe('13:00');
+    expect(times.protein).toBe('18:00');
+    expect(times.weeklyReview).toBe('19:00');
+    expect(times.missedWorkout).toBeNull();
+    expect(times.measurement).toBeNull();
   });
 
   it('rejects a value that does not match the settings schema', async () => {

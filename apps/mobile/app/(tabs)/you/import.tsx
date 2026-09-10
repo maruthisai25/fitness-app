@@ -51,7 +51,9 @@ export default function ImportScreen() {
   const [mode, setMode] = useState<RestoreMode>('merge');
   const [stage, setStage] = useState<Stage | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [done, setDone] = useState<number | null>(null);
+  const [done, setDone] = useState<{ rows: number; photos: number; photosMissing: number } | null>(
+    null,
+  );
 
   useEffect(() => {
     void fileStore
@@ -81,9 +83,20 @@ export default function ImportScreen() {
       const bundle = await crypto.decryptJson<ExportBundle>(payload, passphrase.trim());
       setStage('restoring');
       // `restore` validates the schema version and the whole bundle before it
-      // writes anything, and writes in one transaction (DESIGN.md §8).
-      const result = await exportRepo.restore(bundle, { mode });
-      setDone(Object.values(result.inserted).reduce((sum, count) => sum + count, 0));
+      // writes anything, and writes in one transaction (DESIGN.md §8). The
+      // photo bytes travel with it: `packages/db` holds only the `fileRef`, so
+      // the FileStore write is handed in here or the gallery restores empty.
+      const result = await exportRepo.restore(bundle, {
+        mode,
+        writePhoto: async (photo) => {
+          await fileStore.write(photo.fileRef, photo.base64, 'image/jpeg');
+        },
+      });
+      setDone({
+        rows: Object.values(result.inserted).reduce((sum, count) => sum + count, 0),
+        photos: result.photosWritten,
+        photosMissing: result.photosFailed,
+      });
     } catch (cause) {
       setError(
         cause instanceof UnsupportedBundleError
@@ -99,9 +112,9 @@ export default function ImportScreen() {
     <Screen>
       <ScreenTitle>Import data</ScreenTitle>
       <ScreenBlurb>
-        Restores every table from an encrypted backup made with Export data (DESIGN.md §8). Merge
-        keeps what is already on this device and adds only what is missing; replace wipes your
-        current data first.
+        Restores every table, and the progress photos inside it, from an encrypted backup made with
+        Export data (DESIGN.md §8). Merge keeps what is already on this device and adds only what is
+        missing; replace wipes your current data first.
       </ScreenBlurb>
 
       <Section title="Backup files on this device">
@@ -180,7 +193,10 @@ export default function ImportScreen() {
         <Section title="Done">
           <View style={{ padding: 16 }}>
             <ScreenBlurb>
-              Your backup was restored — {done} {done === 1 ? 'row' : 'rows'} written.
+              Your backup was restored — {done.rows} {done.rows === 1 ? 'row' : 'rows'} written
+              {done.photos + done.photosMissing === 0
+                ? '.'
+                : `, and ${done.photos} of ${done.photos + done.photosMissing} progress photos put back on this device.`}
             </ScreenBlurb>
           </View>
         </Section>

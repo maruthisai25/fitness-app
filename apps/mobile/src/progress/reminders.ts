@@ -9,8 +9,10 @@
  */
 import {
   MEAL_LOG_QUIET_MINUTES,
+  REMINDER_KINDS,
   addDays,
   buildDayNutrition,
+  daysBetween,
   decideReminders,
   minutesOfDay,
   resolveWeeklyReviewDay,
@@ -35,16 +37,20 @@ export function notificationIdFor(kind: ReminderKind): string {
 
 const TITLES: Record<ReminderKind, string> = {
   workout: 'Your session is still open',
+  missed_workout: 'Yesterday got away from you',
   meal_log: 'Nothing logged for a while',
   protein: 'Protein is behind',
   weekly_review: 'Your week is ready to read',
+  measurement: 'Time to measure again',
 };
 
 const BODIES: Record<ReminderKind, string> = {
   workout: 'Open Train when you are ready and the plan is waiting.',
+  missed_workout: 'One missed session is nothing. Want to pick it back up today?',
   meal_log: 'A quick line about what you ate keeps the day totals honest.',
   protein: 'There is still a good chunk of protein left for today.',
   weekly_review: 'Open Progress to see what last week actually looked like.',
+  measurement: 'A weight and a tape measure in Progress keeps the trend lines honest.',
 };
 
 /**
@@ -61,6 +67,10 @@ const BODIES: Record<ReminderKind, string> = {
  *    picked up by the next sync, which reschedules. Scheduling anyway would
  *    deliver "protein is behind" against a target that does not exist.
  *  - `REVIEW_ALREADY_VIEWED` — a week the user has read stays read.
+ *  - `MEASUREMENT_RECENT` — a measurement inside the quiet window only gets
+ *    more recent as the day goes on, never less.
+ *  - `NO_MISSED_WORKOUT` / `MISSED_WORKOUT_NOT_YESTERDAY` — which day
+ *    yesterday was does not change between now and this evening.
  *
  * `MEAL_LOGGED_RECENTLY` is deliberately absent: it expires with the clock, so
  * it is checked against the slot time in {@link skipsTodaysSlot}. `NOT_YET_DUE`
@@ -71,6 +81,9 @@ const STABLE_SKIP_CODES = new Set([
   'PROTEIN_ON_TRACK',
   'NO_PROTEIN_TARGET',
   'REVIEW_ALREADY_VIEWED',
+  'MEASUREMENT_RECENT',
+  'NO_MISSED_WORKOUT',
+  'MISSED_WORKOUT_NOT_YESTERDAY',
 ]);
 
 function pad2(value: number): string {
@@ -159,13 +172,17 @@ export async function readReminderState(
   const now = options.now ?? new Date();
   const today = options.today;
 
-  const [settings, workoutsToday, logs, targets, latestReview] = await Promise.all([
-    repos.settings.getAll(),
-    repos.workouts.getByDate(today),
-    repos.nutrition.listLogs({ from: today, to: today }),
-    repos.targets.getActive(today),
-    repos.reviews.list({ limit: 1 }),
-  ]);
+  const yesterday = addDays(today, -1);
+  const [settings, workoutsToday, workoutsYesterday, logs, targets, latestReview, latestMetric] =
+    await Promise.all([
+      repos.settings.getAll(),
+      repos.workouts.getByDate(today),
+      repos.workouts.getByDate(yesterday),
+      repos.nutrition.listLogs({ from: today, to: today }),
+      repos.targets.getActive(today),
+      repos.reviews.list({ limit: 1 }),
+      repos.body.latestMetric(),
+    ]);
 
   const day = buildDayNutrition({ date: today, logs, targets });
   // The user's chosen day, defaulting to the first day of their week.
@@ -191,6 +208,15 @@ export async function readReminderState(
     plannedWorkoutToday: workoutsToday.some(
       (workout) => workout.status === 'planned' || workout.status === 'in_progress',
     ),
+    // A session that ended `skipped` or `abandoned` yesterday is what the
+    // morning-after follow-up is for (idea.md §24 "missed workouts").
+    lastMissedWorkoutDate: workoutsYesterday.some(
+      (workout) => workout.status === 'skipped' || workout.status === 'abandoned',
+    )
+      ? yesterday
+      : null,
+    daysSinceLastMeasurement:
+      latestMetric == null ? null : Math.max(0, daysBetween(latestMetric.date, today)),
     minutesSinceLastMealLog:
       lastLoggedAt == null
         ? null
@@ -221,12 +247,12 @@ export async function syncReminders(
   now: Date = new Date(),
 ): Promise<ReminderSyncResult> {
   const decisions = decideReminders(state);
-  const scheduled = {
-    workout: null,
-    meal_log: null,
-    protein: null,
-    weekly_review: null,
-  } as Record<ReminderKind, string | null>;
+  // Built from the engine's own list, so a new reminder kind can never be
+  // decided here and then quietly dropped on the way to the adapter.
+  const scheduled = Object.fromEntries(REMINDER_KINDS.map((kind) => [kind, null])) as Record<
+    ReminderKind,
+    string | null
+  >;
 
   for (const decision of decisions) {
     const id = notificationIdFor(decision.kind);
@@ -257,7 +283,7 @@ export async function syncReminders(
 
 /** Cancels every reminder — used when notifications are switched off. */
 export async function cancelAllReminders(notifications: Notifications): Promise<void> {
-  for (const kind of ['workout', 'meal_log', 'protein', 'weekly_review'] as ReminderKind[]) {
+  for (const kind of REMINDER_KINDS) {
     await notifications.cancel(notificationIdFor(kind));
   }
 }

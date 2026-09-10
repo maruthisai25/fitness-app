@@ -39,7 +39,14 @@ async function seedEverything(db: TestDatabase): Promise<void> {
   await repos.settings.setMany({
     onboardingComplete: true,
     weekStartsOn: 1,
-    reminderTimes: { workout: '07:30', mealLog: null, protein: '18:30', weeklyReview: null },
+    reminderTimes: {
+      workout: '07:30',
+      missedWorkout: '08:30',
+      mealLog: null,
+      protein: '18:30',
+      weeklyReview: null,
+      measurement: '07:00',
+    },
     apiKeyRef: 'secure-store://anthropic',
     insightsLastRunOn: '2026-05-01',
     weeklyReviewDay: 0,
@@ -355,6 +362,63 @@ describe('export.restore', () => {
     expect(history).toHaveLength(1);
     expect(history[0]?.sets).toHaveLength(2);
 
+    await target.close();
+  });
+
+  it('writes the bundle photos back through the caller’s file store', async () => {
+    await seedEverything(source);
+    const bundle = await source.repos.export.bundle({
+      photos: [
+        { fileRef: 'photos/2026-05-02.jpg', base64: 'AAAA' },
+        { fileRef: 'photos/2026-05-03.jpg', base64: 'BBBB' },
+      ],
+    });
+
+    const written = new Map<string, string>();
+    const target = await createTestDatabase();
+    const result = await target.repos.export.restore(bundle, {
+      writePhoto: async (photo) => {
+        written.set(photo.fileRef, photo.base64);
+      },
+    });
+
+    expect(result.photosWritten).toBe(2);
+    expect(result.photosFailed).toBe(0);
+    // The row and its bytes land together: no "file missing from this device".
+    const photos = await target.repos.body.listPhotos();
+    expect(photos).toHaveLength(1);
+    expect(written.get(photos[0]!.fileRef)).toBe('AAAA');
+    await target.close();
+  });
+
+  it('keeps the tables when a photo cannot be written', async () => {
+    await seedEverything(source);
+    const bundle = await source.repos.export.bundle({
+      photos: [{ fileRef: 'photos/2026-05-02.jpg', base64: 'AAAA' }],
+    });
+
+    const target = await createTestDatabase();
+    const result = await target.repos.export.restore(bundle, {
+      writePhoto: () => Promise.reject(new Error('storage is full')),
+    });
+
+    expect(result.photosWritten).toBe(0);
+    expect(result.photosFailed).toBe(1);
+    expect(result.inserted.workouts).toBe(1);
+    expect(await target.repos.body.listPhotos()).toHaveLength(1);
+    await target.close();
+  });
+
+  it('reports every photo as unwritten when no file store is supplied', async () => {
+    await seedEverything(source);
+    const bundle = await source.repos.export.bundle({
+      photos: [{ fileRef: 'photos/2026-05-02.jpg', base64: 'AAAA' }],
+    });
+
+    const target = await createTestDatabase();
+    const result = await target.repos.export.restore(bundle);
+    expect(result.photosWritten).toBe(0);
+    expect(result.photosFailed).toBe(1);
     await target.close();
   });
 

@@ -16,6 +16,8 @@ import { themeColor } from '../theme/cssVars';
 type Draft = {
   displayName: string;
   unitSystem: UnitSystem;
+  /** `YYYY-MM-DD`, or empty when the user would rather not say. */
+  birthDate: string;
   sex: Sex;
   heightCm: string;
   weightKg: string;
@@ -33,6 +35,7 @@ function toDraft(profile: Profile): Draft {
   return {
     displayName: profile.displayName,
     unitSystem: profile.unitSystem,
+    birthDate: profile.birthDate ?? '',
     sex: profile.sex ?? 'prefer_not_to_say',
     heightCm: profile.heightCm?.toString() ?? '',
     weightKg: profile.weightKg?.toString() ?? '',
@@ -78,6 +81,7 @@ export function ProfilePanel(): ReactNode {
     try {
       await repos.profile.update({
         displayName: draft.displayName.trim() || 'Athlete',
+        birthDate: draft.birthDate.trim() || null,
         sex: draft.sex,
         heightCm: draft.heightCm ? Number(draft.heightCm) : null,
         weightKg: draft.weightKg ? Number(draft.weightKg) : null,
@@ -109,6 +113,20 @@ export function ProfilePanel(): ReactNode {
         <Select value={draft.unitSystem} onChange={(v) => set('unitSystem', v as UnitSystem)}>
           <option value="metric">Metric (kg, cm)</option>
           <option value="imperial">Imperial (lb, in)</option>
+        </Select>
+      </Field>
+      <Field
+        label="Birth date"
+        hint="Your age is one of the four numbers in the Mifflin-St Jeor equation behind your calorie target. Leave it blank and a default age is assumed instead."
+      >
+        <TextInput value={draft.birthDate} onChange={(v) => set('birthDate', v)} type="date" />
+      </Field>
+      <Field label="Sex" hint="Also part of that equation. It is only ever used for that.">
+        <Select value={draft.sex} onChange={(v) => set('sex', v as Sex)}>
+          <option value="female">Female</option>
+          <option value="male">Male</option>
+          <option value="other">Other</option>
+          <option value="prefer_not_to_say">Prefer not to say</option>
         </Select>
       </Field>
       <Field label={`Height (${draft.unitSystem === 'metric' ? 'cm' : 'in'})`}>

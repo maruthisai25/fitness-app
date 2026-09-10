@@ -49,7 +49,14 @@ beforeEach(async () => {
     ...(await db.repos.settings.getAll()),
     notificationsEnabled: true,
     weekStartsOn: 1,
-    reminderTimes: { workout: null, mealLog: '08:00', protein: null, weeklyReview: '09:00' },
+    reminderTimes: {
+      workout: null,
+      missedWorkout: '08:00',
+      mealLog: '08:00',
+      protein: null,
+      weeklyReview: '09:00',
+      measurement: '08:00',
+    },
   };
 });
 
@@ -102,6 +109,9 @@ describe('loadReminderState', () => {
     expect(state.minutesSinceLastMealLog ?? Number.NaN).toBeLessThan(5);
     // "Has this week's review been read", not "does any review exist".
     expect(state.reviewWeekViewed).toBe(false);
+    // The two §24 inputs the web shell used to have no answer for.
+    expect(state.lastMissedWorkoutDate).toBeNull();
+    expect(state.daysSinceLastMeasurement).toBeNull();
 
     await markWeeklyReviewSeen(db.repos, lastCompletedWeekStart(TODAY, settings.weekStartsOn));
     const seenSettings: Settings = {
@@ -111,6 +121,41 @@ describe('loadReminderState', () => {
     expect((await loadReminderState(db.repos, seenSettings, TODAY, '12:00')).reviewWeekViewed).toBe(
       true,
     );
+  });
+});
+
+describe('the two idea.md §24 reminders the web shell was missing', () => {
+  it('follows up the morning after a skipped session, and measures the measurement gap', async () => {
+    const workout = await db.repos.workouts.create({
+      date: '2026-01-04',
+      status: 'planned',
+      source: 'rule',
+      title: 'Lower body',
+    });
+    await db.repos.workouts.setStatus(workout.id, 'skipped');
+    await db.repos.body.upsertMetric({ date: '2025-12-01', weightKg: 80 });
+
+    const state = await loadReminderState(db.repos, settings, TODAY, '09:00');
+    expect(state.lastMissedWorkoutDate).toBe('2026-01-04');
+    expect(state.daysSinceLastMeasurement).toBe(35);
+
+    const result = await syncReminders(db.repos, settings, TODAY, '09:00');
+    const missed = result.decisions.find((decision) => decision.kind === 'missed_workout');
+    expect(missed?.fires).toBe(true);
+    expect(missed?.rationale.codes).toContain('MISSED_WORKOUT_FOLLOW_UP');
+
+    const measurement = result.decisions.find((decision) => decision.kind === 'measurement');
+    expect(measurement?.fires).toBe(true);
+    expect(measurement?.rationale.codes).toContain('MEASUREMENT_DUE');
+  });
+
+  it('stays quiet about a measurement taken this week', async () => {
+    await db.repos.body.upsertMetric({ date: '2026-01-03', weightKg: 80 });
+    const result = await syncReminders(db.repos, settings, TODAY, '09:00');
+    const measurement = result.decisions.find((decision) => decision.kind === 'measurement');
+    expect(measurement?.fires).toBe(false);
+    expect(measurement?.rationale.codes).toContain('MEASUREMENT_RECENT');
+    expect(result.cancelled).toContain(notificationIdFor('measurement'));
   });
 });
 

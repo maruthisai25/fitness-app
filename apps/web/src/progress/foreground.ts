@@ -293,7 +293,14 @@ async function loadDetectorInput(repos: Repositories, today: LocalDate): Promise
     });
   }
 
-  return { today, period: { from, to: today }, workouts, exercises, exerciseHistories, nutritionDays };
+  return {
+    today,
+    period: { from, to: today },
+    workouts,
+    exercises,
+    exerciseHistories,
+    nutritionDays,
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -497,9 +504,11 @@ export async function runWeeklyReviewIfDue(
 
 const REMINDER_TITLE: Record<ReminderDecision['kind'], string> = {
   workout: 'Your session is still open',
+  missed_workout: 'Yesterday got away from you',
   meal_log: 'Nothing logged for a while',
   protein: 'Protein is still short today',
   weekly_review: 'Your week is ready to review',
+  measurement: 'Time to measure again',
 };
 
 export function notificationIdFor(kind: ReminderDecision['kind']): string {
@@ -524,6 +533,9 @@ export async function loadReminderState(
   now: LocalTime,
 ): Promise<ReminderState> {
   const workoutsToday = await repos.workouts.getByDate(today);
+  const yesterday = addDays(today, -1);
+  const workoutsYesterday = await repos.workouts.getByDate(yesterday);
+  const latestMetric = await repos.body.latestMetric();
   const logs = finalLogs(await repos.nutrition.listLogs({ from: today, to: today }));
   const targets = await repos.targets.getActive(today);
   const day = buildDayNutrition({ date: today, logs, targets });
@@ -544,6 +556,15 @@ export async function loadReminderState(
     plannedWorkoutToday: workoutsToday.some(
       (workout) => workout.status === 'planned' || workout.status === 'in_progress',
     ),
+    // The morning-after follow-up (idea.md §24 "missed workouts") only ever
+    // looks at yesterday: a session that ended skipped or abandoned then.
+    lastMissedWorkoutDate: workoutsYesterday.some(
+      (workout) => workout.status === 'skipped' || workout.status === 'abandoned',
+    )
+      ? yesterday
+      : null,
+    daysSinceLastMeasurement:
+      latestMetric == null ? null : Math.max(0, daysBetween(latestMetric.date, today)),
     minutesSinceLastMealLog,
     remainingProteinG: targets ? day.remaining.proteinG : null,
     // The user's chosen day, defaulting to the first day of their week.

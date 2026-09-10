@@ -119,12 +119,31 @@ export interface RestoreOptions {
    * only ids the database does not already have, so a re-import is safe.
    */
   mode?: 'replace' | 'merge';
+  /**
+   * Writes one progress photo back to the device — the mirror of
+   * {@link BundleOptions.photos}. `packages/db` knows nothing about files, so
+   * the caller hands it the platform FileStore's `write`; without it the rows
+   * restore but every image reads as missing (DESIGN.md §8).
+   *
+   * Called once per photo after the tables are committed, so a device that has
+   * run out of storage still ends up with its data.
+   */
+  writePhoto?: (photo: ExportBundlePhoto) => Promise<void>;
 }
 
 export interface RestoreResult {
   mode: 'replace' | 'merge';
   /** Rows written per table. */
   inserted: Record<keyof ExportTables, number>;
+  /** Photo files written back through {@link RestoreOptions.writePhoto}. */
+  photosWritten: number;
+  /**
+   * Photos the bundle carried that did not reach the device — the file store
+   * threw, or no {@link RestoreOptions.writePhoto} was supplied at all. The
+   * import screen reports the count rather than failing a whole restore over
+   * an image.
+   */
+  photosFailed: number;
 }
 
 /**
@@ -276,7 +295,25 @@ export function createExportRepository(db: VigorDb): ExportRepository {
         }
       });
 
-      return { mode, inserted };
+      // Photos last, and outside the transaction: file writes cannot be rolled
+      // back with the rows, and an image that will not write must not cost the
+      // user the tables that did (DESIGN.md §8).
+      let photosWritten = 0;
+      let photosFailed = 0;
+      if (options.writePhoto) {
+        for (const photo of parsed.photos) {
+          try {
+            await options.writePhoto(photo);
+            photosWritten += 1;
+          } catch {
+            photosFailed += 1;
+          }
+        }
+      } else {
+        photosFailed = parsed.photos.length;
+      }
+
+      return { mode, inserted, photosWritten, photosFailed };
     },
   };
 }

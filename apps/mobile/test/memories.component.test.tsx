@@ -67,6 +67,28 @@ describe('memories screen', () => {
     expect(forgotten.some((entry) => entry.memoryId === memory.id)).toBe(true);
   });
 
+  it('writes a memory the user types straight to the repository', async () => {
+    // No API key, no network: this is the path idea.md §2 had no answer for,
+    // and it is exactly the row `planner` and `substitution` filter on.
+    await renderScreen();
+
+    await fireEvent.press(await screen.findByText('Constraint'));
+    await fireEvent.press(screen.getByText('Nutrition'));
+    await fireEvent.changeText(screen.getByTestId('add-memory-text'), '  No dairy  ');
+    await fireEvent.press(screen.getByTestId('add-memory-save'));
+
+    await waitFor(async () => {
+      expect(await fixture.repos.memories.listActive()).toHaveLength(1);
+    });
+
+    const [row] = await fixture.repos.memories.listActive();
+    expect(row.text).toBe('No dairy');
+    expect(row.kind).toBe('constraint');
+    expect(row.domain).toBe('nutrition');
+    expect(row.source).toBe('user');
+    expect(row.confidence).toBe(1);
+  });
+
   it('shows a what-the-coach-knows summary built from the same rows', async () => {
     await fixture.repos.memories.create({
       kind: 'constraint',

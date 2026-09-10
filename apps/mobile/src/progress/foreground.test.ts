@@ -253,7 +253,15 @@ describe('runForegroundWork', () => {
 
     expect(result.reminders).toBeNull();
     expect(notifications.scheduled).toEqual([]);
-    const everyKind: ReminderKind[] = ['workout', 'meal_log', 'protein', 'weekly_review'];
+    // The six types of idea.md §24 — every one of them has to go quiet.
+    const everyKind: ReminderKind[] = [
+      'workout',
+      'missed_workout',
+      'meal_log',
+      'protein',
+      'weekly_review',
+      'measurement',
+    ];
     expect(notifications.cancelled.sort()).toEqual(everyKind.map(notificationIdFor).sort());
   });
 });

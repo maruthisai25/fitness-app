@@ -413,11 +413,19 @@ export const settingsEntrySchema = z.object({
   value: z.string(),
 });
 
+/**
+ * The six §24 reminder slots. `missedWorkout` and `measurement` default to
+ * `null` rather than being required: a `reminderTimes` row written before those
+ * slots existed must keep the four times the user already chose, not fail to
+ * parse and take the whole object back to defaults.
+ */
 export const reminderTimesSchema = z.object({
   workout: localTimeSchema.nullable(),
+  missedWorkout: localTimeSchema.nullable().default(null),
   mealLog: localTimeSchema.nullable(),
   protein: localTimeSchema.nullable(),
   weeklyReview: localTimeSchema.nullable(),
+  measurement: localTimeSchema.nullable().default(null),
 });
 
 export const settingsSchema = z.object({

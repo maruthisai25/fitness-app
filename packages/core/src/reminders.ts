@@ -11,17 +11,24 @@
  * reminders fire and why". The platform adapter does the scheduling.
  */
 
-import { laterTime, minutesOfDay, timeReached, weekdayName } from './dates';
+import { daysBetween, laterTime, minutesOfDay, timeReached, weekdayName } from './dates';
 import { makeRationale } from './rationale';
 import type { LocalDate, LocalTime, Rationale, Settings, WeekDay } from './types';
 
-export type ReminderKind = 'workout' | 'meal_log' | 'protein' | 'weekly_review';
+/**
+ * The six reminder types of `idea.md` §24 — planned workouts, missed workouts,
+ * meal logging, protein targets, weekly reviews and progress measurements.
+ */
+export type ReminderKind =
+  'workout' | 'missed_workout' | 'meal_log' | 'protein' | 'weekly_review' | 'measurement';
 
 export const REMINDER_KINDS: readonly ReminderKind[] = [
   'workout',
+  'missed_workout',
   'meal_log',
   'protein',
   'weekly_review',
+  'measurement',
 ];
 
 /** A meal logged inside this window silences the meal-log reminder. */
@@ -30,6 +37,18 @@ export const MEAL_LOG_QUIET_MINUTES = 180;
 export const PROTEIN_REMAINING_THRESHOLD_G = 40;
 /** The protein reminder never fires before this time of day. */
 export const PROTEIN_EARLIEST_TIME: LocalTime = '18:00';
+/**
+ * How long a body-metrics row keeps the measurement reminder quiet. Two weeks
+ * is long enough that day-to-day water weight is not what the user is reading,
+ * and short enough that a trend line still has points on it.
+ */
+export const MEASUREMENT_QUIET_DAYS = 14;
+/**
+ * How long after a skipped or abandoned session the follow-up still makes
+ * sense. One day: it is the morning after, not a running tally of every
+ * session ever missed.
+ */
+export const MISSED_WORKOUT_FOLLOW_UP_DAYS = 1;
 
 export interface ReminderState {
   /** The user's local calendar day. */
@@ -42,6 +61,17 @@ export interface ReminderState {
   workoutCompletedToday: boolean;
   /** True when a workout is scheduled for today. */
   plannedWorkoutToday: boolean;
+  /**
+   * The date of the most recent planned session that ended `skipped` or
+   * `abandoned`, or null when there is none. The follow-up reminder reads it
+   * the morning after — see {@link decideMissedWorkoutReminder}.
+   */
+  lastMissedWorkoutDate: LocalDate | null;
+  /**
+   * Whole days since the newest `body_metrics` row, or null when the user has
+   * never recorded one.
+   */
+  daysSinceLastMeasurement: number | null;
   /** Minutes since the most recent `food_logs` row, or null when none today. */
   minutesSinceLastMealLog: number | null;
   /** Signed remaining protein for today, or null when there is no target. */
@@ -111,9 +141,11 @@ export function decideReminders(state: ReminderState): ReminderDecision[] {
 
   return [
     decideWorkoutReminder(state),
+    decideMissedWorkoutReminder(state),
     decideMealLogReminder(state),
     decideProteinReminder(state),
     decideWeeklyReviewReminder(state),
+    decideMeasurementReminder(state),
   ];
 }
 
@@ -171,6 +203,174 @@ export function decideWorkoutReminder(state: ReminderState): ReminderDecision {
       state.plannedWorkoutToday
         ? "Today's session is still open."
         : 'Nothing is logged for today yet.',
+    ),
+  };
+}
+
+/**
+ * The morning-after follow-up on a session that ended `skipped` or
+ * `abandoned` — `idea.md` §24 "missed workouts".
+ *
+ * The same-day workout reminder goes quiet at midnight; this one picks the
+ * thread up the next day and then drops it. It is a follow-up, not a scold: it
+ * fires once, only for yesterday, and stays quiet if today's session is already
+ * done.
+ */
+export function decideMissedWorkoutReminder(state: ReminderState): ReminderDecision {
+  const at = state.settings.reminderTimes.missedWorkout;
+  if (at == null) {
+    return disabled(
+      'missed_workout',
+      'REMINDER_DISABLED',
+      'No missed-workout reminder time is set.',
+    );
+  }
+
+  const daysSince =
+    state.lastMissedWorkoutDate == null
+      ? null
+      : daysBetween(state.lastMissedWorkoutDate, state.today);
+
+  const facts: Record<string, unknown> = {
+    at,
+    now: state.now,
+    lastMissedWorkoutDate: state.lastMissedWorkoutDate,
+    daysSinceMissedWorkout: daysSince,
+    followUpDays: MISSED_WORKOUT_FOLLOW_UP_DAYS,
+    workoutCompletedToday: state.workoutCompletedToday,
+  };
+
+  if (daysSince == null) {
+    return {
+      kind: 'missed_workout',
+      fires: false,
+      scheduledFor: at,
+      rationale: makeRationale(
+        ['NO_MISSED_WORKOUT'],
+        facts,
+        'No session has been left unfinished, so there is nothing to follow up on.',
+      ),
+    };
+  }
+
+  if (daysSince !== MISSED_WORKOUT_FOLLOW_UP_DAYS) {
+    return {
+      kind: 'missed_workout',
+      fires: false,
+      scheduledFor: at,
+      rationale: makeRationale(
+        ['MISSED_WORKOUT_NOT_YESTERDAY'],
+        facts,
+        daysSince < MISSED_WORKOUT_FOLLOW_UP_DAYS
+          ? 'The session you left unfinished is today’s, so the workout reminder has it.'
+          : `The last unfinished session was ${daysSince} days ago — too long ago to chase.`,
+      ),
+    };
+  }
+
+  if (state.workoutCompletedToday) {
+    return {
+      kind: 'missed_workout',
+      fires: false,
+      scheduledFor: at,
+      rationale: makeRationale(
+        ['WORKOUT_ALREADY_COMPLETED'],
+        facts,
+        'You have already trained today, so yesterday is water under the bridge.',
+      ),
+    };
+  }
+
+  if (!timeReached(state.now, at)) {
+    return {
+      kind: 'missed_workout',
+      fires: false,
+      scheduledFor: at,
+      rationale: makeRationale(
+        ['NOT_YET_DUE'],
+        facts,
+        `The missed-workout follow-up is set for ${at} and it is ${state.now}.`,
+      ),
+    };
+  }
+
+  return {
+    kind: 'missed_workout',
+    fires: true,
+    scheduledFor: at,
+    rationale: makeRationale(
+      ['MISSED_WORKOUT_FOLLOW_UP'],
+      facts,
+      `Yesterday's session (${state.lastMissedWorkoutDate}) was left unfinished.`,
+    ),
+  };
+}
+
+/**
+ * The progress-measurement nudge — `idea.md` §24 "progress measurements".
+ *
+ * Driven by the newest `body_metrics` row: quiet while a measurement is recent,
+ * due once {@link MEASUREMENT_QUIET_DAYS} have passed, and due straight away for
+ * a user who has never recorded one.
+ */
+export function decideMeasurementReminder(state: ReminderState): ReminderDecision {
+  const at = state.settings.reminderTimes.measurement;
+  if (at == null) {
+    return disabled('measurement', 'REMINDER_DISABLED', 'No measurement reminder time is set.');
+  }
+
+  const facts: Record<string, unknown> = {
+    at,
+    now: state.now,
+    daysSinceLastMeasurement: state.daysSinceLastMeasurement,
+    quietDays: MEASUREMENT_QUIET_DAYS,
+  };
+
+  if (
+    state.daysSinceLastMeasurement != null &&
+    state.daysSinceLastMeasurement < MEASUREMENT_QUIET_DAYS
+  ) {
+    return {
+      kind: 'measurement',
+      fires: false,
+      scheduledFor: at,
+      rationale: makeRationale(
+        ['MEASUREMENT_RECENT'],
+        facts,
+        state.daysSinceLastMeasurement === 0
+          ? 'You measured yourself today.'
+          : `You measured yourself ${state.daysSinceLastMeasurement} ${
+              state.daysSinceLastMeasurement === 1 ? 'day' : 'days'
+            } ago.`,
+      ),
+    };
+  }
+
+  if (!timeReached(state.now, at)) {
+    return {
+      kind: 'measurement',
+      fires: false,
+      scheduledFor: at,
+      rationale: makeRationale(
+        ['NOT_YET_DUE'],
+        facts,
+        `The measurement reminder is set for ${at} and it is ${state.now}.`,
+      ),
+    };
+  }
+
+  return {
+    kind: 'measurement',
+    fires: true,
+    scheduledFor: at,
+    rationale: makeRationale(
+      state.daysSinceLastMeasurement == null
+        ? ['MEASUREMENT_DUE', 'MEASUREMENT_NEVER_RECORDED']
+        : ['MEASUREMENT_DUE'],
+      facts,
+      state.daysSinceLastMeasurement == null
+        ? 'No weight or measurement has ever been recorded, so there is no trend to read yet.'
+        : `Your last measurement was ${state.daysSinceLastMeasurement} days ago.`,
     ),
   };
 }

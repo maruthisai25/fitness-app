@@ -276,12 +276,20 @@ export interface SettingsEntry {
   value: string;
 }
 
-/** When each reminder fires, `HH:mm` local, null = disabled — DESIGN.md §7.3. */
+/**
+ * When each reminder fires, `HH:mm` local, null = disabled — DESIGN.md §7.3
+ * and the six reminder types of `idea.md` §24: planned workouts, missed
+ * workouts, meal logging, protein, weekly reviews, progress measurements.
+ */
 export interface ReminderTimes {
   workout: LocalTime | null;
+  /** The morning-after follow-up on a session that ended skipped or abandoned. */
+  missedWorkout: LocalTime | null;
   mealLog: LocalTime | null;
   protein: LocalTime | null;
   weeklyReview: LocalTime | null;
+  /** The nudge to step on the scale and run the tape measure round again. */
+  measurement: LocalTime | null;
 }
 
 /** The decoded `settings` table — DESIGN.md §4.1 "Profile & settings". */

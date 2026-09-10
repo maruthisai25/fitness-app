@@ -70,57 +70,77 @@ export function TodayNutritionCard({ date }: { date: LocalDate }): ReactNode {
   const consumed = day.data?.consumed ?? { kcal: 0, proteinG: 0, carbsG: 0, fatG: 0, fiberG: 0 };
 
   return (
-    <Link
-      to="/eat"
-      aria-label="Open the Eat tab"
+    <div
       style={{
-        display: 'block',
-        textDecoration: 'none',
         background: themeColor.surface,
         border: `1px solid ${themeColor.border}`,
         borderRadius: radius.md,
         padding: space.lg,
       }}
     >
-      <p
+      <Link
+        to="/eat/day"
+        aria-label="Open the Eat tab"
+        style={{ display: 'block', textDecoration: 'none' }}
+      >
+        <p
+          style={{
+            margin: `0 0 ${space.md}px`,
+            color: themeColor.textMuted,
+            fontSize: fontSize.label,
+          }}
+        >
+          {targets == null
+            ? 'No targets set yet'
+            : day.isPending
+              ? 'Reading today’s log…'
+              : 'Left today'}
+        </p>
+
+        {targets == null ? (
+          <p
+            style={{ margin: 0, color: themeColor.text, fontSize: fontSize.body, lineHeight: 1.5 }}
+          >
+            Set calorie and macro targets in Eat → Targets and this card starts counting down.
+          </p>
+        ) : (
+          <div style={{ display: 'flex', gap: space.xl, alignItems: 'center', flexWrap: 'wrap' }}>
+            <RingStat
+              label="Calories"
+              remaining={remaining.kcal}
+              unit="kcal"
+              consumed={consumed.kcal}
+              target={targets.kcal}
+              color={themeColor.accent}
+            />
+            <RingStat
+              label="Protein"
+              remaining={remaining.proteinG}
+              unit="g"
+              consumed={consumed.proteinG}
+              target={targets.proteinG}
+              color={themeColor.good}
+            />
+          </div>
+        )}
+      </Link>
+
+      {/* DESIGN.md §7.1 lists "quick log" on Today in its own right: this
+          lands on the add-food form for this day, not on the day list. */}
+      <Link
+        to={`/eat/add?date=${date}`}
         style={{
-          margin: `0 0 ${space.md}px`,
-          color: themeColor.textMuted,
+          display: 'inline-block',
+          marginTop: space.md,
+          color: themeColor.accent,
           fontSize: fontSize.label,
+          fontWeight: 600,
+          textDecoration: 'none',
         }}
       >
-        {targets == null
-          ? 'No targets set yet'
-          : day.isPending
-            ? 'Reading today’s log…'
-            : 'Left today'}
-      </p>
-
-      {targets == null ? (
-        <p style={{ margin: 0, color: themeColor.text, fontSize: fontSize.body, lineHeight: 1.5 }}>
-          Set calorie and macro targets in Eat → Targets and this card starts counting down.
-        </p>
-      ) : (
-        <div style={{ display: 'flex', gap: space.xl, alignItems: 'center', flexWrap: 'wrap' }}>
-          <RingStat
-            label="Calories"
-            remaining={remaining.kcal}
-            unit="kcal"
-            consumed={consumed.kcal}
-            target={targets.kcal}
-            color={themeColor.accent}
-          />
-          <RingStat
-            label="Protein"
-            remaining={remaining.proteinG}
-            unit="g"
-            consumed={consumed.proteinG}
-            target={targets.proteinG}
-            color={themeColor.good}
-          />
-        </div>
-      )}
-    </Link>
+        Log food →
+      </Link>
+    </div>
   );
 }
 

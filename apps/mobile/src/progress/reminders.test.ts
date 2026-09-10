@@ -46,7 +46,14 @@ const SETTINGS: Settings = {
   coachModel: 'claude-opus-5',
   fastModel: 'claude-haiku-4-5',
   notificationsEnabled: true,
-  reminderTimes: { workout: '18:00', mealLog: '13:00', protein: '20:00', weeklyReview: '09:00' },
+  reminderTimes: {
+    workout: '18:00',
+    missedWorkout: '08:30',
+    mealLog: '13:00',
+    protein: '20:00',
+    weeklyReview: '09:00',
+    measurement: '07:30',
+  },
   weekStartsOn: 1,
   onboardingComplete: true,
   disclaimerAcceptedAt: '2026-01-01T00:00:00.000Z',
@@ -64,6 +71,8 @@ function stateAt(now: Date, overrides: Partial<ReminderState> = {}): ReminderSta
     settings: SETTINGS,
     workoutCompletedToday: false,
     plannedWorkoutToday: true,
+    lastMissedWorkoutDate: null,
+    daysSinceLastMeasurement: 0,
     minutesSinceLastMealLog: null,
     remainingProteinG: 90,
     weeklyReviewDay: 1,
@@ -109,12 +118,19 @@ describe('syncReminders', () => {
 
     const result = await syncReminders(notifications, stateAt(now), now);
 
-    const expectedIds: ReminderKind[] = ['meal_log', 'protein', 'weekly_review', 'workout'];
+    const expectedIds: ReminderKind[] = [
+      'meal_log',
+      'measurement',
+      'missed_workout',
+      'protein',
+      'weekly_review',
+      'workout',
+    ];
     expect(notifications.scheduled.map((entry) => entry.id).sort()).toEqual(
       expectedIds.map(notificationIdFor).sort(),
     );
     expect(notifications.cancelled).toEqual([]);
-    expect(result.decisions).toHaveLength(4);
+    expect(result.decisions).toHaveLength(6);
     expect(result.scheduled.workout).not.toBeNull();
   });
 
@@ -181,7 +197,36 @@ describe('syncReminders', () => {
   it('cancels everything when the user turns notifications off', async () => {
     const notifications = recorder();
     await cancelAllReminders(notifications);
-    expect(notifications.cancelled).toHaveLength(4);
+    expect(notifications.cancelled).toHaveLength(6);
+  });
+
+  it('holds the missed-workout follow-up for the morning after, not tomorrow', async () => {
+    const notifications = recorder();
+    // 08:00, slot at 08:30, and yesterday's session was skipped: today is the
+    // morning after, so the follow-up belongs to today.
+    const now = new Date(2026, 8, 10, 8, 0, 0);
+
+    await syncReminders(notifications, stateAt(now, { lastMissedWorkoutDate: '2026-09-09' }), now);
+
+    const missed = notifications.scheduled.find(
+      (entry) => entry.id === notificationIdFor('missed_workout'),
+    );
+    expect(new Date(missed?.fireAt ?? '').getDate()).toBe(10);
+    expect(new Date(missed?.fireAt ?? '').getHours()).toBe(8);
+  });
+
+  it('gives up today’s measurement slot while the last one is still recent', async () => {
+    const notifications = recorder();
+    const now = new Date(2026, 8, 10, 6, 0, 0);
+
+    await syncReminders(notifications, stateAt(now, { daysSinceLastMeasurement: 2 }), now);
+
+    const measurement = notifications.scheduled.find(
+      (entry) => entry.id === notificationIdFor('measurement'),
+    );
+    // 07:30 today is still ahead, but a measurement two days old will still be
+    // recent then, so the slot rolls forward rather than nagging.
+    expect(new Date(measurement?.fireAt ?? '').getDate()).toBe(11);
   });
 });
 
@@ -235,6 +280,45 @@ describe('readReminderState', () => {
     expect(state.minutesSinceLastMealLog).toBe(360);
     expect(state.workoutCompletedToday).toBe(false);
     expect(state.weeklyReviewGenerated).toBe(false);
+    // Nothing skipped and nothing measured, ever.
+    expect(state.lastMissedWorkoutDate).toBeNull();
+    expect(state.daysSinceLastMeasurement).toBeNull();
+  });
+
+  it('reads yesterday’s skipped session and the age of the last measurement', async () => {
+    const workout = await db.repos.workouts.create({
+      date: '2026-09-09',
+      status: 'planned',
+      source: 'rule',
+      title: 'Lower body',
+    });
+    await db.repos.workouts.setStatus(workout.id, 'skipped');
+    await db.repos.body.upsertMetric({ date: '2026-08-27', weightKg: 81.5 });
+
+    const state = await readReminderState(db.repos, {
+      today: '2026-09-10',
+      now: new Date('2026-09-10T06:00:00.000Z'),
+    });
+
+    expect(state.lastMissedWorkoutDate).toBe('2026-09-09');
+    expect(state.daysSinceLastMeasurement).toBe(14);
+  });
+
+  it('ignores a session from yesterday that was completed', async () => {
+    const workout = await db.repos.workouts.create({
+      date: '2026-09-09',
+      status: 'planned',
+      source: 'rule',
+      title: 'Lower body',
+    });
+    await db.repos.workouts.setStatus(workout.id, 'completed');
+
+    const state = await readReminderState(db.repos, {
+      today: '2026-09-10',
+      now: new Date('2026-09-10T06:00:00.000Z'),
+    });
+
+    expect(state.lastMissedWorkoutDate).toBeNull();
   });
 
   it('counts the review of the week that just ended, not the current one', async () => {

@@ -28,6 +28,31 @@ const KIND_ORDER: readonly MemoryKind[] = [
 
 const DOMAIN_ORDER: readonly MemoryDomain[] = ['training', 'nutrition', 'general'];
 
+/**
+ * What the user is most likely to be writing down, first. The coach can create
+ * any of these too; this list is the same set, in the order a person reaches
+ * for them.
+ */
+const ADDABLE_KINDS: readonly MemoryKind[] = [
+  'preference',
+  'dislike',
+  'constraint',
+  'injury',
+  'goal_note',
+  'fact',
+  'behavior',
+];
+
+const KIND_PLACEHOLDER: Record<MemoryKind, string> = {
+  preference: 'e.g. I train best early in the morning',
+  dislike: 'e.g. I hate burpees',
+  constraint: 'e.g. no dairy',
+  injury: 'e.g. my left knee hates deep lunges',
+  behavior: 'e.g. I always skip Friday sessions',
+  goal_note: 'e.g. I want to deadlift 140 kg by spring',
+  fact: 'e.g. I work night shifts every other week',
+};
+
 export function MemoriesPanel(): ReactNode {
   const { data: memories, isPending } = useActiveMemories();
   const [query, setQuery] = useState('');
@@ -35,7 +60,9 @@ export function MemoriesPanel(): ReactNode {
   const filtered = useMemo(() => {
     const rows = memories ?? [];
     const needle = query.trim().toLowerCase();
-    return needle.length === 0 ? rows : rows.filter((row) => row.text.toLowerCase().includes(needle));
+    return needle.length === 0
+      ? rows
+      : rows.filter((row) => row.text.toLowerCase().includes(needle));
   }, [memories, query]);
 
   const groups = useMemo(() => groupMemories(filtered), [filtered]);
@@ -43,10 +70,10 @@ export function MemoriesPanel(): ReactNode {
   return (
     <div>
       <Card style={{ marginBottom: space.lg }}>
-        <p style={{ margin: 0, color: themeColor.text }}>
-          {summarizeMemories(memories ?? [])}
-        </p>
+        <p style={{ margin: 0, color: themeColor.text }}>{summarizeMemories(memories ?? [])}</p>
       </Card>
+
+      <AddMemoryForm />
 
       <input
         type="search"
@@ -72,7 +99,7 @@ export function MemoriesPanel(): ReactNode {
         <EmptyState>
           {query.trim().length > 0
             ? 'No memory matches that search.'
-            : 'Nothing remembered yet. The coach stores durable preferences, dislikes, constraints and injuries it learns in chat, and you can add your own here later.'}
+            : 'Nothing remembered yet. The coach stores durable preferences, dislikes, constraints and injuries it learns in chat, and you can write your own in the form above.'}
         </EmptyState>
       )}
 
@@ -112,6 +139,160 @@ export function MemoriesPanel(): ReactNode {
     </div>
   );
 }
+
+/**
+ * Writing a memory by hand — DESIGN.md §8 and `idea.md` §2.
+ *
+ * Until now the only writer was the coach, so "no dairy" or "my knee hates
+ * lunges" could not be recorded at all without an API key and a network. This
+ * writes straight through `memories.create` with `source: 'user'`, which is
+ * exactly the row `packages/core/planner` and `substitution` filter on, so it
+ * takes effect offline and immediately.
+ */
+function AddMemoryForm(): ReactNode {
+  const repos = useRepos();
+  const invalidate = useInvalidate();
+  const [kind, setKind] = useState<MemoryKind>('preference');
+  const [domain, setDomain] = useState<MemoryDomain>('training');
+  const [text, setText] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [saved, setSaved] = useState<string | null>(null);
+  const [problem, setProblem] = useState<string | null>(null);
+
+  const trimmed = text.trim();
+
+  async function add(): Promise<void> {
+    if (trimmed.length === 0) return;
+    setBusy(true);
+    setProblem(null);
+    try {
+      await repos.memories.create({
+        kind,
+        domain,
+        text: trimmed,
+        // The user said it themselves, so it is not a guess (DESIGN.md §4.1).
+        source: 'user',
+        confidence: 1,
+      });
+      await invalidate('remember');
+      setText('');
+      setSaved(trimmed);
+    } catch (error) {
+      setProblem(error instanceof Error ? error.message : String(error));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <Card style={{ marginBottom: space.lg }}>
+      <h2
+        style={{
+          fontSize: fontSize.subheading,
+          color: themeColor.text,
+          margin: `0 0 ${space.xs}px`,
+        }}
+      >
+        Add a memory
+      </h2>
+      <p
+        style={{
+          margin: `0 0 ${space.sm}px`,
+          color: themeColor.textMuted,
+          fontSize: fontSize.label,
+        }}
+      >
+        Anything durable the coach and the offline planner should work around — a preference, a
+        dislike, a dietary restriction, a joint that complains. No network needed.
+      </p>
+      <div style={{ display: 'flex', gap: space.sm, flexWrap: 'wrap', marginBottom: space.sm }}>
+        <label style={{ fontSize: fontSize.label, color: themeColor.textMuted }}>
+          Kind
+          <select
+            aria-label="Memory kind"
+            value={kind}
+            onChange={(event) => setKind(event.target.value as MemoryKind)}
+            style={{ ...controlStyle, marginLeft: space.xs }}
+          >
+            {ADDABLE_KINDS.map((option) => (
+              <option key={option} value={option}>
+                {humanize(option)}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label style={{ fontSize: fontSize.label, color: themeColor.textMuted }}>
+          Domain
+          <select
+            aria-label="Memory domain"
+            value={domain}
+            onChange={(event) => setDomain(event.target.value as MemoryDomain)}
+            style={{ ...controlStyle, marginLeft: space.xs }}
+          >
+            {DOMAIN_ORDER.map((option) => (
+              <option key={option} value={option}>
+                {humanize(option)}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+      <textarea
+        aria-label="New memory text"
+        value={text}
+        rows={2}
+        placeholder={KIND_PLACEHOLDER[kind]}
+        onChange={(event) => {
+          setText(event.target.value);
+          setSaved(null);
+        }}
+        style={{
+          width: '100%',
+          padding: space.sm,
+          borderRadius: radius.sm,
+          border: `1px solid ${themeColor.border}`,
+          background: themeColor.surface,
+          color: themeColor.text,
+          fontSize: fontSize.body,
+          fontFamily: 'inherit',
+        }}
+      />
+      <div style={{ display: 'flex', gap: space.md, alignItems: 'center', marginTop: space.sm }}>
+        <button
+          type="button"
+          disabled={busy || trimmed.length === 0}
+          onClick={() => void add()}
+          style={{
+            ...linkButton,
+            opacity: busy || trimmed.length === 0 ? 0.5 : 1,
+            cursor: trimmed.length === 0 ? 'not-allowed' : 'pointer',
+          }}
+        >
+          {busy ? 'Saving…' : 'Remember this'}
+        </button>
+        {saved && (
+          <span role="status" style={{ color: themeColor.good, fontSize: fontSize.label }}>
+            Remembered: {saved}
+          </span>
+        )}
+        {problem && (
+          <span role="alert" style={{ color: themeColor.bad, fontSize: fontSize.label }}>
+            {problem}
+          </span>
+        )}
+      </div>
+    </Card>
+  );
+}
+
+const controlStyle = {
+  padding: `${space.xs}px ${space.sm}px`,
+  borderRadius: radius.sm,
+  border: `1px solid ${themeColor.border}`,
+  background: themeColor.surface,
+  color: themeColor.text,
+  fontSize: fontSize.label,
+} as const;
 
 interface DomainGroup {
   domain: MemoryDomain;
@@ -197,7 +378,12 @@ function MemoryRow({ memory }: { memory: Memory }): ReactNode {
             }}
           />
           <div style={{ display: 'flex', gap: space.sm, marginTop: space.sm }}>
-            <button type="button" disabled={busy} onClick={() => void saveEdit()} style={linkButton}>
+            <button
+              type="button"
+              disabled={busy}
+              onClick={() => void saveEdit()}
+              style={linkButton}
+            >
               Save
             </button>
             <button
@@ -233,7 +419,11 @@ function MemoryRow({ memory }: { memory: Memory }): ReactNode {
             <button type="button" onClick={() => setMode('forget')} style={linkButton}>
               Forget
             </button>
-            <button type="button" onClick={() => setMode('delete')} style={{ ...linkButton, color: themeColor.bad }}>
+            <button
+              type="button"
+              onClick={() => setMode('delete')}
+              style={{ ...linkButton, color: themeColor.bad }}
+            >
               Delete
             </button>
           </div>
@@ -258,7 +448,12 @@ function MemoryRow({ memory }: { memory: Memory }): ReactNode {
               fontSize: fontSize.label,
             }}
           />
-          <button type="button" disabled={busy} onClick={() => void confirmForget()} style={linkButton}>
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => void confirmForget()}
+            style={linkButton}
+          >
             Confirm forget
           </button>
           <button type="button" onClick={() => setMode('view')} style={linkButton}>

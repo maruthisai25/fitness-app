@@ -186,9 +186,11 @@ export function makeSettings(partial: Partial<Settings> = {}): Settings {
     notificationsEnabled: partial.notificationsEnabled ?? true,
     reminderTimes: partial.reminderTimes ?? {
       workout: '17:30',
+      missedWorkout: '08:00',
       mealLog: '13:00',
       protein: '18:00',
       weeklyReview: '19:00',
+      measurement: '07:30',
     },
     weekStartsOn: partial.weekStartsOn ?? 1,
     onboardingComplete: partial.onboardingComplete ?? true,

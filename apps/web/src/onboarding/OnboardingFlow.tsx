@@ -38,6 +38,8 @@ interface EquipmentDraft {
 interface OnboardingDraft {
   displayName: string;
   unitSystem: UnitSystem;
+  /** `YYYY-MM-DD`, or empty when the user would rather not say. */
+  birthDate: string;
   sex: Sex;
   heightCm: string;
   weightKg: string;
@@ -56,6 +58,7 @@ interface OnboardingDraft {
 const DEFAULT_DRAFT: OnboardingDraft = {
   displayName: '',
   unitSystem: 'metric',
+  birthDate: '',
   sex: 'prefer_not_to_say',
   heightCm: '',
   weightKg: '',
@@ -125,7 +128,9 @@ export function OnboardingFlow({ onComplete }: { onComplete: () => void }): Reac
     try {
       await repos.profile.save({
         displayName: draft.displayName.trim() || 'Athlete',
-        birthDate: null,
+        // Real, not a placeholder: `packages/core/nutrition` falls back to a
+        // default age for BMR without it, and says so in the rationale.
+        birthDate: draft.birthDate.trim() || null,
         sex: draft.sex,
         heightCm: draft.heightCm ? Number(draft.heightCm) : null,
         weightKg: draft.weightKg ? Number(draft.weightKg) : null,
@@ -324,6 +329,17 @@ function ProfileStep({
           <option value="metric">Metric (kg, cm)</option>
           <option value="imperial">Imperial (lb, in)</option>
         </Select>
+      </Field>
+      <Field
+        label="Birth date"
+        hint="Your age is one of the four numbers in the Mifflin-St Jeor equation behind your calorie target. Leave it blank and a default age is assumed instead."
+      >
+        <TextInput
+          value={draft.birthDate}
+          onChange={(v) => set('birthDate', v)}
+          type="date"
+          placeholder="YYYY-MM-DD"
+        />
       </Field>
       <Field label="Sex">
         <Select value={draft.sex} onChange={(v) => set('sex', v as Sex)}>

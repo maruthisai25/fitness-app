@@ -3,9 +3,12 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { makeSettings, resetFixtureIds } from './fixtures';
 import {
   MEAL_LOG_QUIET_MINUTES,
+  MEASUREMENT_QUIET_DAYS,
   PROTEIN_REMAINING_THRESHOLD_G,
   REMINDER_KINDS,
   decideMealLogReminder,
+  decideMeasurementReminder,
+  decideMissedWorkoutReminder,
   decideProteinReminder,
   decideReminders,
   decideWeeklyReviewReminder,
@@ -26,6 +29,10 @@ function state(overrides: Partial<ReminderState> = {}): ReminderState {
     settings: makeSettings(),
     workoutCompletedToday: false,
     plannedWorkoutToday: true,
+    // Quiet by default, so a test that is about one reminder is not answering
+    // for the other five.
+    lastMissedWorkoutDate: null,
+    daysSinceLastMeasurement: 0,
     minutesSinceLastMealLog: null,
     remainingProteinG: 80,
     weeklyReviewDay: 0,
@@ -45,11 +52,14 @@ describe('notifications master switch', () => {
   });
 
   it('returns one decision per reminder kind, in order', () => {
+    // The six types of idea.md §24, in the order that section lists them.
     expect(decideReminders(state()).map((decision) => decision.kind)).toEqual([
       'workout',
+      'missed_workout',
       'meal_log',
       'protein',
       'weekly_review',
+      'measurement',
     ]);
   });
 });
@@ -78,7 +88,14 @@ describe('workout reminder — DESIGN.md §7.3', () => {
     const decision = decideWorkoutReminder(
       state({
         settings: makeSettings({
-          reminderTimes: { workout: null, mealLog: null, protein: null, weeklyReview: null },
+          reminderTimes: {
+            workout: null,
+            missedWorkout: null,
+            mealLog: null,
+            protein: null,
+            weeklyReview: null,
+            measurement: null,
+          },
         }),
       }),
     );
@@ -91,6 +108,92 @@ describe('workout reminder — DESIGN.md §7.3', () => {
     const decision = decideWorkoutReminder(state({ plannedWorkoutToday: false }));
     expect(decision.fires).toBe(true);
     expect(decision.rationale.codes).toEqual(['WORKOUT_DUE']);
+  });
+});
+
+describe('missed-workout reminder — idea.md §24', () => {
+  it('fires the morning after a session was skipped', () => {
+    const decision = decideMissedWorkoutReminder(
+      state({ now: '08:30', lastMissedWorkoutDate: '2026-09-09' }),
+    );
+    expect(decision.fires).toBe(true);
+    expect(decision.scheduledFor).toBe('08:00');
+    expect(decision.rationale.codes).toEqual(['MISSED_WORKOUT_FOLLOW_UP']);
+    expect(decision.rationale.summary).toContain('2026-09-09');
+  });
+
+  it('says nothing when no session has been left unfinished', () => {
+    const decision = decideMissedWorkoutReminder(state({ now: '08:30' }));
+    expect(decision.fires).toBe(false);
+    expect(decision.rationale.codes).toEqual(['NO_MISSED_WORKOUT']);
+  });
+
+  it('leaves today’s unfinished session to the workout reminder', () => {
+    const decision = decideMissedWorkoutReminder(
+      state({ now: '08:30', lastMissedWorkoutDate: '2026-09-10' }),
+    );
+    expect(decision.fires).toBe(false);
+    expect(decision.rationale.codes).toEqual(['MISSED_WORKOUT_NOT_YESTERDAY']);
+  });
+
+  it('drops the thread rather than chasing a session from last week', () => {
+    const decision = decideMissedWorkoutReminder(
+      state({ now: '08:30', lastMissedWorkoutDate: '2026-09-03' }),
+    );
+    expect(decision.fires).toBe(false);
+    expect(decision.rationale.codes).toEqual(['MISSED_WORKOUT_NOT_YESTERDAY']);
+    expect(decision.rationale.summary).toContain('7 days ago');
+  });
+
+  it('stays quiet once today’s session is done', () => {
+    const decision = decideMissedWorkoutReminder(
+      state({ now: '08:30', lastMissedWorkoutDate: '2026-09-09', workoutCompletedToday: true }),
+    );
+    expect(decision.fires).toBe(false);
+    expect(decision.rationale.codes).toEqual(['WORKOUT_ALREADY_COMPLETED']);
+  });
+
+  it('waits for its configured time', () => {
+    const decision = decideMissedWorkoutReminder(
+      state({ now: '06:00', lastMissedWorkoutDate: '2026-09-09' }),
+    );
+    expect(decision.fires).toBe(false);
+    expect(decision.rationale.codes).toEqual(['NOT_YET_DUE']);
+  });
+});
+
+describe('measurement reminder — idea.md §24', () => {
+  it('fires once the quiet window has passed', () => {
+    const decision = decideMeasurementReminder(
+      state({ now: '08:00', daysSinceLastMeasurement: MEASUREMENT_QUIET_DAYS }),
+    );
+    expect(decision.fires).toBe(true);
+    expect(decision.scheduledFor).toBe('07:30');
+    expect(decision.rationale.codes).toEqual(['MEASUREMENT_DUE']);
+  });
+
+  it('stays quiet one day inside the window', () => {
+    const decision = decideMeasurementReminder(
+      state({ now: '08:00', daysSinceLastMeasurement: MEASUREMENT_QUIET_DAYS - 1 }),
+    );
+    expect(decision.fires).toBe(false);
+    expect(decision.rationale.codes).toEqual(['MEASUREMENT_RECENT']);
+  });
+
+  it('fires for a user who has never recorded one', () => {
+    const decision = decideMeasurementReminder(
+      state({ now: '08:00', daysSinceLastMeasurement: null }),
+    );
+    expect(decision.fires).toBe(true);
+    expect(decision.rationale.codes).toEqual(['MEASUREMENT_DUE', 'MEASUREMENT_NEVER_RECORDED']);
+  });
+
+  it('waits for its configured time', () => {
+    const decision = decideMeasurementReminder(
+      state({ now: '06:00', daysSinceLastMeasurement: null }),
+    );
+    expect(decision.fires).toBe(false);
+    expect(decision.rationale.codes).toEqual(['NOT_YET_DUE']);
   });
 });
 
@@ -136,9 +239,11 @@ describe('protein reminder — DESIGN.md §7.3', () => {
         settings: makeSettings({
           reminderTimes: {
             workout: '17:30',
+            missedWorkout: '08:00',
             mealLog: '13:00',
             protein: '16:00',
             weeklyReview: '19:00',
+            measurement: '07:30',
           },
         }),
       }),
@@ -194,7 +299,12 @@ describe('weekly review reminder — DESIGN.md §7.3', () => {
 
   it('stays quiet once the user has opened that week’s review', () => {
     const decision = decideWeeklyReviewReminder(
-      state({ weekday: 0, weeklyReviewDay: 0, weeklyReviewGenerated: true, reviewWeekViewed: true }),
+      state({
+        weekday: 0,
+        weeklyReviewDay: 0,
+        weeklyReviewGenerated: true,
+        reviewWeekViewed: true,
+      }),
     );
     expect(decision.fires).toBe(false);
     expect(decision.rationale.codes).toEqual(['REVIEW_ALREADY_VIEWED']);
@@ -222,5 +332,20 @@ describe('firingReminders', () => {
       }),
     );
     expect(firing.map((decision) => decision.kind)).toEqual(['protein', 'weekly_review']);
+  });
+
+  it('carries the two §24 reminders the engine used to have no answer for', () => {
+    const firing = firingReminders(
+      state({
+        now: '09:00',
+        weekday: 3,
+        weeklyReviewDay: 0,
+        lastMissedWorkoutDate: '2026-09-09',
+        daysSinceLastMeasurement: 30,
+        minutesSinceLastMealLog: 10,
+        remainingProteinG: 10,
+      }),
+    );
+    expect(firing.map((decision) => decision.kind)).toEqual(['missed_workout', 'measurement']);
   });
 });

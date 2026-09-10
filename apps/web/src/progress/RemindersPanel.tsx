@@ -30,25 +30,32 @@ import { loadReminderState, localTimeNow, syncReminders } from './foreground';
 
 const KIND_LABEL: Record<ReminderKind, string> = {
   workout: 'Workout',
+  missed_workout: 'Missed workout',
   meal_log: 'Meal log',
   protein: 'Protein',
   weekly_review: 'Weekly review',
+  measurement: 'Progress measurement',
 };
 
 const KIND_RULE: Record<ReminderKind, string> = {
   workout: 'Stays quiet once a workout is completed today.',
+  missed_workout:
+    'The morning after a session you skipped or abandoned. Once, for yesterday only, and never once today’s session is done.',
   meal_log: 'Stays quiet if you logged a meal in the last 3 hours.',
   protein: 'Fires only after 18:00, and only if more than 40 g of protein is still left.',
   weekly_review: 'Fires on your week-start day, once, until that week’s review exists.',
+  measurement: 'Due once a fortnight has passed since your last weight or tape measurement.',
 };
 
-type TimeKey = 'workout' | 'mealLog' | 'protein' | 'weeklyReview';
+type TimeKey = 'workout' | 'missedWorkout' | 'mealLog' | 'protein' | 'weeklyReview' | 'measurement';
 
 const TIME_FIELDS: { key: TimeKey; kind: ReminderKind; label: string }[] = [
   { key: 'workout', kind: 'workout', label: 'Workout reminder' },
+  { key: 'missedWorkout', kind: 'missed_workout', label: 'Missed-workout follow-up' },
   { key: 'mealLog', kind: 'meal_log', label: 'Meal-log reminder' },
   { key: 'protein', kind: 'protein', label: 'Protein reminder' },
   { key: 'weeklyReview', kind: 'weekly_review', label: 'Weekly review reminder' },
+  { key: 'measurement', kind: 'measurement', label: 'Measurement reminder' },
 ];
 
 const WEEKDAYS: WeekDay[] = [0, 1, 2, 3, 4, 5, 6];
@@ -127,10 +134,7 @@ export function RemindersPanel({ today }: { today: LocalDate }): ReactNode {
   async function setReviewDay(value: string): Promise<void> {
     setBusy(true);
     try {
-      await repos.settings.set(
-        'weeklyReviewDay',
-        value === '' ? null : (Number(value) as WeekDay),
-      );
+      await repos.settings.set('weeklyReviewDay', value === '' ? null : (Number(value) as WeekDay));
       await refreshSettings();
       setNote('Saved.');
     } finally {
@@ -164,8 +168,7 @@ export function RemindersPanel({ today }: { today: LocalDate }): ReactNode {
       <Section title="Notifications" style={{ marginTop: space.xl }}>
         <Card>
           <p style={{ margin: `0 0 ${space.md}px`, color: themeColor.text }}>
-            Currently{' '}
-            <strong>{settings.notificationsEnabled ? 'on' : 'off'}</strong>
+            Currently <strong>{settings.notificationsEnabled ? 'on' : 'off'}</strong>
             {permission === 'denied' && settings.notificationsEnabled && (
               <>
                 {' '}

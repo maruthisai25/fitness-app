@@ -3,7 +3,7 @@
  */
 import { useMutation, useQuery } from '@tanstack/react-query';
 import type { UseQueryResult } from '@tanstack/react-query';
-import { queryKeys, type Id, type Memory } from '@vigor/core';
+import { queryKeys, type Id, type Memory, type MemoryDomain, type MemoryKind } from '@vigor/core';
 
 import { useInvalidate } from '../data/queries';
 import { useRepos } from '../db/AppDataProvider';
@@ -17,11 +17,30 @@ export function useMemoriesQuery(): UseQueryResult<Memory[]> {
   });
 }
 
+/**
+ * Writing a memory by hand — DESIGN.md §8, `idea.md` §2.
+ *
+ * The coach used to be the only author, which meant "no dairy" or "my knee
+ * hates lunges" could not be recorded without an API key and a network. This
+ * goes straight through the repository with `source: 'user'`, the same row the
+ * offline planner and the substitution engine filter on.
+ */
+export function useCreateMemory() {
+  const { memories } = useRepos();
+  const invalidate = useInvalidate();
+  return useMutation({
+    mutationFn: (input: { kind: MemoryKind; domain: MemoryDomain; text: string }) =>
+      memories.create({ ...input, source: 'user', confidence: 1 }),
+    onSuccess: () => invalidate('remember'),
+  });
+}
+
 export function useUpdateMemoryText() {
   const { memories } = useRepos();
   const invalidate = useInvalidate();
   return useMutation({
-    mutationFn: (input: { id: Id; text: string }) => memories.update(input.id, { text: input.text }),
+    mutationFn: (input: { id: Id; text: string }) =>
+      memories.update(input.id, { text: input.text }),
     onSuccess: () => invalidate('remember'),
   });
 }
