@@ -5,31 +5,70 @@
     "version": "0.1.0",
     "orientation": "portrait",
     "scheme": "vigorengine",
-    "userInterfaceStyle": "dark",
+    "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "backgroundColor": "#0B1210",
+    "primaryColor": "#C4711F",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0B1210"
+    },
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.vigorengine.app"
+      "bundleIdentifier": "com.vigorengine.app",
+      "icon": "./assets/icon.png",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "package": "com.vigorengine.app",
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0B1210"
+      }
     },
     "web": {
       "bundler": "metro",
-      "output": "static"
+      "output": "static",
+      "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-router",
       "expo-sqlite",
-      "expo-secure-store",
-      "expo-notifications",
+      [
+        "expo-secure-store",
+        {
+          "configureAndroidBackup": false,
+          "faceIDPermission": "VigorEngine uses Face ID only to unlock the Anthropic API key you saved on this device."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/adaptive-icon.png",
+          "color": "#C4711F",
+          "defaultChannel": "default"
+        }
+      ],
       [
         "expo-image-picker",
         {
-          "photosPermission": "VigorEngine uses your photos only to store progress photos on this device.",
-          "cameraPermission": "VigorEngine uses the camera only to take progress photos, which stay on this device."
+          "photosPermission": "VigorEngine uses your photo library only to attach progress photos that stay on this device.",
+          "cameraPermission": "VigorEngine uses the camera only to take private progress photos that stay on this device."
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "resizeMode": "contain",
+          "backgroundColor": "#0B1210",
+          "imageWidth": 220
         }
       ]
     ]

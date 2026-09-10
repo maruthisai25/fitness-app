@@ -2,9 +2,23 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <!-- darkPalette.bg from @vigor/ui-tokens; matches the manifest theme_color. -->
     <meta name="theme-color" content="#0B1210" />
     <meta name="description" content="VigorEngine — local-first AI fitness coach" />
+
+    <!--
+      Icons are rendered from tooling/assets/vigor-mark.svg by
+      tooling/scripts/render-icons.mjs. The SVG favicon is preferred where it is
+      supported; the PNG is the fallback and the one iOS uses on the home screen.
+    -->
+    <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg" />
+    <link rel="alternate icon" type="image/png" sizes="192x192" href="/icons/icon-192.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon-180.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Vigor" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
     <title>VigorEngine</title>
   </head>
   <body>
