@@ -8,6 +8,21 @@
  * so a crash loses at most the row being typed. No number on this screen is
  * computed here: targets come from the stored `ProgressionDecision`, the
  * substitution list from the core engine, and the PRs from the records engine.
+ *
+ * ## Accessibility
+ *
+ * Reading order inside a set is fixed and deliberate: **target, then the
+ * inputs, then confirm**. That is the order the elements are written in below
+ * (`setHead` → `inputRow`/RPE/notes → `Confirm set`), which is the order both
+ * VoiceOver and TalkBack walk, and it is what `accessibility.component.test`
+ * asserts — a swipe through a set row should tell you what to hit before it
+ * offers you the box to type it in.
+ *
+ * The rest countdown is the only thing here that moves on its own: it steps
+ * once a second under Reduce Motion instead of twice, and says "rest is up"
+ * through the screen reader rather than relying on the number changing. The
+ * PR celebration on the finish summary fades and rises in — unless Reduce
+ * Motion is on, in which case it is simply there.
  */
 import { isAiError } from '@vigor/ai';
 import {
@@ -20,7 +35,16 @@ import {
   type UnitSystem,
 } from '@vigor/core';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import {
+  Alert,
+  Animated,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useAiClient } from '../ai/useAiClient';
@@ -54,9 +78,19 @@ import {
   repUnit,
   repUnitShort,
 } from '../ui/format';
-import { Button, ErrorBanner, LoadingScreen } from '../ui/components';
+import { Button, ErrorBanner, LoadingScreen, TextAction } from '../ui/components';
 import { SafetyBanner } from '../ui/SafetyBanner';
-import { color, fontSize, fontWeight, radius, space } from '../ui/tokens';
+import {
+  color,
+  fontSize,
+  fontWeight,
+  HIT_TARGET,
+  MAX_COMPACT_FONT_SCALE,
+  MAX_NUMERAL_FONT_SCALE,
+  radius,
+  space,
+} from '../ui/tokens';
+import { announce, useReducedMotionSetting } from '../ui/useReducedMotion';
 import { useRestTimer } from './restTimer';
 import { useSessionDraft, useSetDraft } from './store';
 import {
@@ -307,6 +341,17 @@ export function SessionMode({ workoutId, onExit }: { workoutId: Id; onExit: () =
   const exerciseName = current.exercise?.name ?? 'Exercise';
   const isLastExercise = index === total - 1;
   const everySetDone = current.sets.every((entry) => entry.set.completed);
+  /** Spoken form of the target line — the first thing a screen reader reads. */
+  const targetSentence = `${formatSetTarget(
+    current.slot.targetSets,
+    current.slot.targetRepMin,
+    current.slot.targetRepMax,
+    loadType,
+  )}${
+    current.slot.targetLoadKg != null
+      ? ` at ${formatLoadOrDash(current.slot.targetLoadKg, unitSystem, incrementKg)}`
+      : ''
+  }. Rest ${current.slot.restSec} seconds between sets.`;
 
   return (
     <View style={styles.screen}>
@@ -319,49 +364,65 @@ export function SessionMode({ workoutId, onExit }: { workoutId: Id; onExit: () =
         keyboardShouldPersistTaps="handled"
       >
         <View style={styles.headerRow}>
-          <View style={styles.headerText}>
+          <View
+            accessible
+            accessibilityRole="header"
+            accessibilityLabel={`${exerciseName}. Exercise ${index + 1} of ${total} in ${workout.title}`}
+            style={styles.headerText}
+          >
             <Caption>{`Exercise ${index + 1} of ${total} · ${workout.title}`}</Caption>
-            <Text style={styles.headerTitle}>{exerciseName}</Text>
+            <Text maxFontSizeMultiplier={1.8} style={styles.headerTitle}>
+              {exerciseName}
+            </Text>
           </View>
-          <Pressable accessibilityRole="button" onPress={confirmAbandon} testID="abandon-session">
-            <Text style={styles.abandon}>Abandon</Text>
-          </Pressable>
+          <TextAction
+            label="Abandon"
+            tone="muted"
+            hint="Ends the session; the sets you already confirmed stay logged"
+            testID="abandon-session"
+            onPress={confirmAbandon}
+          />
         </View>
 
         <SafetyBanner compact />
         {data.safetyActive ? (
-          <Text style={styles.holdNote}>
+          <Text accessibilityRole="alert" style={styles.holdNote}>
             Safety hold is on: the load stays where it was and one set comes off.
           </Text>
         ) : null}
 
         <Card>
-          <Body>
-            {formatSetTarget(
-              current.slot.targetSets,
-              current.slot.targetRepMin,
-              current.slot.targetRepMax,
-              loadType,
-            )}
-            {current.slot.targetLoadKg != null
-              ? ` at ${formatLoadOrDash(current.slot.targetLoadKg, unitSystem, incrementKg)}`
-              : ''}
-          </Body>
-          <Caption>{`Rest ${current.slot.restSec}s between sets`}</Caption>
+          {/* First in the reading order: what this exercise is asking for. */}
+          <View accessible accessibilityLabel={`Target: ${targetSentence}`} testID="exercise-target">
+            <Body>
+              {formatSetTarget(
+                current.slot.targetSets,
+                current.slot.targetRepMin,
+                current.slot.targetRepMax,
+                loadType,
+              )}
+              {current.slot.targetLoadKg != null
+                ? ` at ${formatLoadOrDash(current.slot.targetLoadKg, unitSystem, incrementKg)}`
+                : ''}
+            </Body>
+            <Caption>{`Rest ${current.slot.restSec}s between sets`}</Caption>
+          </View>
           {current.slot.substitutedFromExerciseId ? (
             <Text style={styles.substituted}>Swapped in for the exercise you could not do.</Text>
           ) : null}
-          <WhyDisclosure rationale={current.slot.progressionDecision?.rationale ?? null} />
-          <Pressable
-            accessibilityRole="button"
+          <WhyDisclosure
+            rationale={current.slot.progressionDecision?.rationale ?? null}
+            testID="exercise-why"
+          />
+          <TextAction
+            label="Can’t do this"
+            hint="Opens alternatives that work the same pattern"
             testID="cant-do-this"
             onPress={() => {
               setSheetOpen(true);
               void openSubstitutions(reason);
             }}
-          >
-            <Text style={styles.cantDo}>Can’t do this</Text>
-          </Pressable>
+          />
         </Card>
 
         {current.sets.map((entry, setIndex) => (
@@ -439,7 +500,9 @@ export function SessionMode({ workoutId, onExit }: { workoutId: Id; onExit: () =
         </View>
 
         {candidates == null ? (
-          <Text style={styles.sheetLoading}>Ranking alternatives…</Text>
+          <Text accessibilityLiveRegion="polite" style={styles.sheetLoading}>
+            Ranking alternatives…
+          </Text>
         ) : candidates.length === 0 ? (
           <EmptyState
             title="Nothing matches with the kit you have"
@@ -450,6 +513,9 @@ export function SessionMode({ workoutId, onExit }: { workoutId: Id; onExit: () =
             <Pressable
               key={candidate.exerciseId}
               accessibilityRole="button"
+              accessibilityLabel={`Swap in ${candidate.name}`}
+              accessibilityHint={candidate.rationale.summary}
+              accessibilityState={{ disabled: false }}
               testID={`substitute-${candidate.exerciseId}`}
               onPress={() => void applySubstitution(candidate)}
               style={styles.candidate}
@@ -463,6 +529,9 @@ export function SessionMode({ workoutId, onExit }: { workoutId: Id; onExit: () =
         {hasApiKey && online ? (
           <Pressable
             accessibilityRole="button"
+            accessibilityLabel={coachAsking ? 'Asking the coach' : 'Ask the coach instead'}
+            accessibilityHint="It can look further than the list above and explain why"
+            accessibilityState={{ disabled: coachAsking, busy: coachAsking }}
             testID="ask-coach-for-swap"
             onPress={() => void askCoachForSwap(reason)}
             disabled={coachAsking}
@@ -571,45 +640,66 @@ function SetRow({
     });
   }
 
+  const targetText = `Target ${entry.set.targetReps} ${repUnitShort(loadType)}${
+    targetLoadKg != null ? ` × ${formatLoadOrDash(targetLoadKg, unitSystem, incrementKg)}` : ''
+  }`;
+  const loggedText = `${entry.set.actualReps ?? 0} ${repUnit(loadType)}${
+    entry.set.actualLoadKg != null
+      ? ` × ${formatLoggedLoadOrDash(entry.set.actualLoadKg, unitSystem)}`
+      : ''
+  }${entry.set.rpe != null ? ` · RPE ${entry.set.rpe}` : ''}`;
+
   return (
     <View style={[styles.setCard, done && styles.setCardDone]} testID={`set-${setIndex}`}>
-      <View style={styles.setHead}>
-        <Text style={styles.setLabel}>{`Set ${setIndex + 1}`}</Text>
-        <Text style={styles.setTarget}>
-          {`Target ${entry.set.targetReps} ${repUnitShort(loadType)}${
-            targetLoadKg != null
-              ? ` × ${formatLoadOrDash(targetLoadKg, unitSystem, incrementKg)}`
-              : ''
-          }`}
-        </Text>
+      {/* 1 — the target. One element, read before anything is typed. */}
+      <View
+        accessible
+        accessibilityLabel={`Set ${setIndex + 1}. ${targetText}. ${lastTime}`}
+        testID={`set-${setIndex}-target`}
+      >
+        <View style={styles.setHead}>
+          <Text maxFontSizeMultiplier={MAX_COMPACT_FONT_SCALE} style={styles.setLabel}>
+            {`Set ${setIndex + 1}`}
+          </Text>
+          <Text maxFontSizeMultiplier={MAX_COMPACT_FONT_SCALE} style={styles.setTarget}>
+            {targetText}
+          </Text>
+        </View>
+        <Caption>{lastTime}</Caption>
       </View>
-      <Caption>{lastTime}</Caption>
 
       {done ? (
         <View style={styles.doneRow}>
-          <Text style={styles.doneText}>
-            {`${entry.set.actualReps ?? 0} ${repUnit(loadType)}`}
-            {entry.set.actualLoadKg != null
-              ? ` × ${formatLoggedLoadOrDash(entry.set.actualLoadKg, unitSystem)}`
-              : ''}
-            {entry.set.rpe != null ? ` · RPE ${entry.set.rpe}` : ''}
+          <Text
+            accessibilityLabel={`Logged ${loggedText}`}
+            maxFontSizeMultiplier={MAX_COMPACT_FONT_SCALE}
+            style={styles.doneText}
+          >
+            {loggedText}
           </Text>
-          <Pressable
-            accessibilityRole="button"
+          <TextAction
+            label="Edit"
+            hint={`Reopens set ${setIndex + 1} with what you logged`}
             testID={`set-${setIndex}-edit`}
             onPress={startEditing}
-          >
-            <Text style={styles.editLink}>Edit</Text>
-          </Pressable>
+          />
         </View>
       ) : (
         <>
+          {/* 2 — the inputs, in the order they are filled. */}
           <View style={styles.inputRow}>
             <View style={styles.inputCell}>
-              <Text style={styles.inputLabel}>{repUnitShort(loadType)}</Text>
+              <Text
+                accessibilityElementsHidden
+                importantForAccessibility="no"
+                style={styles.inputLabel}
+              >
+                {repUnitShort(loadType)}
+              </Text>
               <TextInput
                 testID={`set-${setIndex}-reps`}
                 accessibilityLabel={`Set ${setIndex + 1} ${repUnit(loadType)}`}
+                accessibilityHint={`Target is ${entry.set.targetReps}`}
                 keyboardType="number-pad"
                 inputMode="numeric"
                 placeholder={String(entry.set.targetReps)}
@@ -621,10 +711,21 @@ function SetRow({
             </View>
             {loadable ? (
               <View style={styles.inputCell}>
-                <Text style={styles.inputLabel}>{loadUnit(unitSystem)}</Text>
+                <Text
+                  accessibilityElementsHidden
+                  importantForAccessibility="no"
+                  style={styles.inputLabel}
+                >
+                  {loadUnit(unitSystem)}
+                </Text>
                 <TextInput
                   testID={`set-${setIndex}-load`}
-                  accessibilityLabel={`Set ${setIndex + 1} load`}
+                  accessibilityLabel={`Set ${setIndex + 1} load in ${loadUnit(unitSystem)}`}
+                  accessibilityHint={
+                    targetLoadKg == null
+                      ? undefined
+                      : `Target is ${formatLoadOrDash(targetLoadKg, unitSystem, incrementKg)}`
+                  }
                   keyboardType="decimal-pad"
                   inputMode="decimal"
                   placeholder={
@@ -641,7 +742,9 @@ function SetRow({
             ) : null}
           </View>
 
-          <Text style={styles.inputLabel}>RPE</Text>
+          <Text accessibilityRole="header" style={styles.inputLabel}>
+            RPE
+          </Text>
           <ChipRow>
             {RPE_VALUES.map((value) => (
               <Chip
@@ -656,6 +759,7 @@ function SetRow({
           <TextInput
             testID={`set-${setIndex}-notes`}
             accessibilityLabel={`Set ${setIndex + 1} notes`}
+            accessibilityHint="Optional — how the set felt"
             placeholder="Notes (optional)"
             placeholderTextColor={color.textFaint}
             style={[styles.input, styles.notes]}
@@ -663,24 +767,42 @@ function SetRow({
             onChangeText={(notes) => setInput(entry.set.id, { notes })}
           />
 
+          {/* 3 — confirm, last, so nothing is offered before the numbers. */}
           <Pressable
             accessibilityRole="button"
+            accessibilityLabel={`Confirm set ${setIndex + 1}`}
+            accessibilityHint="Saves this set straight away"
+            accessibilityState={{ disabled: saving, busy: saving }}
             testID={`set-${setIndex}-confirm`}
             onPress={confirm}
             disabled={saving}
             style={({ pressed }) => [styles.confirm, pressed && styles.confirmPressed]}
           >
-            <Text style={styles.confirmLabel}>Confirm set</Text>
+            <Text maxFontSizeMultiplier={1.8} style={styles.confirmLabel}>
+              Confirm set
+            </Text>
           </Pressable>
         </>
       )}
 
       {resting ? (
         <View style={styles.restRow}>
-          <Text style={styles.restText}>{`Rest ${formatClock(secondsLeft ?? 0)}`}</Text>
-          <Pressable accessibilityRole="button" onPress={onSkipRest} testID={`set-${setIndex}-skip-rest`}>
-            <Text style={styles.editLink}>Skip rest</Text>
-          </Pressable>
+          <Text
+            // The number changes on its own; "polite" lets the reader announce
+            // it without interrupting, and `useRestTimer` says "rest is up".
+            accessibilityLiveRegion="polite"
+            accessibilityLabel={`Resting, ${formatClock(secondsLeft ?? 0)} left`}
+            maxFontSizeMultiplier={MAX_NUMERAL_FONT_SCALE}
+            style={styles.restText}
+          >
+            {`Rest ${formatClock(secondsLeft ?? 0)}`}
+          </Text>
+          <TextAction
+            label="Skip rest"
+            hint="Ends the countdown now"
+            testID={`set-${setIndex}-skip-rest`}
+            onPress={onSkipRest}
+          />
         </View>
       ) : null}
     </View>
@@ -704,6 +826,35 @@ function SessionSummary({
   onDone: () => void;
 }) {
   const insets = useSafeAreaInsets();
+  // `null` while the OS has not answered yet: the celebration plays once, so
+  // it waits rather than starting an animation it would have to take back.
+  const reducedMotion = useReducedMotionSetting();
+  const celebration = useRef(new Animated.Value(0)).current;
+  const celebrated = summary.celebrated.length > 0;
+
+  /**
+   * The PR moment — DESIGN.md §5.7 asks for it "loudly". Loud here is a short
+   * rise and fade plus a spoken announcement, and with Reduce Motion on the
+   * card is simply in place from the first frame: same card, same words, no
+   * movement.
+   */
+  useEffect(() => {
+    if (!celebrated || reducedMotion == null) return;
+    if (reducedMotion) {
+      celebration.setValue(1);
+    } else {
+      Animated.timing(celebration, {
+        toValue: 1,
+        duration: 320,
+        useNativeDriver: true,
+      }).start();
+    }
+    const first = summary.celebrated[0]!;
+    announce(
+      `Personal record: ${(RECORD_LABEL[first.kind] ?? first.kind).toLowerCase()} on ${first.exerciseName}.`,
+    );
+  }, [celebrated, celebration, reducedMotion, summary.celebrated]);
+
   return (
     <ScrollView
       style={styles.screen}
@@ -713,7 +864,9 @@ function SessionSummary({
         paddingHorizontal: space.xl,
       }}
     >
-      <Text style={styles.summaryTitle}>Session logged</Text>
+      <Text accessibilityRole="header" maxFontSizeMultiplier={1.8} style={styles.summaryTitle}>
+        Session logged
+      </Text>
       <StatRow>
         <StatTile label="Duration" value={formatDuration(summary.startedAt, summary.finishedAt)} />
         <StatTile label="Sets" value={String(summary.totalSets)} />
@@ -724,19 +877,29 @@ function SessionSummary({
         />
       </StatRow>
 
-      {summary.celebrated.length > 0 ? (
-        <Card title="Personal record">
-          {summary.celebrated.map((record, index) => (
-            <View key={`${record.exerciseId}-${record.kind}-${index}`} style={styles.prRow}>
-              <Caption>{`${RECORD_LABEL[record.kind] ?? record.kind} · ${record.exerciseName}`}</Caption>
-              <Numeral
-                value={formatLoggedLoadOrDash(record.value, unitSystem).split(' ')[0]}
-                unit={loadUnit(unitSystem)}
-                tone="accent"
-              />
-            </View>
-          ))}
-        </Card>
+      {celebrated ? (
+        <Animated.View
+          testID="pr-celebration"
+          style={{
+            opacity: celebration,
+            transform: [
+              { translateY: celebration.interpolate({ inputRange: [0, 1], outputRange: [12, 0] }) },
+            ],
+          }}
+        >
+          <Card title="Personal record">
+            {summary.celebrated.map((record, index) => (
+              <View key={`${record.exerciseId}-${record.kind}-${index}`} style={styles.prRow}>
+                <Caption>{`${RECORD_LABEL[record.kind] ?? record.kind} · ${record.exerciseName}`}</Caption>
+                <Numeral
+                  value={formatLoggedLoadOrDash(record.value, unitSystem).split(' ')[0]}
+                  unit={loadUnit(unitSystem)}
+                  tone="accent"
+                />
+              </View>
+            ))}
+          </Card>
+        </Animated.View>
       ) : null}
 
       {summary.quiet.length > 0 ? (
@@ -751,7 +914,7 @@ function SessionSummary({
         </Card>
       ) : null}
 
-      {summary.celebrated.length === 0 && summary.quiet.length === 0 ? (
+      {!celebrated && summary.quiet.length === 0 ? (
         <Card>
           <Body muted>No new records this time — the work still counts.</Body>
         </Card>
@@ -777,11 +940,6 @@ const styles = StyleSheet.create({
     fontSize: fontSize.display,
     fontWeight: fontWeight.bold,
   },
-  abandon: {
-    color: color.textMuted,
-    fontSize: fontSize.label,
-    paddingTop: space.md,
-  },
   holdNote: {
     color: color.warn,
     fontSize: fontSize.label,
@@ -791,12 +949,6 @@ const styles = StyleSheet.create({
     color: color.textMuted,
     fontSize: fontSize.caption,
     marginTop: space.xs,
-  },
-  cantDo: {
-    color: color.accent,
-    fontSize: fontSize.label,
-    fontWeight: fontWeight.medium,
-    marginTop: space.md,
   },
   setCard: {
     backgroundColor: color.surface,
@@ -833,7 +985,6 @@ const styles = StyleSheet.create({
     fontSize: fontSize.body,
     fontVariant: ['tabular-nums'],
   },
-  editLink: { color: color.accent, fontSize: fontSize.label },
   inputRow: { flexDirection: 'row', gap: space.md, marginTop: space.md },
   inputCell: { flex: 1 },
   inputLabel: {
@@ -851,6 +1002,7 @@ const styles = StyleSheet.create({
     borderColor: color.border,
     paddingHorizontal: space.md,
     paddingVertical: space.sm + 2,
+    minHeight: HIT_TARGET,
     color: color.text,
     fontSize: fontSize.body,
     fontVariant: ['tabular-nums'],
@@ -860,7 +1012,9 @@ const styles = StyleSheet.create({
     backgroundColor: color.accent,
     borderRadius: radius.md,
     paddingVertical: space.md,
+    minHeight: HIT_TARGET,
     alignItems: 'center',
+    justifyContent: 'center',
     marginTop: space.lg,
   },
   confirmPressed: { backgroundColor: color.accentPressed },
@@ -893,6 +1047,8 @@ const styles = StyleSheet.create({
   },
   candidate: {
     paddingVertical: space.md,
+    minHeight: HIT_TARGET,
+    justifyContent: 'center',
     borderBottomWidth: 1,
     borderBottomColor: color.border,
   },
@@ -910,6 +1066,8 @@ const styles = StyleSheet.create({
   askCoach: {
     marginTop: space.md,
     paddingTop: space.md,
+    minHeight: HIT_TARGET,
+    justifyContent: 'center',
     borderTopWidth: 1,
     borderTopColor: color.border,
   },

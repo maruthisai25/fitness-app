@@ -6,7 +6,7 @@ import {
 } from '@vigor/core';
 import { useLocalSearchParams } from 'expo-router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { buildSlot, loadBuilderContext, type BuilderContext } from '../../../src/data/builder';
 import { planToday } from '../../../src/data/planner';
@@ -20,6 +20,7 @@ import {
   Screen,
   ScreenBlurb,
   ScreenTitle,
+  TextAction,
   TextField,
 } from '../../../src/ui/components';
 import {
@@ -32,7 +33,7 @@ import {
 } from '../../../src/ui/format';
 import { Caption, Card, EmptyState, ListRow, Sheet, WhyDisclosure } from '../../../src/ui/kit';
 import { SafetyBanner } from '../../../src/ui/SafetyBanner';
-import { color, fontSize, fontWeight, radius, space } from '../../../src/ui/tokens';
+import { color, fontSize, radius, space } from '../../../src/ui/tokens';
 
 /**
  * The manual workout builder — DESIGN.md §9 phase 1. It opens on the rule-based
@@ -214,6 +215,7 @@ export default function BuilderScreen() {
           const exercise = exercisesById.get(slot.exerciseId) ?? ctx?.exercises.find((entry) => entry.id === slot.exerciseId);
           const loadType = exercise?.loadType ?? 'external';
           const loadable = isLoadableLoadType(loadType);
+          const name = exercise?.name ?? 'this exercise';
           return (
             <Card
               key={`${slot.exerciseId}-${slot.order}`}
@@ -271,15 +273,24 @@ export default function BuilderScreen() {
               <WhyDisclosure rationale={slot.progressionDecision?.rationale ?? null} />
 
               <View style={styles.slotActions}>
-                <Pressable accessibilityRole="button" onPress={() => move(slot.order, -1)}>
-                  <Text style={styles.slotAction}>Move up</Text>
-                </Pressable>
-                <Pressable accessibilityRole="button" onPress={() => move(slot.order, 1)}>
-                  <Text style={styles.slotAction}>Move down</Text>
-                </Pressable>
-                <Pressable accessibilityRole="button" onPress={() => remove(slot.order)}>
-                  <Text style={[styles.slotAction, { color: color.bad }]}>Remove</Text>
-                </Pressable>
+                <TextAction
+                  label="Move up"
+                  tone="muted"
+                  hint={`Moves ${name} earlier in the session`}
+                  onPress={() => move(slot.order, -1)}
+                />
+                <TextAction
+                  label="Move down"
+                  tone="muted"
+                  hint={`Moves ${name} later in the session`}
+                  onPress={() => move(slot.order, 1)}
+                />
+                <TextAction
+                  label="Remove"
+                  tone="bad"
+                  hint={`Takes ${name} out of this workout`}
+                  onPress={() => remove(slot.order)}
+                />
               </View>
             </Card>
           );
@@ -375,12 +386,8 @@ const styles = StyleSheet.create({
   },
   slotActions: {
     flexDirection: 'row',
+    alignItems: 'center',
     gap: space.lg,
     marginTop: space.md,
-  },
-  slotAction: {
-    color: color.accent,
-    fontSize: fontSize.label,
-    fontWeight: fontWeight.medium,
   },
 });

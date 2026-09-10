@@ -3,7 +3,6 @@
  * writes through)".
  */
 import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import MemoriesScreen from '../app/(tabs)/you/memories';
 import { createSessionFixture, TestProviders, type SessionFixture } from './support';
@@ -18,8 +17,9 @@ afterEach(async () => {
   await fixture.close();
 });
 
-function renderScreen() {
-  return render(
+/** `render` and `fireEvent` are async in React Native Testing Library 14. */
+async function renderScreen() {
+  await render(
     <TestProviders repos={fixture.repos} platform={fixture.platform}>
       <MemoriesScreen />
     </TestProviders>,
@@ -36,7 +36,7 @@ describe('memories screen', () => {
       confidence: 0.9,
     });
 
-    renderScreen();
+    await renderScreen();
 
     expect(await screen.findByText('Prefers training in the evening')).toBeTruthy();
     expect(screen.getByText('active · source coach · confidence 90%')).toBeTruthy();
@@ -52,11 +52,11 @@ describe('memories screen', () => {
       confidence: 1,
     });
 
-    renderScreen();
+    await renderScreen();
     expect(await screen.findByText('Does not like burpees')).toBeTruthy();
 
-    fireEvent.press(screen.getByTestId(`memory-${memory.id}-forget`));
-    fireEvent.press(await screen.findByTestId(`memory-${memory.id}-forget-confirm`));
+    await fireEvent.press(screen.getByTestId(`memory-${memory.id}-forget`));
+    await fireEvent.press(await screen.findByTestId(`memory-${memory.id}-forget-confirm`));
 
     await waitFor(async () => {
       const row = await fixture.repos.memories.get(memory.id);
@@ -76,7 +76,7 @@ describe('memories screen', () => {
       confidence: 0.8,
     });
 
-    renderScreen();
+    await renderScreen();
     expect(await screen.findByText(/The coach is holding 1 active memory/)).toBeTruthy();
   });
 });

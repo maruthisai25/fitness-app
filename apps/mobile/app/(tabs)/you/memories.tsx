@@ -3,7 +3,7 @@
  * box", and every row visible with source and confidence.
  */
 import { useMemo, useState } from 'react';
-import { Alert, Pressable, Text, TextInput, View } from 'react-native';
+import { Alert, TextInput, View } from 'react-native';
 import type { Memory } from '@vigor/core';
 
 import {
@@ -29,10 +29,11 @@ import {
   ScreenBlurb,
   ScreenTitle,
   Section,
+  TextAction,
   TextField,
 } from '../../../src/ui/components';
 import { Body, Caption, Card, EmptyState, SectionHeading } from '../../../src/ui/kit';
-import { color, fontSize, fontWeight, radius, space } from '../../../src/ui/tokens';
+import { color, fontSize, radius, space } from '../../../src/ui/tokens';
 
 function confidencePct(value: number): string {
   return `${Math.round(value * 100)}%`;
@@ -83,6 +84,8 @@ function MemoryRow({ memory }: { memory: Memory }) {
         <View>
           <TextInput
             testID={`memory-${memory.id}-input`}
+            accessibilityLabel="Memory text"
+            accessibilityHint="Edit what the coach remembers, then save"
             style={{
               backgroundColor: color.surfaceRaised,
               borderRadius: radius.md,
@@ -147,33 +150,36 @@ function MemoryRow({ memory }: { memory: Memory }) {
             <View style={{ flexDirection: 'row', gap: space.lg, marginTop: space.sm }}>
               {memory.active ? (
                 <>
-                  <Pressable accessibilityRole="button" onPress={() => setEditing(true)}>
-                    <Text style={{ color: color.accent, fontSize: fontSize.label, fontWeight: fontWeight.medium }}>
-                      Edit
-                    </Text>
-                  </Pressable>
-                  <Pressable
-                    accessibilityRole="button"
+                  <TextAction
+                    label="Edit"
+                    hint={`Rewrites "${memory.text}"`}
+                    testID={`memory-${memory.id}-edit`}
+                    onPress={() => setEditing(true)}
+                  />
+                  <TextAction
+                    label="Forget"
+                    tone="warn"
+                    hint="Stops the coach using this, but keeps it in the audit list"
                     testID={`memory-${memory.id}-forget`}
                     onPress={() => setReasonPrompt(true)}
-                  >
-                    <Text style={{ color: color.warn, fontSize: fontSize.label, fontWeight: fontWeight.medium }}>
-                      Forget
-                    </Text>
-                  </Pressable>
+                  />
                 </>
               ) : (
-                <Pressable accessibilityRole="button" onPress={() => void restore.mutate(memory.id)}>
-                  <Text style={{ color: color.accent, fontSize: fontSize.label, fontWeight: fontWeight.medium }}>
-                    Restore
-                  </Text>
-                </Pressable>
+                <TextAction
+                  label="Restore"
+                  hint="Brings this back into the coach's context"
+                  testID={`memory-${memory.id}-restore`}
+                  busy={restore.isPending}
+                  onPress={() => void restore.mutate(memory.id)}
+                />
               )}
-              <Pressable accessibilityRole="button" onPress={confirmDelete}>
-                <Text style={{ color: color.bad, fontSize: fontSize.label, fontWeight: fontWeight.medium }}>
-                  Delete
-                </Text>
-              </Pressable>
+              <TextAction
+                label="Delete"
+                tone="bad"
+                hint="Removes it for good"
+                testID={`memory-${memory.id}-delete`}
+                onPress={confirmDelete}
+              />
             </View>
           )}
         </>

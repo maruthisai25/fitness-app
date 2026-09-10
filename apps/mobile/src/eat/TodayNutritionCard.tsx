@@ -35,15 +35,30 @@ export function TodayNutritionCard({ onOpenEat, date }: TodayNutritionCardProps)
   const targets = state?.targets ?? null;
   const remaining = state ? clampMacros(state.remaining) : null;
 
+  /**
+   * The rings are a picture of numbers a screen reader would otherwise have to
+   * piece together from four fragments, so the card speaks one sentence.
+   */
+  const spoken =
+    !state || !targets || !remaining
+      ? 'Left today. Open the Eat tab to log a meal.'
+      : `Left today: ${Math.round(remaining.kcal)} of ${targets.kcal} kcal and ${Math.round(
+          remaining.proteinG,
+        )} of ${targets.proteinG} grams of protein.`;
+
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel="Open the Eat tab"
+      accessibilityLabel={spoken}
+      accessibilityHint="Opens the Eat tab"
+      accessibilityState={{ disabled: false }}
       onPress={onOpenEat}
       style={({ pressed }) => [styles.card, pressed && styles.pressed]}
     >
       <View style={styles.header}>
-        <Text style={styles.title}>Left today</Text>
+        <Text accessibilityRole="header" style={styles.title}>
+          Left today
+        </Text>
         <Text style={styles.link}>Eat ›</Text>
       </View>
 
@@ -66,7 +81,7 @@ export function TodayNutritionCard({ onOpenEat, date }: TodayNutritionCardProps)
               stroke={state.remaining.kcal < 0 ? color.warn : color.accent}
               progress={progressAgainstTarget(state.consumed.kcal, targets.kcal) ?? 0}
             >
-              <Text style={styles.ringValue}>{Math.round(remaining.kcal)}</Text>
+              <Text maxFontSizeMultiplier={1.4} style={styles.ringValue}>{Math.round(remaining.kcal)}</Text>
               <Text style={styles.ringUnit}>kcal</Text>
             </Ring>
             <Text style={styles.ringLabel}>{`of ${targets.kcal} kcal`}</Text>
@@ -79,7 +94,7 @@ export function TodayNutritionCard({ onOpenEat, date }: TodayNutritionCardProps)
               stroke={color.good}
               progress={progressAgainstTarget(state.consumed.proteinG, targets.proteinG) ?? 0}
             >
-              <Text style={styles.ringValue}>{Math.round(remaining.proteinG)}</Text>
+              <Text maxFontSizeMultiplier={1.4} style={styles.ringValue}>{Math.round(remaining.proteinG)}</Text>
               <Text style={styles.ringUnit}>g protein</Text>
             </Ring>
             <Text style={styles.ringLabel}>{`of ${targets.proteinG} g`}</Text>

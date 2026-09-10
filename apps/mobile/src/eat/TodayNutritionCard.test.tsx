@@ -88,7 +88,14 @@ describe('TodayNutritionCard', () => {
     expect(screen.getByText('of 150 g')).toBeTruthy();
     expect(screen.getByText('1 meal logged · 28 g fiber still to go')).toBeTruthy();
 
-    fireEvent.press(screen.getByLabelText('Open the Eat tab'));
+    // The rings are a picture; the card speaks the same numbers in one
+    // sentence, and says where a tap goes as its hint.
+    const card = screen.getByHintText('Opens the Eat tab');
+    expect(card.props.accessibilityLabel).toBe(
+      'Left today: 2000 of 2400 kcal and 130 of 150 grams of protein.',
+    );
+
+    await fireEvent.press(card);
     expect(onOpenEat).toHaveBeenCalledTimes(1);
   });
 

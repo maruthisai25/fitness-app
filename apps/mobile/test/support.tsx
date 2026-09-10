@@ -30,7 +30,13 @@ export function TestProviders({
   children: ReactNode;
 }) {
   const client = new QueryClient({
-    defaultOptions: { queries: { retry: false, gcTime: 0, staleTime: 0 } },
+    defaultOptions: {
+      queries: { retry: false, gcTime: 0, staleTime: 0 },
+      // Mutations default to a five-minute garbage-collection timer. Under
+      // Jest that timer is a live handle, so a test that fires a mutation
+      // keeps the worker alive for five minutes after the assertions pass.
+      mutations: { retry: false, gcTime: 0 },
+    },
   });
   return (
     <QueryClientProvider client={client}>

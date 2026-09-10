@@ -6,13 +6,27 @@
  *
  * Nothing here computes anything a `@vigor/core` engine owns; every number
  * arrives already decided.
+ *
+ * Accessibility: every pressable has a role, a label and a state; fields are
+ * labelled and their hint is spoken; meters report their value; figures cap
+ * dynamic-type growth so a macro row does not wrap mid-number.
  */
 import type { ReactNode } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import type { TextInputProps, ViewStyle } from 'react-native';
 
 import { ErrorBanner, Screen } from './components';
-import { color, fontSize, fontWeight, radius, space } from './tokens';
+import {
+  color,
+  fontSize,
+  fontWeight,
+  HIT_TARGET,
+  MAX_COMPACT_FONT_SCALE,
+  MAX_NUMERAL_FONT_SCALE,
+  radius,
+  space,
+  TEXT_ACTION_HIT_SLOP,
+} from './tokens';
 
 /** A whole-screen failure, on the app ground with the usual padding. */
 export function ErrorScreen({ message }: { message: string }) {
@@ -38,15 +52,20 @@ export function Card({
   children,
   style,
   onPress,
+  /** Required when `onPress` is given — a card has no text of its own to read. */
+  label,
 }: {
   children: ReactNode;
   style?: ViewStyle;
   onPress?: () => void;
+  label?: string;
 }) {
   if (onPress) {
     return (
       <Pressable
         accessibilityRole="button"
+        accessibilityLabel={label}
+        accessibilityState={{ disabled: false }}
         onPress={onPress}
         style={({ pressed }) => [styles.card, pressed && styles.cardPressed, style]}
       >
@@ -58,7 +77,11 @@ export function Card({
 }
 
 export function CardTitle({ children }: { children: ReactNode }) {
-  return <Text style={styles.cardTitle}>{children}</Text>;
+  return (
+    <Text accessibilityRole="header" style={styles.cardTitle}>
+      {children}
+    </Text>
+  );
 }
 
 export function Body({ children, tone = 'neutral' }: { children: ReactNode; tone?: ToneName }) {
@@ -82,11 +105,26 @@ export function Stat({
   tone?: ToneName;
 }) {
   return (
-    <View style={styles.stat}>
-      <Text style={styles.statLabel}>{label}</Text>
+    <View
+      accessible
+      accessibilityLabel={`${label}: ${value}${unit ? ` ${unit}` : ''}`}
+      style={styles.stat}
+    >
+      <Text maxFontSizeMultiplier={MAX_COMPACT_FONT_SCALE} style={styles.statLabel}>
+        {label}
+      </Text>
       <View style={styles.statValueRow}>
-        <Text style={[styles.statValue, { color: TONE_COLOR[tone] }]}>{value}</Text>
-        {unit ? <Text style={styles.statUnit}>{unit}</Text> : null}
+        <Text
+          maxFontSizeMultiplier={MAX_NUMERAL_FONT_SCALE}
+          style={[styles.statValue, { color: TONE_COLOR[tone] }]}
+        >
+          {value}
+        </Text>
+        {unit ? (
+          <Text maxFontSizeMultiplier={MAX_NUMERAL_FONT_SCALE} style={styles.statUnit}>
+            {unit}
+          </Text>
+        ) : null}
       </View>
     </View>
   );
@@ -109,12 +147,21 @@ export function DataRow({
   hint?: string;
 }) {
   return (
-    <View style={styles.dataRow}>
+    <View
+      accessible
+      accessibilityLabel={`${label}: ${value}${hint ? `. ${hint}` : ''}`}
+      style={styles.dataRow}
+    >
       <View style={styles.dataRowLabel}>
         <Text style={styles.dataRowLabelText}>{label}</Text>
         {hint ? <Text style={styles.caption}>{hint}</Text> : null}
       </View>
-      <Text style={[styles.dataRowValue, { color: TONE_COLOR[tone] }]}>{value}</Text>
+      <Text
+        maxFontSizeMultiplier={MAX_COMPACT_FONT_SCALE}
+        style={[styles.dataRowValue, { color: TONE_COLOR[tone] }]}
+      >
+        {value}
+      </Text>
     </View>
   );
 }
@@ -124,14 +171,22 @@ export function MeterBar({
   value,
   max,
   tone = 'accent',
+  /** What the bar measures, e.g. "Protein". Read with the value. */
+  label,
 }: {
   value: number;
   max: number;
   tone?: ToneName;
+  label?: string;
 }) {
   const share = max > 0 ? Math.max(0, Math.min(1, value / max)) : 0;
   return (
-    <View style={styles.meterTrack}>
+    <View
+      accessibilityRole="progressbar"
+      accessibilityLabel={label}
+      accessibilityValue={{ min: 0, max: Math.round(max), now: Math.round(value) }}
+      style={styles.meterTrack}
+    >
       <View
         style={[styles.meterFill, { width: `${share * 100}%`, backgroundColor: TONE_COLOR[tone] }]}
       />
@@ -152,6 +207,7 @@ export function Chip({
 }) {
   const content = (
     <Text
+      maxFontSizeMultiplier={2}
       style={[
         styles.chipLabel,
         selected && styles.chipLabelSelected,
@@ -167,7 +223,9 @@ export function Chip({
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityState={{ selected }}
+      accessibilityLabel={label}
+      accessibilityState={{ selected, disabled: false }}
+      hitSlop={TEXT_ACTION_HIT_SLOP}
       onPress={onPress}
       style={({ pressed }) => [
         styles.chip,
@@ -190,20 +248,32 @@ export function InlineAction({
   onPress,
   tone = 'accent',
   disabled = false,
+  hint,
+  testID,
 }: {
   label: string;
   onPress: () => void;
   tone?: ToneName;
   disabled?: boolean;
+  hint?: string;
+  testID?: string;
 }) {
   return (
     <Pressable
       accessibilityRole="button"
+      accessibilityLabel={label}
+      accessibilityHint={hint}
+      accessibilityState={{ disabled }}
+      testID={testID}
+      hitSlop={TEXT_ACTION_HIT_SLOP}
       onPress={onPress}
       disabled={disabled}
       style={({ pressed }) => [styles.inlineAction, pressed && !disabled && styles.chipPressed]}
     >
-      <Text style={[styles.inlineActionLabel, { color: TONE_COLOR[tone] }, disabled && styles.dim]}>
+      <Text
+        maxFontSizeMultiplier={2}
+        style={[styles.inlineActionLabel, { color: TONE_COLOR[tone] }, disabled && styles.dim]}
+      >
         {label}
       </Text>
     </Pressable>
@@ -216,17 +286,25 @@ export function ActionRow({ children }: { children: ReactNode }) {
 
 export function EmptyState({ title, detail }: { title: string; detail: string }) {
   return (
-    <View style={styles.empty}>
+    <View accessible accessibilityLabel={`${title}. ${detail}`} style={styles.empty}>
       <Text style={styles.emptyTitle}>{title}</Text>
       <Text style={styles.emptyDetail}>{detail}</Text>
     </View>
   );
 }
 
-/** A short, quiet note — used for "why?" summaries and privacy statements. */
+/**
+ * A short, quiet note — used for "why?" summaries, privacy statements and the
+ * confirmation after a food log lands. A toned note is a status the user has
+ * just caused, so it is announced politely rather than waiting to be found.
+ */
 export function Note({ children, tone = 'neutral' }: { children: ReactNode; tone?: ToneName }) {
   return (
-    <View style={[styles.note, tone !== 'neutral' && { borderLeftColor: TONE_COLOR[tone] }]}>
+    <View
+      accessibilityRole={tone === 'neutral' ? undefined : 'alert'}
+      accessibilityLiveRegion={tone === 'neutral' ? 'none' : 'polite'}
+      style={[styles.note, tone !== 'neutral' && { borderLeftColor: TONE_COLOR[tone] }]}
+    >
       <Text style={styles.noteText}>{children}</Text>
     </View>
   );
@@ -254,6 +332,11 @@ export function NumberField({
       <View style={styles.numberRow}>
         <TextInput
           accessibilityLabel={label}
+          // The unit is a hint, not part of the name: a screen-reader user
+          // looking for "Arm" should find "Arm", and hear "in cm" after it.
+          accessibilityHint={[suffix ? `In ${suffix}` : null, hint]
+            .filter((part): part is string => Boolean(part))
+            .join('. ')}
           inputMode="decimal"
           keyboardType="decimal-pad"
           placeholder={placeholder}
@@ -263,7 +346,16 @@ export function NumberField({
           onChangeText={onChangeText}
           {...rest}
         />
-        {suffix ? <Text style={styles.numberSuffix}>{suffix}</Text> : null}
+        {suffix ? (
+          <Text
+            accessibilityElementsHidden
+            importantForAccessibility="no"
+            maxFontSizeMultiplier={MAX_COMPACT_FONT_SCALE}
+            style={styles.numberSuffix}
+          >
+            {suffix}
+          </Text>
+        ) : null}
       </View>
       {hint ? <Text style={styles.caption}>{hint}</Text> : null}
     </View>
@@ -281,6 +373,7 @@ export function LabelledInput({
       <Text style={styles.fieldLabel}>{label}</Text>
       <TextInput
         accessibilityLabel={label}
+        accessibilityHint={hint}
         placeholderTextColor={color.textFaint}
         style={styles.numberInput}
         {...rest}
@@ -313,21 +406,40 @@ export function ItemRow({
         {subtitle ? <Text style={styles.caption}>{subtitle}</Text> : null}
       </View>
       {value ? (
-        <Text style={[styles.dataRowValue, { color: TONE_COLOR[tone] }]}>{value}</Text>
+        <Text
+          maxFontSizeMultiplier={MAX_COMPACT_FONT_SCALE}
+          style={[styles.dataRowValue, { color: TONE_COLOR[tone] }]}
+        >
+          {value}
+        </Text>
       ) : null}
       {right}
     </>
   );
-  if (!onPress) return <View style={styles.itemRow}>{inner}</View>;
+  if (!onPress) {
+    return (
+      <View accessibilityLabel={rowLabel(title, subtitle, value)} style={styles.itemRow}>
+        {inner}
+      </View>
+    );
+  }
   return (
     <Pressable
       accessibilityRole="button"
+      // The row's own text is the label, so a swipe reads "Two rotis, 240 kcal"
+      // and not three separate fragments.
+      accessibilityLabel={rowLabel(title, subtitle, value)}
+      accessibilityState={{ disabled: false }}
       onPress={onPress}
       style={({ pressed }) => [styles.itemRow, pressed && styles.cardPressed]}
     >
       {inner}
     </Pressable>
   );
+}
+
+function rowLabel(title: string, subtitle?: string, value?: string): string {
+  return [title, value, subtitle].filter((part) => part && part.length > 0).join(', ');
 }
 
 const styles = StyleSheet.create({
@@ -421,6 +533,9 @@ const styles = StyleSheet.create({
     borderColor: color.borderStrong,
     paddingHorizontal: space.md,
     paddingVertical: space.xs,
+    minWidth: HIT_TARGET,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   chipSelected: {
     backgroundColor: color.accentSoft,
@@ -446,6 +561,7 @@ const styles = StyleSheet.create({
   inlineAction: {
     paddingVertical: space.xs,
     paddingHorizontal: space.sm,
+    justifyContent: 'center',
   },
   inlineActionLabel: {
     fontSize: fontSize.label,
@@ -508,6 +624,7 @@ const styles = StyleSheet.create({
     borderColor: color.border,
     paddingHorizontal: space.md,
     paddingVertical: space.sm + 2,
+    minHeight: HIT_TARGET,
     color: color.text,
     fontSize: fontSize.body,
   },
@@ -521,6 +638,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: space.md,
     paddingVertical: space.sm,
+    minHeight: HIT_TARGET,
     borderBottomWidth: 1,
     borderBottomColor: color.border,
   },

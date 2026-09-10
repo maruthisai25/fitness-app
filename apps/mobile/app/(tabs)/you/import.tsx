@@ -1,7 +1,7 @@
 import type { ExportBundle } from '@vigor/core';
 import { UnsupportedBundleError } from '@vigor/db';
 import type { EncryptedPayload, StoredFile } from '@vigor/platform';
-import { color, fontSize, space } from '../../../src/ui/tokens';
+import { color, fontSize, HIT_TARGET, space } from '../../../src/ui/tokens';
 import { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
@@ -118,8 +118,18 @@ export default function ImportScreen() {
                   key={file.ref}
                   disabled={stage !== null}
                   onPress={() => setSelectedRef(file.ref)}
+                  accessibilityRole="radio"
+                  accessibilityLabel={file.ref}
+                  accessibilityHint="Chooses this backup to restore from"
+                  accessibilityState={{
+                    selected: active,
+                    checked: active,
+                    disabled: stage !== null,
+                  }}
                   style={{
                     padding: space.lg,
+                    minHeight: HIT_TARGET,
+                    justifyContent: 'center',
                     borderBottomWidth: index === files.length - 1 ? 0 : 1,
                     borderBottomColor: color.border,
                     backgroundColor: active ? color.accentSoft : 'transparent',

@@ -10,7 +10,6 @@ import type { Exercise, Id, WorkoutPlan } from '@vigor/core';
 import type { Repositories } from '@vigor/db';
 import { createTestDatabase } from '@vigor/db/testing';
 import type { PlatformAdapters } from '@vigor/platform';
-import { vi } from 'vitest';
 
 export const TEST_DATE = '2026-09-10';
 
@@ -18,32 +17,39 @@ export const BACK_SQUAT_ID = '0195c0de-0000-7000-8000-00000000ba01';
 export const FRONT_SQUAT_ID = '0195c0de-0000-7000-8000-00000000ba02';
 export const PLANK_ID = '0195c0de-0000-7000-8000-00000000ba03';
 
-/** Fake adapters: nothing in a test may reach a device API. */
+/**
+ * Fake adapters: nothing in a test may reach a device API.
+ *
+ * Plain functions, not spies — this module is shared by the vitest projects
+ * and the jest-expo rendering project, so it must not import either runner.
+ * A test that needs to assert on a call wraps the one adapter it cares about
+ * with its own spy.
+ */
 export function createFakePlatform(): PlatformAdapters {
   return {
     secureStore: {
-      get: vi.fn(async () => null),
-      set: vi.fn(async () => undefined),
-      remove: vi.fn(async () => undefined),
+      get: async () => null,
+      set: async () => undefined,
+      remove: async () => undefined,
       isHardwareBacked: () => false,
     },
     fileStore: {
-      write: vi.fn(async (ref: string) => ({ ref, mimeType: 'application/json', byteLength: 0 })),
-      readBase64: vi.fn(async () => null),
-      remove: vi.fn(async () => undefined),
-      list: vi.fn(async () => []),
-      exists: vi.fn(async () => false),
+      write: async (ref: string) => ({ ref, mimeType: 'application/json', byteLength: 0 }),
+      readBase64: async () => null,
+      remove: async () => undefined,
+      list: async () => [],
+      exists: async () => false,
     },
     notifications: {
-      requestPermission: vi.fn(async () => true),
-      hasPermission: vi.fn(async () => true),
-      schedule: vi.fn(async () => undefined),
-      cancel: vi.fn(async () => undefined),
-      cancelAll: vi.fn(async () => undefined),
+      requestPermission: async () => true,
+      hasPermission: async () => true,
+      schedule: async () => undefined,
+      cancel: async () => undefined,
+      cancelAll: async () => undefined,
       supportsBackgroundDelivery: () => true,
     },
     network: {
-      isOnline: vi.fn(async () => false),
+      isOnline: async () => false,
       subscribe: () => () => undefined,
     },
     clock: {
@@ -51,8 +57,12 @@ export function createFakePlatform(): PlatformAdapters {
       today: () => TEST_DATE,
     },
     crypto: {
-      encryptJson: vi.fn(),
-      decryptJson: vi.fn(),
+      encryptJson: async () => {
+        throw new Error('crypto is not wired up in component tests');
+      },
+      decryptJson: async () => {
+        throw new Error('crypto is not wired up in component tests');
+      },
     } as unknown as PlatformAdapters['crypto'],
   };
 }
@@ -143,7 +153,24 @@ export async function createSessionFixture(): Promise<SessionFixture> {
         restSec: 120,
         tempo: null,
         substitutedFromExerciseId: null,
-        progressionDecision: null,
+        // A planned slot normally carries the engine's decision — that is what
+        // the "Why?" disclosure on the exercise card reads (DESIGN.md §2.3).
+        progressionDecision: {
+          exerciseId: BACK_SQUAT_ID,
+          action: 'hold_load',
+          targetLoadKg: 60,
+          targetRepMin: 5,
+          targetRepMax: 8,
+          targetSets: 2,
+          restSec: 120,
+          suggestedExerciseId: null,
+          loadDeltaKg: 0,
+          rationale: {
+            codes: ['HOLD_BUILD_REPS'],
+            facts: { targetReps: 5 },
+            summary: 'Holding the load and building reps toward the top of the range.',
+          },
+        },
         notes: null,
       },
     ],

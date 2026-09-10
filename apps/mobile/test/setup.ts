@@ -1,5 +1,6 @@
 /**
- * Test bootstrap for the mobile shell.
+ * Test bootstrap for the vitest projects (`vitest.config.mts`). The rendering
+ * tests under `jest-expo` have their own, in `test/jest.setup.ts`.
  *
  * Two things happen here, in this order:
  *

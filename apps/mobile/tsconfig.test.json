@@ -10,7 +10,10 @@
     "test/**/*.cjs",
     "src/**/*.ts",
     "src/**/*.tsx",
-    "vitest.config.mts",
-    "vitest.components.config.ts"
-  ]
+    "vitest.config.mts"
+  ],
+  // The rendering tests run under jest-expo, not vitest: their globals come
+  // from `@types/jest` and are checked by `tsconfig.jest.json`. Having both
+  // sets of globals in one program would give `expect` two conflicting types.
+  "exclude": ["test/**/*.component.test.tsx", "test/jest.setup.ts"]
 }

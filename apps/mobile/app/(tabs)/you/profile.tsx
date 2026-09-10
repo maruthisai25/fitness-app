@@ -8,7 +8,7 @@ import type {
 } from '@vigor/core';
 import { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
-import { color, fontSize, space } from '../../../src/ui/tokens';
+import { color, fontSize, HIT_TARGET, space } from '../../../src/ui/tokens';
 
 import { useRepos } from '../../../src/db/AppDataProvider';
 import {
@@ -275,9 +275,15 @@ export default function ProfileScreen() {
                 <Pressable
                   key={style}
                   onPress={() => toggleStyle(style)}
+                  accessibilityRole="checkbox"
+                  accessibilityLabel={style}
+                  accessibilityState={{ checked: active, disabled: false }}
+                  hitSlop={8}
                   style={{
                     paddingVertical: space.sm,
                     paddingHorizontal: space.md,
+                    minHeight: HIT_TARGET - 16,
+                    justifyContent: 'center',
                     borderRadius: 999,
                     borderWidth: 1,
                     borderColor: active ? color.accent : color.borderStrong,
@@ -285,6 +291,7 @@ export default function ProfileScreen() {
                   }}
                 >
                   <Text
+                    maxFontSizeMultiplier={2}
                     style={{
                       color: active ? color.accent : color.textMuted,
                       fontSize: fontSize.label,

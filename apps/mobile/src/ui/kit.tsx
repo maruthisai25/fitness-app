@@ -8,6 +8,12 @@
  *
  * DESIGN.md §2.3 and §7.1: every engine recommendation carries a `Rationale`
  * and the UI always offers "Why?" — that is `WhyDisclosure` below.
+ *
+ * Accessibility: pressables carry role, label and state; targets are at least
+ * `HIT_TARGET`; figures cap their dynamic-type growth with
+ * `maxFontSizeMultiplier` so a number and its unit stay on one line at large
+ * text sizes; the bottom sheet is announced as modal and skips its slide-in
+ * when the OS asks for reduced motion.
  */
 import type { Rationale } from '@vigor/core';
 import { useState } from 'react';
@@ -16,7 +22,18 @@ import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from 'react-nati
 import type { ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { color, fontSize, fontWeight, radius, space } from './tokens';
+import {
+  color,
+  fontSize,
+  fontWeight,
+  HIT_TARGET,
+  MAX_COMPACT_FONT_SCALE,
+  MAX_NUMERAL_FONT_SCALE,
+  radius,
+  space,
+  TEXT_ACTION_HIT_SLOP,
+} from './tokens';
+import { useReducedMotion } from './useReducedMotion';
 
 /** A raised panel. `title` is optional so it can wrap a bare row of numbers. */
 export function Card({
@@ -37,7 +54,11 @@ export function Card({
       {title || action ? (
         <View style={styles.cardHead}>
           <View style={styles.cardHeadText}>
-            {title ? <Text style={styles.cardTitle}>{title}</Text> : null}
+            {title ? (
+              <Text accessibilityRole="header" style={styles.cardTitle}>
+                {title}
+              </Text>
+            ) : null}
             {subtitle ? <Text style={styles.cardSubtitle}>{subtitle}</Text> : null}
           </View>
           {action}
@@ -52,7 +73,9 @@ export function Card({
 export function SectionHeading({ children, action }: { children: ReactNode; action?: ReactNode }) {
   return (
     <View style={styles.sectionHeading}>
-      <Text style={styles.sectionHeadingText}>{children}</Text>
+      <Text accessibilityRole="header" style={styles.sectionHeadingText}>
+        {children}
+      </Text>
       {action}
     </View>
   );
@@ -66,7 +89,14 @@ export function Caption({ children }: { children: ReactNode }) {
   return <Text style={styles.caption}>{children}</Text>;
 }
 
-/** A number that sits in a column: tabular figures, condensed weight. */
+/**
+ * A number that sits in a column: tabular figures, condensed weight.
+ *
+ * The figure and its unit are one accessibility element ("62.5 kg", not "62.5"
+ * then "kg"), and both cap their dynamic-type growth so the pair stays on one
+ * line — DESIGN.md §7.5 asks for numbers in columns, and a column that wraps
+ * is no longer a column.
+ */
 export function Numeral({
   value,
   unit,
@@ -77,9 +107,19 @@ export function Numeral({
   tone?: 'default' | 'accent' | 'good' | 'warn' | 'bad';
 }) {
   return (
-    <View style={styles.numeralRow}>
-      <Text style={[styles.numeral, toneStyle(tone)]}>{value}</Text>
-      {unit ? <Text style={styles.numeralUnit}>{unit}</Text> : null}
+    <View
+      accessible
+      accessibilityLabel={unit ? `${value} ${unit}` : value}
+      style={styles.numeralRow}
+    >
+      <Text maxFontSizeMultiplier={MAX_NUMERAL_FONT_SCALE} style={[styles.numeral, toneStyle(tone)]}>
+        {value}
+      </Text>
+      {unit ? (
+        <Text maxFontSizeMultiplier={MAX_NUMERAL_FONT_SCALE} style={styles.numeralUnit}>
+          {unit}
+        </Text>
+      ) : null}
     </View>
   );
 }
@@ -112,8 +152,19 @@ export function StatTile({
   tone?: 'default' | 'accent' | 'good' | 'warn' | 'bad';
 }) {
   return (
-    <View style={styles.statTile}>
-      <Text style={styles.statLabel}>{label}</Text>
+    <View
+      accessible
+      accessibilityLabel={`${label}: ${value}${unit ? ` ${unit}` : ''}`}
+      style={styles.statTile}
+    >
+      <Text
+        accessibilityElementsHidden
+        importantForAccessibility="no"
+        maxFontSizeMultiplier={MAX_COMPACT_FONT_SCALE}
+        style={styles.statLabel}
+      >
+        {label}
+      </Text>
       <Numeral value={value} unit={unit} tone={tone} />
     </View>
   );
@@ -143,12 +194,25 @@ export function Chip({
         tone === 'accent' && !selected && styles.chipAccent,
       ]}
     >
-      <Text style={[styles.chipLabel, selected && styles.chipLabelSelected]}>{label}</Text>
+      <Text
+        maxFontSizeMultiplier={2}
+        style={[styles.chipLabel, selected && styles.chipLabelSelected]}
+      >
+        {label}
+      </Text>
     </View>
   );
   if (!onPress) return body;
   return (
-    <Pressable onPress={onPress} accessibilityRole="button" accessibilityLabel={label}>
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={label}
+      // Selection is the whole point of a chip; without this a screen reader
+      // cannot tell the chosen RPE from the eight it did not choose.
+      accessibilityState={{ selected: Boolean(selected), disabled: false }}
+      hitSlop={TEXT_ACTION_HIT_SLOP}
+    >
       {body}
     </Pressable>
   );
@@ -186,6 +250,8 @@ export function ListRow({
     <Pressable
       onPress={onPress}
       accessibilityRole="button"
+      accessibilityLabel={title}
+      accessibilityHint={subtitle}
       style={({ pressed }) => (pressed ? styles.pressed : undefined)}
     >
       {content}
@@ -198,19 +264,43 @@ export function ListRow({
  * always shows it. Collapsed by default so the number leads and the reasoning
  * is one tap away.
  */
-export function WhyDisclosure({ rationale, label = 'Why?' }: { rationale: Rationale | null; label?: string }) {
+export function WhyDisclosure({
+  rationale,
+  label = 'Why?',
+  testID,
+}: {
+  rationale: Rationale | null;
+  label?: string;
+  testID?: string;
+}) {
   const [open, setOpen] = useState(false);
   if (!rationale) return null;
   return (
     <View style={styles.why}>
-      <Pressable onPress={() => setOpen((value) => !value)} accessibilityRole="button">
-        <Text style={styles.whyToggle}>{open ? `Hide ${label.toLowerCase()}` : label}</Text>
+      <Pressable
+        onPress={() => setOpen((value) => !value)}
+        testID={testID}
+        accessibilityRole="button"
+        accessibilityLabel={label}
+        accessibilityHint="Shows the reasoning behind this number"
+        accessibilityState={{ expanded: open, disabled: false }}
+        hitSlop={TEXT_ACTION_HIT_SLOP}
+        style={styles.whyToggleHit}
+      >
+        <Text maxFontSizeMultiplier={2} style={styles.whyToggle}>
+          {open ? `Hide ${label.toLowerCase()}` : label}
+        </Text>
       </Pressable>
       {open ? (
         <View style={styles.whyBody}>
           <Text style={styles.whySummary}>{rationale.summary}</Text>
           {rationale.codes.length > 0 ? (
-            <Text style={styles.whyCodes}>{rationale.codes.join(' · ')}</Text>
+            <Text
+              accessibilityLabel={`Reason codes: ${rationale.codes.join(', ')}`}
+              style={styles.whyCodes}
+            >
+              {rationale.codes.join(' · ')}
+            </Text>
           ) : null}
         </View>
       ) : null}
@@ -221,7 +311,7 @@ export function WhyDisclosure({ rationale, label = 'Why?' }: { rationale: Ration
 /** Nothing here yet, and what to do about it. */
 export function EmptyState({ title, blurb }: { title: string; blurb?: string }) {
   return (
-    <View style={styles.empty}>
+    <View accessible accessibilityLabel={blurb ? `${title}. ${blurb}` : title} style={styles.empty}>
       <Text style={styles.emptyTitle}>{title}</Text>
       {blurb ? <Text style={styles.emptyBlurb}>{blurb}</Text> : null}
     </View>
@@ -247,7 +337,16 @@ export function BarChart({
 
   return (
     <View>
-      <View style={[styles.chart, { height }]}>
+      {/* The bars are a picture of the numbers already read out below them, so
+          they are one labelled image rather than N unlabelled rectangles. */}
+      <View
+        accessible
+        accessibilityRole="image"
+        accessibilityLabel={`Chart: ${points.length} points from ${points[0].value} to ${
+          points[points.length - 1].value
+        } ${unit}`}
+        style={[styles.chart, { height }]}
+      >
         {points.map((point, index) => {
           const ratio = Math.max(0.06, (point.value - floor) / (max - floor || 1));
           return (
@@ -278,14 +377,37 @@ export function Sheet({
   children: ReactNode;
 }) {
   const insets = useSafeAreaInsets();
+  const reducedMotion = useReducedMotion();
   return (
-    <Modal visible={visible} animationType="slide" transparent onRequestClose={onClose}>
+    <Modal
+      visible={visible}
+      // The slide-up is decoration; with Reduce Motion on the sheet is simply
+      // there. Nothing about its content changes.
+      animationType={reducedMotion ? 'none' : 'slide'}
+      transparent
+      onRequestClose={onClose}
+    >
       <View style={styles.sheetBackdrop}>
-        <View style={[styles.sheet, { paddingBottom: insets.bottom + space.xl }]}>
+        <View
+          accessibilityViewIsModal
+          accessibilityLabel={title}
+          style={[styles.sheet, { paddingBottom: insets.bottom + space.xl }]}
+        >
           <View style={styles.sheetHead}>
-            <Text style={styles.sheetTitle}>{title}</Text>
-            <Pressable onPress={onClose} accessibilityRole="button" accessibilityLabel="Close">
-              <Text style={styles.sheetClose}>Close</Text>
+            <Text accessibilityRole="header" style={styles.sheetTitle}>
+              {title}
+            </Text>
+            <Pressable
+              onPress={onClose}
+              accessibilityRole="button"
+              accessibilityLabel="Close"
+              accessibilityHint={`Closes ${title.toLowerCase()}`}
+              hitSlop={TEXT_ACTION_HIT_SLOP}
+              style={styles.sheetCloseHit}
+            >
+              <Text maxFontSizeMultiplier={2} style={styles.sheetClose}>
+                Close
+              </Text>
             </Pressable>
           </View>
           <ScrollView keyboardShouldPersistTaps="handled">{children}</ScrollView>
@@ -374,6 +496,11 @@ const styles = StyleSheet.create({
     borderColor: color.borderStrong,
     paddingVertical: space.xs + 2,
     paddingHorizontal: space.md,
+    // A chip is a pill, not a button bar — it stays visually compact and the
+    // Pressable around it carries `hitSlop` to reach 44 pt.
+    minWidth: HIT_TARGET,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   chipSelected: {
     backgroundColor: color.accentSoft,
@@ -395,6 +522,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: space.md,
+    minHeight: HIT_TARGET,
     borderBottomWidth: 1,
     borderBottomColor: color.border,
   },
@@ -412,6 +540,7 @@ const styles = StyleSheet.create({
   },
   pressed: { opacity: 0.6 },
   why: { marginTop: space.md },
+  whyToggleHit: { paddingVertical: space.xs, alignSelf: 'flex-start' },
   whyToggle: {
     color: color.accent,
     fontSize: fontSize.label,
@@ -489,8 +618,10 @@ const styles = StyleSheet.create({
     fontSize: fontSize.heading,
     fontWeight: fontWeight.semibold,
   },
+  sheetCloseHit: { paddingVertical: space.xs, paddingLeft: space.md },
   sheetClose: {
     color: color.accent,
     fontSize: fontSize.label,
+    fontWeight: fontWeight.semibold,
   },
 });

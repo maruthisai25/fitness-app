@@ -1,5 +1,5 @@
 import type { Goal, GoalType } from '@vigor/core';
-import { color, fontSize, space } from '../../../src/ui/tokens';
+import { color, fontSize, HIT_TARGET, space } from '../../../src/ui/tokens';
 import { useCallback, useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
@@ -11,8 +11,17 @@ import {
   ScreenBlurb,
   ScreenTitle,
   Section,
+  TextAction,
   ToggleRow,
 } from '../../../src/ui/components';
+
+/** Arrow buttons are one glyph wide, so they carry a real 44 pt target. */
+const stepperStyle = {
+  width: HIT_TARGET,
+  height: HIT_TARGET,
+  alignItems: 'center',
+  justifyContent: 'center',
+} as const;
 
 const GOAL_TYPES: readonly { value: GoalType; label: string }[] = [
   { value: 'strength', label: 'Strength' },
@@ -101,7 +110,9 @@ export default function GoalsScreen() {
       {ordered.length > 0 ? (
         <Section title="Your goals, by priority">
           <View>
-            {ordered.map((goal, index) => (
+            {ordered.map((goal, index) => {
+              const name = GOAL_TYPES.find((g) => g.value === goal.type)?.label ?? goal.type;
+              return (
               <View
                 key={goal.id}
                 style={{
@@ -110,7 +121,8 @@ export default function GoalsScreen() {
                 }}
               >
                 <ToggleRow
-                  label={`${index + 1}. ${GOAL_TYPES.find((g) => g.value === goal.type)?.label ?? goal.type}`}
+                  label={`${index + 1}. ${name}`}
+                  hint="Off keeps the goal but stops it steering the plan"
                   value={goal.active}
                   onValueChange={(active) => setActive(goal.id, active)}
                 />
@@ -118,23 +130,56 @@ export default function GoalsScreen() {
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'flex-end',
+                    alignItems: 'center',
                     gap: space.lg,
                     paddingHorizontal: space.lg,
                     paddingBottom: space.md,
                   }}
                 >
-                  <Pressable onPress={() => move(goal.id, -1)}>
-                    <Text style={{ color: color.textMuted, fontSize: fontSize.heading }}>↑</Text>
+                  <Pressable
+                    onPress={() => move(goal.id, -1)}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Move ${name} up`}
+                    accessibilityHint="Gives this goal more weight"
+                    accessibilityState={{ disabled: index === 0 }}
+                    disabled={index === 0}
+                    style={stepperStyle}
+                  >
+                    <Text
+                      accessibilityElementsHidden
+                      importantForAccessibility="no"
+                      style={{ color: color.textMuted, fontSize: fontSize.heading }}
+                    >
+                      ↑
+                    </Text>
                   </Pressable>
-                  <Pressable onPress={() => move(goal.id, 1)}>
-                    <Text style={{ color: color.textMuted, fontSize: fontSize.heading }}>↓</Text>
+                  <Pressable
+                    onPress={() => move(goal.id, 1)}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Move ${name} down`}
+                    accessibilityHint="Gives this goal less weight"
+                    accessibilityState={{ disabled: index === ordered.length - 1 }}
+                    disabled={index === ordered.length - 1}
+                    style={stepperStyle}
+                  >
+                    <Text
+                      accessibilityElementsHidden
+                      importantForAccessibility="no"
+                      style={{ color: color.textMuted, fontSize: fontSize.heading }}
+                    >
+                      ↓
+                    </Text>
                   </Pressable>
-                  <Pressable onPress={() => remove(goal.id)}>
-                    <Text style={{ color: color.bad, fontSize: fontSize.body }}>Remove</Text>
-                  </Pressable>
+                  <TextAction
+                    label="Remove"
+                    tone="bad"
+                    hint={`Deletes the ${name} goal`}
+                    onPress={() => remove(goal.id)}
+                  />
                 </View>
               </View>
-            ))}
+              );
+            })}
           </View>
         </Section>
       ) : null}
@@ -148,15 +193,24 @@ export default function GoalsScreen() {
               <Pressable
                 key={option.value}
                 onPress={() => addGoal(option.value)}
+                accessibilityRole="button"
+                accessibilityLabel={`Add ${option.label}`}
+                accessibilityState={{ disabled: false }}
+                hitSlop={8}
                 style={{
                   paddingVertical: space.sm,
                   paddingHorizontal: space.md,
+                  minHeight: HIT_TARGET - 16,
+                  justifyContent: 'center',
                   borderRadius: 999,
                   borderWidth: 1,
                   borderColor: color.borderStrong,
                 }}
               >
-                <Text style={{ color: color.textMuted, fontSize: fontSize.label }}>
+                <Text
+                  maxFontSizeMultiplier={2}
+                  style={{ color: color.textMuted, fontSize: fontSize.label }}
+                >
                   + {option.label}
                 </Text>
               </Pressable>

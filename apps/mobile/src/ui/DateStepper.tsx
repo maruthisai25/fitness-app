@@ -56,25 +56,36 @@ export function DateStepper({
       <Pressable
         accessibilityRole="button"
         accessibilityLabel="Previous day"
+        accessibilityState={{ disabled: false }}
         onPress={() => onChange(addDays(date, -1))}
         style={({ pressed }) => [styles.step, pressed && styles.pressed]}
       >
-        <Text style={styles.stepLabel}>{'‹'}</Text>
+        <Text accessibilityElementsHidden importantForAccessibility="no" style={styles.stepLabel}>
+          {'‹'}
+        </Text>
       </Pressable>
 
       <Pressable
         accessibilityRole="button"
+        accessibilityLabel={`${formatDayLabel(date, today)}, ${date}`}
+        accessibilityHint={date === today ? undefined : 'Jumps back to today'}
+        accessibilityState={{ disabled: date === today }}
         onPress={() => onChange(today)}
         style={styles.middle}
         disabled={date === today}
       >
-        <Text style={styles.dayLabel}>{formatDayLabel(date, today)}</Text>
-        <Text style={styles.dateLabel}>{date}</Text>
+        <Text maxFontSizeMultiplier={1.6} style={styles.dayLabel}>
+          {formatDayLabel(date, today)}
+        </Text>
+        <Text maxFontSizeMultiplier={1.4} style={styles.dateLabel}>
+          {date}
+        </Text>
       </Pressable>
 
       <Pressable
         accessibilityRole="button"
         accessibilityLabel="Next day"
+        accessibilityState={{ disabled: nextDisabled }}
         disabled={nextDisabled}
         onPress={() => onChange(addDays(date, 1))}
         style={({ pressed }) => [
@@ -83,7 +94,9 @@ export function DateStepper({
           nextDisabled && styles.disabled,
         ]}
       >
-        <Text style={styles.stepLabel}>{'›'}</Text>
+        <Text accessibilityElementsHidden importantForAccessibility="no" style={styles.stepLabel}>
+          {'›'}
+        </Text>
       </Pressable>
     </View>
   );
@@ -117,10 +130,14 @@ const styles = StyleSheet.create({
   stepLabel: {
     color: color.text,
     fontSize: fontSize.heading,
+    // Decorative chevrons; the pressable around each carries the real name.
+    includeFontPadding: false,
   },
   middle: {
     flex: 1,
+    minHeight: 44,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   dayLabel: {
     color: color.text,

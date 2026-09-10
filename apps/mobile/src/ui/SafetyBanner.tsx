@@ -6,9 +6,10 @@
  * While it shows, the engines hold: the planner drops load and a set
  * (DESIGN.md §5.1 rule 1) and session mode says so above the first set.
  */
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 import { useOpenSafetyEvents, useResolveSafetyEvent } from '../data/queries';
+import { TextAction } from './components';
 import { color, fontSize, fontWeight, radius, space } from './tokens';
 
 const KIND_LABEL: Record<string, string> = {
@@ -26,8 +27,8 @@ export function SafetyBanner({ compact = false }: { compact?: boolean }) {
   if (!events || events.length === 0) return null;
 
   return (
-    <View style={styles.banner} accessibilityRole="alert">
-      <Text style={styles.title}>
+    <View style={styles.banner} accessibilityRole="alert" accessibilityLiveRegion="polite">
+      <Text accessibilityRole="header" style={styles.title}>
         {events.length === 1 ? 'Safety event open' : `${events.length} safety events open`}
       </Text>
       <Text style={styles.blurb}>
@@ -44,13 +45,13 @@ export function SafetyBanner({ compact = false }: { compact?: boolean }) {
                 </Text>
                 <Text style={styles.rowBody}>{event.text}</Text>
               </View>
-              <Pressable
-                accessibilityRole="button"
+              <TextAction
+                label="Resolve"
+                hint={`Closes the ${(KIND_LABEL[event.kind] ?? event.kind).toLowerCase()} event and lets loads move again`}
+                testID={`safety-${event.id}-resolve`}
+                busy={resolve.isPending}
                 onPress={() => resolve.mutate({ id: event.id, note: 'Resolved from the banner' })}
-                disabled={resolve.isPending}
-              >
-                <Text style={styles.resolve}>Resolve</Text>
-              </Pressable>
+              />
             </View>
           ))}
     </View>
@@ -96,10 +97,5 @@ const styles = StyleSheet.create({
     color: color.textMuted,
     fontSize: fontSize.caption,
     marginTop: 2,
-  },
-  resolve: {
-    color: color.accent,
-    fontSize: fontSize.label,
-    fontWeight: fontWeight.semibold,
   },
 });

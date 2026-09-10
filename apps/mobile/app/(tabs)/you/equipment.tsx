@@ -1,5 +1,5 @@
 import type { Equipment, EquipmentCategory } from '@vigor/core';
-import { color, fontSize, space } from '../../../src/ui/tokens';
+import { color, fontSize, HIT_TARGET, space } from '../../../src/ui/tokens';
 import { useCallback, useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
@@ -12,6 +12,7 @@ import {
   ScreenBlurb,
   ScreenTitle,
   Section,
+  TextAction,
   TextField,
   ToggleRow,
 } from '../../../src/ui/components';
@@ -115,9 +116,12 @@ export default function EquipmentScreen() {
                     alignItems: 'flex-end',
                   }}
                 >
-                  <Pressable onPress={() => remove(item.id)}>
-                    <Text style={{ color: color.bad, fontSize: fontSize.label }}>Remove</Text>
-                  </Pressable>
+                  <TextAction
+                    label="Remove"
+                    tone="bad"
+                    hint={`Deletes ${item.name} from your kit`}
+                    onPress={() => remove(item.id)}
+                  />
                 </View>
               </View>
             ))}
@@ -147,9 +151,15 @@ export default function EquipmentScreen() {
                 <Pressable
                   key={category.value}
                   onPress={() => setNewCategory(category.value)}
+                  accessibilityRole="radio"
+                  accessibilityLabel={category.label}
+                  accessibilityState={{ selected: active, checked: active, disabled: false }}
+                  hitSlop={8}
                   style={{
                     paddingVertical: space.sm,
                     paddingHorizontal: space.md,
+                    minHeight: HIT_TARGET - 16,
+                    justifyContent: 'center',
                     borderRadius: 999,
                     borderWidth: 1,
                     borderColor: active ? color.accent : color.borderStrong,
@@ -157,6 +167,7 @@ export default function EquipmentScreen() {
                   }}
                 >
                   <Text
+                    maxFontSizeMultiplier={2}
                     style={{
                       color: active ? color.accent : color.textMuted,
                       fontSize: fontSize.label,

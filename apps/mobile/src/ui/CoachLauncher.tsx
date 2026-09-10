@@ -9,7 +9,7 @@ import { Pressable, StyleSheet, Text } from 'react-native';
 import { useRouter, useSegments } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { color, fontSize, fontWeight, radius, space } from './tokens';
+import { color, fontSize, fontWeight, HIT_TARGET, radius, space } from './tokens';
 
 const HIDDEN_ON: readonly string[] = ['coach', 'onboarding', 'session'];
 
@@ -24,6 +24,8 @@ export function CoachLauncher() {
     <Pressable
       accessibilityRole="button"
       accessibilityLabel="Open the coach"
+      accessibilityHint="Opens the coach chat, which can see your history"
+      accessibilityState={{ disabled: false }}
       testID="coach-launcher"
       onPress={() => router.push('/coach')}
       style={({ pressed }) => [
@@ -32,7 +34,9 @@ export function CoachLauncher() {
         pressed && styles.buttonPressed,
       ]}
     >
-      <Text style={styles.label}>Coach</Text>
+      <Text maxFontSizeMultiplier={1.6} style={styles.label}>
+        Coach
+      </Text>
     </Pressable>
   );
 }
@@ -43,6 +47,10 @@ const styles = StyleSheet.create({
     right: space.xl,
     paddingHorizontal: space.lg,
     paddingVertical: space.md,
+    minHeight: HIT_TARGET,
+    minWidth: HIT_TARGET * 2,
+    alignItems: 'center',
+    justifyContent: 'center',
     borderRadius: radius.pill,
     backgroundColor: color.accent,
     shadowColor: '#000',

@@ -26,7 +26,8 @@ import type { Id } from '@vigor/core';
 
 import { Button, ErrorBanner } from '../ui/components';
 import { Body, Caption, EmptyState, WhyDisclosure } from '../ui/kit';
-import { color, fontSize, fontWeight, radius, space } from '../ui/tokens';
+import { color, fontSize, fontWeight, HIT_TARGET, radius, space } from '../ui/tokens';
+import { useReducedMotion } from '../ui/useReducedMotion';
 import { useAiClient } from '../ai/useAiClient';
 import { useOnlineStatus } from '../ai/useOnlineStatus';
 import { useForgetMemory } from '../memories/useMemories';
@@ -46,12 +47,15 @@ export function CoachThread({ conversationId }: { conversationId: Id }) {
   const forget = useForgetMemory();
   const [draft, setDraft] = useState('');
   const scrollRef = useRef<ScrollView>(null);
+  const reducedMotion = useReducedMotion();
 
   const items = useMemo(() => buildTurnItems(messages.data ?? []), [messages.data]);
 
   useEffect(() => {
-    scrollRef.current?.scrollToEnd({ animated: true });
-  }, [items.length, stream.text, stream.tools.length]);
+    // Following the stream means the view scrolls on its own several times a
+    // turn. With Reduce Motion on it jumps instead of gliding.
+    scrollRef.current?.scrollToEnd({ animated: !reducedMotion });
+  }, [items.length, stream.text, stream.tools.length, reducedMotion]);
 
   async function onSend() {
     const text = draft.trim();
@@ -116,14 +120,25 @@ export function CoachThread({ conversationId }: { conversationId: Id }) {
                 </View>
               ))}
               {stream.text.length === 0 && stream.tools.length === 0 ? (
-                <ActivityIndicator color={color.accent} testID="coach-thinking" />
+                <ActivityIndicator
+                  color={color.accent}
+                  testID="coach-thinking"
+                  accessibilityRole="progressbar"
+                  accessibilityLabel="The coach is thinking"
+                  accessibilityLiveRegion="polite"
+                />
               ) : null}
             </MessageBubble>
           </>
         ) : null}
 
         {stream.refusal ? (
-          <View style={styles.notice}>
+          <View
+            style={styles.notice}
+            accessibilityRole="alert"
+            accessibilityLiveRegion="polite"
+            accessibilityLabel={stream.refusal.message}
+          >
             <Caption>{stream.refusal.message}</Caption>
           </View>
         ) : null}
@@ -170,6 +185,8 @@ export function CoachThread({ conversationId }: { conversationId: Id }) {
           <TextInput
             testID="coach-input"
             accessibilityLabel="Message the coach"
+            accessibilityHint="Ask about training, nutrition or today's plan"
+            accessibilityState={{ disabled: !canType || send.isPending }}
             style={styles.input}
             placeholder="Ask your coach…"
             placeholderTextColor={color.textFaint}
@@ -181,6 +198,8 @@ export function CoachThread({ conversationId }: { conversationId: Id }) {
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Send"
+            accessibilityHint="Sends your message to the coach"
+            accessibilityState={{ disabled: !canSend, busy: send.isPending }}
             testID="coach-send"
             onPress={onSend}
             disabled={!canSend}
@@ -190,7 +209,9 @@ export function CoachThread({ conversationId }: { conversationId: Id }) {
               pressed && canSend && styles.sendButtonPressed,
             ]}
           >
-            <Text style={styles.sendLabel}>Send</Text>
+            <Text maxFontSizeMultiplier={1.8} style={styles.sendLabel}>
+              Send
+            </Text>
           </Pressable>
         </View>
       )}
@@ -227,6 +248,7 @@ const styles = StyleSheet.create({
     borderColor: color.border,
     paddingHorizontal: space.md,
     paddingVertical: space.sm + 2,
+    minHeight: HIT_TARGET,
     color: color.text,
     fontSize: fontSize.body,
     maxHeight: 120,
@@ -236,6 +258,10 @@ const styles = StyleSheet.create({
     borderRadius: radius.pill,
     paddingHorizontal: space.lg,
     paddingVertical: space.sm + 2,
+    minHeight: HIT_TARGET,
+    minWidth: HIT_TARGET,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   sendButtonDisabled: { opacity: 0.4 },
   sendButtonPressed: { backgroundColor: color.accentPressed },

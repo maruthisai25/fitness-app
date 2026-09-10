@@ -6,9 +6,16 @@ packages:
 # Native/postinstall build scripts that are allowed to run (pnpm blocks the rest
 # by default). better-sqlite3 backs the in-memory SqlDriver used by db tests
 # (DESIGN.md §10); esbuild is Vite's/Vitest's transform binary.
+#
+# The two `false` entries arrived with jest/jest-expo and are deliberately not
+# built: `@parcel/watcher` is jest-haste-map's optional native file watcher (it
+# falls back to a plain crawl, and nothing here runs jest in watch mode), and
+# `unrs-resolver` ships prebuilt binaries for the platforms we run on.
 allowBuilds:
+  '@parcel/watcher': false
   better-sqlite3: true
   esbuild: true
+  unrs-resolver: false
 
 minimumReleaseAgeExclude:
   - '@types/node@22.20.2'

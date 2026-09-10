@@ -8,11 +8,12 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "typecheck": "tsc --noEmit",
-    "typecheck:test": "tsc -p tsconfig.test.json --noEmit",
+    "typecheck:test": "tsc -p tsconfig.test.json --noEmit && tsc -p tsconfig.jest.json --noEmit",
     "lint": "eslint . --max-warnings=0",
-    "test": "vitest run --passWithNoTests",
+    "test": "pnpm run test:unit && pnpm run test:components",
+    "test:unit": "vitest run --passWithNoTests",
     "test:watch": "vitest",
-    "test:components": "vitest run --config vitest.components.config.ts"
+    "test:components": "jest --config jest.config.js"
   },
   "dependencies": {
     "@tanstack/react-query": "5.102.8",
@@ -51,11 +52,14 @@
   "devDependencies": {
     "@babel/core": "7.29.7",
     "@testing-library/react-native": "14.0.1",
+    "@types/jest": "30.0.0",
     "@types/react": "19.2.18",
     "@vigor/eslint-config": "workspace:*",
     "@vigor/tsconfig": "workspace:*",
     "babel-preset-expo": "57.0.11",
     "eslint": "10.10.0",
+    "jest": "30.5.1",
+    "jest-expo": "57.0.5",
     "test-renderer": "1.2.0",
     "typescript": "6.0.3",
     "vitest": "5.0.0"

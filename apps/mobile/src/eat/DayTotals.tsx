@@ -29,7 +29,7 @@ export function DayTotals({
 
   if (!day.targets) {
     return (
-      <Card onPress={onOpenTargets}>
+      <Card onPress={onOpenTargets} label="No targets yet. Open Targets to set them">
         <CardTitle>No targets yet</CardTitle>
         <Body>
           {`You have eaten ${Math.round(day.consumed.kcal)} kcal and ${Math.round(
@@ -61,6 +61,7 @@ export function DayTotals({
             }
           />
           <MeterBar
+            label={`${row.label} against target`}
             value={day.consumed[row.key]}
             max={targets[row.key]}
             tone={day.remaining[row.key] < 0 ? 'warn' : 'accent'}

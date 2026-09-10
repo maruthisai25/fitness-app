@@ -20,8 +20,10 @@ const here = (relative: string): string => fileURLToPath(new URL(relative, impor
  * migrations, engines — is the real thing, running against the in-memory
  * database from `@vigor/db/testing`.
  *
- * The older `test/*.component.test.tsx` files still need Metro's platform
- * resolution and run from `vitest.components.config.ts`; see the note there.
+ * The `test/*.component.test.tsx` files need Metro's platform resolution
+ * (`Platform.ios.js` ahead of `Platform.js`) and React Native's own Jest
+ * mocks, which Vite cannot provide. They run under `jest-expo` instead —
+ * `pnpm --filter mobile test:components`, configured in `jest.config.js`.
  */
 export default defineConfig({
   resolve: {

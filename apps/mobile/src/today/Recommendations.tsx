@@ -6,7 +6,7 @@
  * Accepting or dismissing writes an `insights` row so the answer survives a
  * restart, and an accepted deload is what makes the next plan lighter.
  */
-import { Pressable, Text, View } from 'react-native';
+import { View } from 'react-native';
 
 import {
   useAnswerDeload,
@@ -16,30 +16,34 @@ import {
   type TodayBundle,
 } from '../data/today';
 import { useVigorNavigation } from '../navigation';
+import { TextAction } from '../ui/components';
 import { Body, Caption, Card, EmptyState, SectionHeading, WhyDisclosure } from '../ui/kit';
-import { color, fontSize, fontWeight, space } from '../ui/tokens';
+import { space } from '../ui/tokens';
 
 function AnswerRow({
   onAccept,
   onDismiss,
   acceptLabel,
+  subject,
   busy,
 }: {
   onAccept: () => void;
   onDismiss: () => void;
   acceptLabel: string;
+  /** What is being accepted or put off, so "Not now" is not ambiguous. */
+  subject: string;
   busy?: boolean;
 }) {
   return (
     <View style={{ flexDirection: 'row', gap: space.xl, marginTop: space.md }}>
-      <Pressable accessibilityRole="button" onPress={onAccept} disabled={busy}>
-        <Text style={{ color: color.accent, fontSize: fontSize.label, fontWeight: fontWeight.semibold }}>
-          {acceptLabel}
-        </Text>
-      </Pressable>
-      <Pressable accessibilityRole="button" onPress={onDismiss} disabled={busy}>
-        <Text style={{ color: color.textMuted, fontSize: fontSize.label }}>Not now</Text>
-      </Pressable>
+      <TextAction label={acceptLabel} busy={busy} onPress={onAccept} />
+      <TextAction
+        label="Not now"
+        tone="muted"
+        hint={`Leaves ${subject} as it is`}
+        busy={busy}
+        onPress={onDismiss}
+      />
     </View>
   );
 }
@@ -79,6 +83,7 @@ export function Recommendations({ bundle, onAnswered }: { bundle: TodayBundle; o
           <WhyDisclosure rationale={bundle.deload.rationale} />
           <AnswerRow
             acceptLabel="Accept the deload"
+            subject="next week's plan"
             busy={answerDeload.isPending}
             onAccept={() => void answerDeloadWith(true)}
             onDismiss={() => void answerDeloadWith(false)}
@@ -107,11 +112,11 @@ export function Recommendations({ bundle, onAnswered }: { bundle: TodayBundle; o
               <View key={`${suggestion.kind}-${index}`} style={{ marginTop: space.sm }}>
                 <Caption>{suggestion.detail}</Caption>
                 {swapId ? (
-                  <Pressable accessibilityRole="button" onPress={() => nav.openExercise(swapId)}>
-                    <Text style={{ color: color.accent, fontSize: fontSize.label }}>
-                      See the variation
-                    </Text>
-                  </Pressable>
+                  <TextAction
+                    label="See the variation"
+                    hint={suggestion.detail}
+                    onPress={() => nav.openExercise(swapId)}
+                  />
                 ) : null}
               </View>
             );
@@ -119,6 +124,7 @@ export function Recommendations({ bundle, onAnswered }: { bundle: TodayBundle; o
           <WhyDisclosure rationale={plateau.rationale} />
           <AnswerRow
             acceptLabel="Change something"
+            subject={plateau.exerciseName}
             busy={answerPlateau.isPending}
             onAccept={() => void answerPlateauWith(plateau, true)}
             onDismiss={() => void answerPlateauWith(plateau, false)}
@@ -139,23 +145,17 @@ export function Recommendations({ bundle, onAnswered }: { bundle: TodayBundle; o
             <Card key={id ?? `${insight.detector}-${index}`} title={insight.headline}>
               <Body muted>{insight.detail}</Body>
               {id ? (
-                <Pressable
-                  accessibilityRole="button"
-                  onPress={() => {
-                    dismissInsight.mutate(id);
-                    onAnswered();
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: color.textMuted,
-                      fontSize: fontSize.label,
-                      marginTop: space.md,
+                <View style={{ marginTop: space.md }}>
+                  <TextAction
+                    label="Dismiss"
+                    tone="muted"
+                    hint={`Hides "${insight.headline}"`}
+                    onPress={() => {
+                      dismissInsight.mutate(id);
+                      onAnswered();
                     }}
-                  >
-                    Dismiss
-                  </Text>
-                </Pressable>
+                  />
+                </View>
               ) : null}
             </Card>
           );

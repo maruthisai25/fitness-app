@@ -8,7 +8,6 @@
  * engine found (§5.7).
  */
 import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { SessionMode } from '../src/session/SessionMode';
 import { useSessionDraft } from '../src/session/store';
@@ -31,8 +30,9 @@ afterEach(async () => {
   await fixture.close();
 });
 
-function renderSession() {
-  return render(
+/** `render` and `fireEvent` are async in React Native Testing Library 14. */
+async function renderSession() {
+  await render(
     <TestProviders repos={fixture.repos} platform={fixture.platform}>
       <SessionMode workoutId={fixture.workoutId} onExit={() => undefined} />
     </TestProviders>,
@@ -40,14 +40,14 @@ function renderSession() {
 }
 
 async function confirmSet(index: number, reps: string, load: string) {
-  fireEvent.changeText(await screen.findByTestId(`set-${index}-reps`), reps);
-  fireEvent.changeText(screen.getByTestId(`set-${index}-load`), load);
-  fireEvent.press(screen.getByTestId(`set-${index}-confirm`));
+  await fireEvent.changeText(await screen.findByTestId(`set-${index}-reps`), reps);
+  await fireEvent.changeText(screen.getByTestId(`set-${index}-load`), load);
+  await fireEvent.press(screen.getByTestId(`set-${index}-confirm`));
 }
 
 describe('session mode', () => {
   it('writes the set row as soon as the set is confirmed', async () => {
-    renderSession();
+    await renderSession();
     expect(await screen.findByText('Back squat')).toBeTruthy();
 
     await confirmSet(0, '8', '62.5');
@@ -64,11 +64,11 @@ describe('session mode', () => {
   });
 
   it('replaces the exercise when the user cannot do it', async () => {
-    renderSession();
+    await renderSession();
     expect(await screen.findByText('Back squat')).toBeTruthy();
 
-    fireEvent.press(screen.getByTestId('cant-do-this'));
-    fireEvent.press(await screen.findByTestId(`substitute-${FRONT_SQUAT_ID}`));
+    await fireEvent.press(screen.getByTestId('cant-do-this'));
+    await fireEvent.press(await screen.findByTestId(`substitute-${FRONT_SQUAT_ID}`));
 
     await waitFor(async () => {
       const slot = await fixture.repos.workouts.getExercise(fixture.workoutExerciseId);
@@ -78,7 +78,7 @@ describe('session mode', () => {
   });
 
   it('celebrates the records the engine found in the finish summary', async () => {
-    renderSession();
+    await renderSession();
     expect(await screen.findByText('Back squat')).toBeTruthy();
 
     await confirmSet(0, '8', '60');
@@ -86,7 +86,7 @@ describe('session mode', () => {
     await confirmSet(1, '8', '60');
     await waitFor(() => expect(screen.getByTestId('set-1-edit')).toBeTruthy());
 
-    fireEvent.press(screen.getByText('Finish session'));
+    await fireEvent.press(screen.getByText('Finish session'));
 
     expect(await screen.findByText('Session logged')).toBeTruthy();
     expect(screen.getByText('Personal record')).toBeTruthy();

@@ -10,7 +10,6 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 import { createFakeAiClient } from '@vigor/ai/testing';
 import type { PlatformAdapters } from '@vigor/platform';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { CoachThread } from '../src/coach/CoachThread';
 import { createSessionFixture, TestProviders, type SessionFixture } from './support';
@@ -49,15 +48,15 @@ describe('coach chat', () => {
       ],
     });
 
-    render(
+    await render(
       <TestProviders repos={fixture.repos} platform={onlinePlatform()} aiClient={fake.client}>
         <CoachThread conversationId={conversation.id} />
       </TestProviders>,
     );
 
     const input = await screen.findByTestId('coach-input');
-    fireEvent.changeText(input, 'What did I do this week?');
-    fireEvent.press(screen.getByTestId('coach-send'));
+    await fireEvent.changeText(input, 'What did I do this week?');
+    await fireEvent.press(screen.getByTestId('coach-send'));
 
     // The tool chip shows while (or just after) the turn runs.
     await waitFor(() => expect(screen.getAllByText(/recent sessions/).length).toBeGreaterThan(0));
@@ -86,7 +85,7 @@ describe('coach chat', () => {
   it('shows the "add a key" state without an AI client', async () => {
     const conversation = await fixture.repos.conversations.create({ title: 'No key yet' });
 
-    render(
+    await render(
       <TestProviders repos={fixture.repos} platform={onlinePlatform()} aiClient={null}>
         <CoachThread conversationId={conversation.id} />
       </TestProviders>,

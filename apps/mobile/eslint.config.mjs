@@ -9,6 +9,21 @@ export default [
     ignores: ['babel.config.js', 'metro.config.js', '.expo/**', 'expo-env.d.ts'],
   }),
   {
+    // Jest loads its config and resolver through Node's CommonJS require,
+    // before any transform runs — same situation as the `.cjs` block below.
+    files: ['jest.config.js'],
+    languageOptions: {
+      sourceType: 'commonjs',
+      globals: {
+        __dirname: 'readonly',
+        module: 'writable',
+        require: 'readonly',
+        exports: 'writable',
+        process: 'readonly',
+      },
+    },
+  },
+  {
     // The React Native resolver shim runs in Node's CommonJS loader, before
     // Vitest hands anything to Vite (see `vitest.config.mts`).
     files: ['test/**/*.cjs'],

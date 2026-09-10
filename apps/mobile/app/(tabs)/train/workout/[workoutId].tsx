@@ -23,7 +23,7 @@ import {
   StatTile,
   WhyDisclosure,
 } from '../../../../src/ui/kit';
-import { color, fontSize, space } from '../../../../src/ui/tokens';
+import { color, fontSize, MAX_COMPACT_FONT_SCALE, space } from '../../../../src/ui/tokens';
 
 /** Workout detail — exercises, sets and the rationale behind "Why?". */
 export default function WorkoutDetailScreen() {
@@ -132,14 +132,21 @@ export default function WorkoutDetailScreen() {
             ) : (
               slot.sets.map((set, index) => (
                 <View key={set.id} style={{ flexDirection: 'row', marginTop: space.xs }}>
-                  <Text style={{ color: color.textMuted, fontSize: fontSize.label, width: 56 }}>
+                  <Text
+                    maxFontSizeMultiplier={MAX_COMPACT_FONT_SCALE}
+                    style={{ color: color.textMuted, fontSize: fontSize.label, width: 56 }}
+                  >
                     {`Set ${index + 1}`}
                   </Text>
                   <Text
+                    // Two figures share this row; capping the growth keeps the
+                    // load next to the reps instead of under them.
+                    maxFontSizeMultiplier={MAX_COMPACT_FONT_SCALE}
                     style={{
                       color: set.completed ? color.text : color.textFaint,
                       fontSize: fontSize.label,
                       fontVariant: ['tabular-nums'],
+                      flex: 1,
                     }}
                   >
                     {set.completed

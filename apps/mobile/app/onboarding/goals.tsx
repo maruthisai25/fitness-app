@@ -2,7 +2,7 @@ import type { Goal, GoalType } from '@vigor/core';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
-import { color, fontSize, space } from '../../src/ui/tokens';
+import { color, fontSize, HIT_TARGET, space } from '../../src/ui/tokens';
 
 import { useRepos } from '../../src/db/AppDataProvider';
 import {
@@ -24,6 +24,14 @@ const GOAL_TYPES: readonly { value: GoalType; label: string }[] = [
   { value: 'conditioning', label: 'Conditioning' },
   { value: 'consistency', label: 'Consistency' },
 ];
+
+/** Arrow buttons are one glyph wide, so they carry a real 44 pt target. */
+const stepperStyle = {
+  width: HIT_TARGET,
+  height: HIT_TARGET,
+  alignItems: 'center',
+  justifyContent: 'center',
+} as const;
 
 export default function OnboardingGoalsScreen() {
   const router = useRouter();
@@ -92,9 +100,15 @@ export default function OnboardingGoalsScreen() {
               <Pressable
                 key={option.value}
                 onPress={() => toggle(option.value)}
+                accessibilityRole="checkbox"
+                accessibilityLabel={option.label}
+                accessibilityState={{ checked: active, disabled: false }}
+                hitSlop={8}
                 style={{
                   paddingVertical: space.sm,
                   paddingHorizontal: space.md,
+                  minHeight: HIT_TARGET - 16,
+                  justifyContent: 'center',
                   borderRadius: 999,
                   borderWidth: 1,
                   borderColor: active ? color.accent : color.borderStrong,
@@ -102,6 +116,7 @@ export default function OnboardingGoalsScreen() {
                 }}
               >
                 <Text
+                  maxFontSizeMultiplier={2}
                   style={{
                     color: active ? color.accent : color.textMuted,
                     fontSize: fontSize.label,
@@ -118,7 +133,9 @@ export default function OnboardingGoalsScreen() {
       {ordered.length > 0 ? (
         <Section title="Priority (top = most weight)">
           <View>
-            {ordered.map((goal, index) => (
+            {ordered.map((goal, index) => {
+              const label = GOAL_TYPES.find((g) => g.value === goal.type)?.label ?? goal.type;
+              return (
               <View
                 key={goal.id}
                 style={{
@@ -130,19 +147,51 @@ export default function OnboardingGoalsScreen() {
                   borderBottomColor: color.border,
                 }}
               >
-                <Text style={{ color: color.text, fontSize: fontSize.body }}>
-                  {index + 1}. {GOAL_TYPES.find((g) => g.value === goal.type)?.label ?? goal.type}
+                <Text
+                  accessibilityLabel={`Priority ${index + 1}: ${label}`}
+                  style={{ color: color.text, fontSize: fontSize.body }}
+                >
+                  {index + 1}. {label}
                 </Text>
                 <View style={{ flexDirection: 'row', gap: space.md }}>
-                  <Pressable onPress={() => move(goal.id, -1)}>
-                    <Text style={{ color: color.textMuted, fontSize: fontSize.heading }}>↑</Text>
+                  <Pressable
+                    onPress={() => move(goal.id, -1)}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Move ${label} up`}
+                    accessibilityHint="Gives this goal more weight"
+                    accessibilityState={{ disabled: index === 0 }}
+                    disabled={index === 0}
+                    style={stepperStyle}
+                  >
+                    <Text
+                      accessibilityElementsHidden
+                      importantForAccessibility="no"
+                      style={{ color: color.textMuted, fontSize: fontSize.heading }}
+                    >
+                      ↑
+                    </Text>
                   </Pressable>
-                  <Pressable onPress={() => move(goal.id, 1)}>
-                    <Text style={{ color: color.textMuted, fontSize: fontSize.heading }}>↓</Text>
+                  <Pressable
+                    onPress={() => move(goal.id, 1)}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Move ${label} down`}
+                    accessibilityHint="Gives this goal less weight"
+                    accessibilityState={{ disabled: index === ordered.length - 1 }}
+                    disabled={index === ordered.length - 1}
+                    style={stepperStyle}
+                  >
+                    <Text
+                      accessibilityElementsHidden
+                      importantForAccessibility="no"
+                      style={{ color: color.textMuted, fontSize: fontSize.heading }}
+                    >
+                      ↓
+                    </Text>
                   </Pressable>
                 </View>
               </View>
-            ))}
+              );
+            })}
           </View>
         </Section>
       ) : null}

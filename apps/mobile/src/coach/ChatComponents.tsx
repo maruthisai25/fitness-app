@@ -3,16 +3,25 @@
  * assistant text, tool activity chips, and "Remembered: …" chips with undo.
  */
 import type { ReactNode } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
-import { color, fontSize, fontWeight, radius, space } from '../ui/tokens';
+import { TextAction } from '../ui/components';
+import { color, fontSize, radius, space } from '../ui/tokens';
 import { toolActivityLabel } from './toolLabels';
 
 export function ToolChip({ name, status }: { name: string; status: 'running' | 'ok' | 'error' }) {
+  const label = toolActivityLabel(name, status);
   return (
-    <View style={[styles.toolChip, status === 'error' && styles.toolChipError]}>
+    <View
+      accessible
+      // A chip that appears mid-turn is news; "polite" lets the reader finish
+      // the sentence it is on before saying what the coach just did.
+      accessibilityLiveRegion={status === 'running' ? 'polite' : 'none'}
+      accessibilityLabel={label}
+      style={[styles.toolChip, status === 'error' && styles.toolChipError]}
+    >
       <Text style={[styles.toolChipText, status === 'error' && styles.toolChipTextError]}>
-        {toolActivityLabel(name, status)}
+        {label}
       </Text>
     </View>
   );
@@ -28,7 +37,12 @@ export function MessageBubble({
   children?: ReactNode;
 }) {
   return (
-    <View style={[styles.bubble, role === 'user' ? styles.bubbleUser : styles.bubbleAssistant]}>
+    <View
+      // Who said it has to be spoken; the colour and the side of the screen
+      // that carry it visually mean nothing to a screen reader.
+      accessibilityLabel={text.length > 0 ? `${role === 'user' ? 'You' : 'Coach'}: ${text}` : undefined}
+      style={[styles.bubble, role === 'user' ? styles.bubbleUser : styles.bubbleAssistant]}
+    >
       {text.length > 0 ? (
         <Text style={[styles.bubbleText, role === 'user' && styles.bubbleTextUser]}>{text}</Text>
       ) : null}
@@ -39,11 +53,19 @@ export function MessageBubble({
 
 export function RememberedChip({ text, onUndo }: { text: string; onUndo: () => void }) {
   return (
-    <View style={styles.remembered} testID="remembered-chip">
+    <View
+      style={styles.remembered}
+      testID="remembered-chip"
+      accessibilityLiveRegion="polite"
+      accessibilityLabel={`Remembered: ${text}`}
+    >
       <Text style={styles.rememberedText}>{`Remembered: ${text}`}</Text>
-      <Pressable accessibilityRole="button" onPress={onUndo}>
-        <Text style={styles.rememberedUndo}>Undo</Text>
-      </Pressable>
+      <TextAction
+        label="Undo"
+        hint={`Forgets "${text}" again`}
+        testID="remembered-chip-undo"
+        onPress={onUndo}
+      />
     </View>
   );
 }
@@ -102,10 +124,5 @@ const styles = StyleSheet.create({
     fontSize: fontSize.label,
     flex: 1,
     marginRight: space.sm,
-  },
-  rememberedUndo: {
-    color: color.accent,
-    fontSize: fontSize.label,
-    fontWeight: fontWeight.semibold,
   },
 });
