@@ -111,6 +111,18 @@ export function RemindersPanel({ today }: { today: LocalDate }): ReactNode {
     }
   }
 
+  /** Where every week boundary falls: reviews, charts and the review reminder all follow it. */
+  async function setWeekStart(value: string): Promise<void> {
+    setBusy(true);
+    try {
+      await repos.settings.set('weekStartsOn', Number(value) as WeekDay);
+      await refreshSettings();
+      setNote('Saved.');
+    } finally {
+      setBusy(false);
+    }
+  }
+
   /** `''` puts the review back on whatever day the week starts. */
   async function setReviewDay(value: string): Promise<void> {
     setBusy(true);
@@ -200,7 +212,28 @@ export function RemindersPanel({ today }: { today: LocalDate }): ReactNode {
               </Field>
             ))}
           </div>
-          <div style={{ maxWidth: 240 }}>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 240px))',
+              gap: space.md,
+            }}
+          >
+            <Field
+              label="Week starts on"
+              hint="Where every week boundary falls: the weekly review covers the week that ends here, and the Progress charts are grouped by it."
+            >
+              <Select
+                value={String(settings.weekStartsOn)}
+                onChange={(value) => void setWeekStart(value)}
+              >
+                {WEEKDAYS.map((day) => (
+                  <option key={day} value={String(day)}>
+                    {weekdayName(day)}
+                  </option>
+                ))}
+              </Select>
+            </Field>
             <Field
               label="Review day"
               hint={`The day the weekly review is built and reminded. Left on "week start" it follows ${weekdayName(settings.weekStartsOn)}.`}

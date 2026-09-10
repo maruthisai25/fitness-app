@@ -35,8 +35,12 @@ export interface RealGatewaySettings {
   region: string;
   /** The Network adapter's answer. Offline means no gateway at all. */
   online: boolean;
-  /** The user's calendar day, from the Clock adapter — the plan's start date. */
-  today: LocalDate;
+  /**
+   * The Clock adapter, read when a task runs rather than when the gateway is
+   * built. An app resumed after midnight would otherwise plan meals starting
+   * yesterday.
+   */
+  today: () => LocalDate;
 }
 
 /** A recipe id only ever used in memory; saving mints the stored one. */
@@ -118,7 +122,7 @@ export function realGateway(client: AiClient | null, settings: RealGatewaySettin
     async generateMealPlan(input: GenerateMealPlanInput) {
       const result = await aiGenerateMealPlan({
         client,
-        startDate: settings.today,
+        startDate: settings.today(),
         days: input.days,
         targets: input.targets,
         inventory: input.inventory,

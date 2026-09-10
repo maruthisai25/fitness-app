@@ -11,7 +11,7 @@
   },
   "scripts": {
     "check": "pnpm run typecheck && pnpm run lint && pnpm run test",
-    "typecheck": "pnpm -r typecheck",
+    "typecheck": "pnpm -r typecheck && pnpm -r --if-present typecheck:test && pnpm -r --if-present typecheck:e2e",
     "lint": "pnpm -r lint",
     "test": "vitest run --passWithNoTests",
     "test:watch": "vitest",

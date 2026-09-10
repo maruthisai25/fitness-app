@@ -108,7 +108,7 @@ export function CoachProvider({ children }: { children: ReactNode }): ReactNode 
   // that knows whether there is a key and whether the browser is online.
   const region = useProfile().data?.foodRegion ?? 'generic';
   const gateway = useMemo(
-    () => realGateway(client, { region, online, today: webClock.today() }),
+    () => realGateway(client, { region, online, today: () => webClock.today() }),
     [client, region, online],
   );
 

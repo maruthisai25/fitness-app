@@ -399,6 +399,42 @@ describe('export.restore', () => {
     await target.close();
   });
 
+  it('imports a version 1 bundle, filling in insights.dismissedAt', async () => {
+    await seedEverything(source);
+    const current = await source.repos.export.bundle();
+
+    // A v1 backup, taken before migration 0001 added the column: the field is
+    // not `null` in those files, it is simply absent.
+    const v1 = {
+      ...current,
+      schemaVersion: 1,
+      tables: {
+        ...current.tables,
+        insights: current.tables.insights.map((row) => {
+          const { dismissedAt: _dropped, ...rest } = row;
+          return rest;
+        }),
+      },
+    } as unknown as ExportBundle;
+    expect(v1.tables.insights[0]).not.toHaveProperty('dismissedAt');
+
+    const target = await createTestDatabase();
+    const result = await target.repos.export.restore(v1);
+    expect(result.inserted.insights).toBe(current.tables.insights.length);
+
+    const restored = await target.repos.insights.listOpen();
+    expect(restored).toHaveLength(1);
+    expect(restored[0]?.detector).toBe('PUSH_PULL_BALANCE');
+    expect(restored[0]?.dismissedAt).toBeNull();
+
+    // Everything else in the bundle survives the upgrade untouched.
+    const rebundled = await target.repos.export.bundle();
+    expect(rebundled.schemaVersion).toBe(EXPORT_SCHEMA_VERSION);
+    expect(rebundled.tables).toEqual(current.tables);
+
+    await target.close();
+  });
+
   it('refuses a bundle from an unknown schema version', async () => {
     const bundle = await source.repos.export.bundle();
     const future: ExportBundle = { ...bundle, schemaVersion: EXPORT_SCHEMA_VERSION + 1 };

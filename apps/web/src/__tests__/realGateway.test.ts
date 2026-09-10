@@ -8,13 +8,13 @@
  */
 
 import { createFakeAiClient, jsonTurn, refusalTurn } from '@vigor/ai/testing';
-import type { InventoryItem, NutritionTargets } from '@vigor/core';
+import type { InventoryItem, LocalDate, NutritionTargets } from '@vigor/core';
 import { describe, expect, it } from 'vitest';
 
 import { isAiUnavailableError } from '../ai/gateway';
 import { realGateway } from '../ai/realGateway';
 
-const SETTINGS = { region: 'IN', online: true, today: '2026-09-10' as const };
+const SETTINGS = { region: 'IN', online: true, today: () => '2026-09-10' as const };
 
 /** What `parseFood`'s structured output looks like coming off the wire. */
 const PARSED_FOOD = {
@@ -165,6 +165,23 @@ describe('realGateway', () => {
     expect(plan[0].date).toBe('2026-09-10');
     expect(plan[0].meals[0].items[0].savedMealId).toBeNull();
     expect(plan[0].meals[0].recipeId).toBeNull();
+  });
+
+  it('reads the clock when the plan runs, not when the gateway is built', async () => {
+    const fake = createFakeAiClient({ responses: [jsonTurn(GENERATED_PLAN)] });
+    // A tab open across midnight: the gateway was built yesterday.
+    let today: LocalDate = '2026-09-09';
+    const gateway = realGateway(fake.client, { ...SETTINGS, today: () => today });
+    today = '2026-09-10';
+
+    await gateway.generateMealPlan({
+      days: 1,
+      targets: TARGETS,
+      inventory: INVENTORY,
+      constraints: [],
+    });
+
+    expect(JSON.stringify(fake.createRequests[0].messages)).toContain('2026-09-10');
   });
 
   it('is unavailable with no client and when the device is offline', async () => {

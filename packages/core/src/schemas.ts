@@ -909,8 +909,15 @@ export const exportTablesSchema = z.object({
   safetyEvents: z.array(safetyEventSchema),
 });
 
-/** Bumped whenever `ExportTables` changes shape. */
-export const EXPORT_SCHEMA_VERSION = 1;
+/**
+ * Bumped whenever `ExportTables` changes shape. Version 2 adds
+ * `insights.dismissedAt` (migration 0001); a version 1 bundle is still
+ * readable, with that field filled in as `null`.
+ */
+export const EXPORT_SCHEMA_VERSION = 2;
+
+/** The oldest bundle this build knows how to upgrade and import. */
+export const MIN_SUPPORTED_EXPORT_SCHEMA_VERSION = 1;
 
 export const exportBundleSchema = z.object({
   schemaVersion: z.number().int().positive(),

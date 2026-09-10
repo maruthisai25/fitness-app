@@ -16,8 +16,12 @@ import { chunk } from './support';
 /**
  * Bumped whenever the shape of `ExportTables` changes. `restore` refuses a
  * bundle it does not recognise rather than half-importing it (DESIGN.md §8).
+ *
+ * Version 2 is version 1 plus `insights.dismissedAt` (migration 0001). Older
+ * bundles are upgraded on the way in, not rejected — a backup taken before the
+ * column existed is still the user's only copy of that data.
  */
-export const EXPORT_SCHEMA_VERSION = 1;
+export const EXPORT_SCHEMA_VERSION = 2;
 
 /** Stamped into the bundle so a support question can name the build. */
 export const EXPORT_APP_VERSION = '0.1.0';
@@ -123,6 +127,39 @@ export interface RestoreResult {
   inserted: Record<keyof ExportTables, number>;
 }
 
+/**
+ * A bundle arrives as decrypted JSON, so nothing about its shape is known
+ * until `exportBundleSchema` has seen it — including its version number.
+ */
+function readSchemaVersion(bundle: unknown): number | null {
+  if (typeof bundle !== 'object' || bundle === null) return null;
+  const version = (bundle as { schemaVersion?: unknown }).schemaVersion;
+  return typeof version === 'number' ? version : null;
+}
+
+/**
+ * Version 1 predates `insights.dismissedAt`. The column is nullable and a
+ * `null` means "never dismissed", which is exactly what every row in a v1
+ * bundle was, so the upgrade is a fill-in rather than a guess.
+ */
+function upgradeFromV1(bundle: unknown): unknown {
+  const source = bundle as Record<string, unknown>;
+  const tables = (source.tables ?? {}) as Record<string, unknown>;
+  const insights = Array.isArray(tables.insights) ? tables.insights : [];
+  return {
+    ...source,
+    schemaVersion: EXPORT_SCHEMA_VERSION,
+    tables: {
+      ...tables,
+      // The spread order lets a row that already carries the field keep it.
+      insights: insights.map((row) => ({
+        dismissedAt: null,
+        ...(row as Record<string, unknown>),
+      })),
+    },
+  };
+}
+
 export class UnsupportedBundleError extends Error {
   readonly schemaVersion: number;
 
@@ -196,10 +233,12 @@ export function createExportRepository(db: VigorDb): ExportRepository {
     },
 
     async restore(bundle: ExportBundle, options: RestoreOptions = {}): Promise<RestoreResult> {
-      if (bundle.schemaVersion !== EXPORT_SCHEMA_VERSION) {
-        throw new UnsupportedBundleError(bundle.schemaVersion);
+      const version = readSchemaVersion(bundle);
+      const upgraded = version === 1 ? upgradeFromV1(bundle) : bundle;
+      if (readSchemaVersion(upgraded) !== EXPORT_SCHEMA_VERSION) {
+        throw new UnsupportedBundleError(version ?? Number.NaN);
       }
-      const parsed = exportBundleSchema.parse(bundle);
+      const parsed = exportBundleSchema.parse(upgraded);
       const mode = options.mode ?? 'replace';
 
       const inserted = {} as Record<keyof ExportTables, number>;

@@ -50,7 +50,7 @@ export function AiGatewayInstaller({ children }: { children?: ReactNode }) {
   const region = profile.data?.foodRegion ?? 'generic';
 
   useEffect(() => {
-    installAiGateway(realGateway(client, { region, online, today: clock.today() }));
+    installAiGateway(realGateway(client, { region, online, today: () => clock.today() }));
   }, [client, online, region, clock]);
 
   return <>{children ?? null}</>;
