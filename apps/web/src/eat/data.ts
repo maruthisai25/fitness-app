@@ -165,6 +165,46 @@ export function useLogFood() {
   });
 }
 
+/**
+ * The offline half of food parsing — DESIGN.md §6.4: "Offline → `ai_jobs` row
+ * with `estimate_food`, item shows 'estimating…'". The log is written straight
+ * away with no items, so nothing the user typed is lost, and the job runner
+ * fills the macros in on the next pass that reaches the API.
+ */
+export function useQueueFoodEstimate() {
+  const { repos } = useDb();
+  const invalidate = useInvalidate();
+  return useMutation({
+    mutationFn: async (input: {
+      date: LocalDate;
+      mealSlot: MealSlot;
+      rawText: string;
+      region: string;
+    }) => {
+      const log = await repos.nutrition.createLog({
+        date: input.date,
+        mealSlot: input.mealSlot,
+        rawText: input.rawText,
+        source: 'ai',
+        estimationStatus: 'pending',
+        items: [],
+      });
+      // Idempotent by id (DESIGN.md §8): one job per log, however often this runs.
+      await repos.aiJobs.enqueue({
+        id: `estimate_food:${log.id}`,
+        kind: 'estimate_food',
+        payload: { foodLogId: log.id, text: input.rawText, region: input.region },
+        resultRef: log.id,
+      });
+      return log;
+    },
+    onSuccess: async () => {
+      await invalidate('logFood');
+      await invalidate('enqueueAiJob');
+    },
+  });
+}
+
 /** The dietary constraints the coach must respect, from memories and profile notes. */
 export function constraintsFrom(memories: readonly Memory[]): string[] {
   return memories

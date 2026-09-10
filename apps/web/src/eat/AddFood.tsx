@@ -25,7 +25,7 @@ import {
   toEditable,
   type EditableItem,
 } from './DayLog';
-import { useLogFood, useProfile, useSavedMeals } from './data';
+import { useLogFood, useProfile, useQueueFoodEstimate, useSavedMeals } from './data';
 import { MEAL_SLOT_LABEL, MEAL_SLOTS } from './mealSlots';
 
 const BLANK_ITEM: EditableItem = {
@@ -148,11 +148,13 @@ function DescribeFood({
 }): ReactNode {
   const profile = useProfile();
   const logFood = useLogFood();
+  const queueEstimate = useQueueFoodEstimate();
   const [text, setText] = useState(initialText);
   const [parsing, setParsing] = useState(false);
   const [drafts, setDrafts] = useState<EditableItem[] | null>(null);
   const [confidences, setConfidences] = useState<number[]>([]);
   const [problem, setProblem] = useState<string | null>(null);
+  const [queued, setQueued] = useState<string | null>(null);
 
   const region = profile.data?.foodRegion ?? 'generic';
   const available = gateway.isAvailable();
@@ -179,6 +181,17 @@ function DescribeFood({
     } finally {
       setParsing(false);
     }
+  }
+
+  /** Nothing typed is lost while the coach is unreachable — DESIGN.md §2.4, §6.4. */
+  async function queueForCoach(): Promise<void> {
+    const trimmed = text.trim();
+    if (!trimmed) return;
+    setProblem(null);
+    await queueEstimate.mutateAsync({ date, mealSlot: slot, rawText: trimmed, region });
+    setText('');
+    setQueued('Saved as “estimating…”. The coach fills the macros in the next time it connects.');
+    onLogged();
   }
 
   async function confirm(): Promise<void> {
@@ -225,8 +238,9 @@ function DescribeFood({
 
       {!available && (
         <Notice tone="accent">
-          The coach is not connected, so nothing can be estimated from words yet. Add your Anthropic
-          API key in You → Settings, or{' '}
+          The coach is not connected, so nothing can be estimated right now. You can save this and
+          have it estimated the next time there is a key and a connection, add your Anthropic API
+          key in You → Settings, or{' '}
           <LinkButton tone="accent" onClick={onFallbackToManual}>
             type the numbers in yourself
           </LinkButton>
@@ -235,11 +249,26 @@ function DescribeFood({
       )}
 
       <div style={{ display: 'flex', gap: space.sm, marginTop: space.md }}>
-        <PrimaryButton onClick={() => void parse()} disabled={!available || parsing || !text.trim()}>
-          {parsing ? 'Estimating…' : 'Estimate this'}
-        </PrimaryButton>
+        {available ? (
+          <PrimaryButton onClick={() => void parse()} disabled={parsing || !text.trim()}>
+            {parsing ? 'Estimating…' : 'Estimate this'}
+          </PrimaryButton>
+        ) : (
+          <PrimaryButton
+            onClick={() => void queueForCoach()}
+            disabled={queueEstimate.isPending || !text.trim()}
+          >
+            {queueEstimate.isPending ? 'Saving…' : 'Save it for the coach'}
+          </PrimaryButton>
+        )}
         <SecondaryButton onClick={onFallbackToManual}>Enter it by hand instead</SecondaryButton>
       </div>
+
+      {queued && (
+        <p style={{ color: themeColor.good, fontSize: fontSize.label }} role="status">
+          {queued}
+        </p>
+      )}
 
       {problem && (
         <div style={{ marginTop: space.md }}>

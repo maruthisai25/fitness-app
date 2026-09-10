@@ -103,16 +103,42 @@ describe('Eat → Add food', () => {
     expect(day.consumed.proteinG).toBe(20);
   });
 
+  it('queues the estimate for the coach when it is not connected', async () => {
+    const user = userEvent.setup();
+    // The unavailable gateway is the default, so this is the offline state.
+    renderWithProviders(<AddFood date={DATE} initialSlot="breakfast" onLogged={vi.fn()} />);
+
+    expect(screen.getByText(/coach is not connected/i)).toBeTruthy();
+
+    await user.type(screen.getByPlaceholderText(/two eggs/i), 'two rotis and a bowl of dal');
+    await user.click(screen.getByRole('button', { name: /save it for the coach/i }));
+
+    // DESIGN.md §6.4: the log lands straight away as "estimating…" and the work
+    // is queued rather than lost.
+    await waitFor(async () => {
+      const logs = await harness.db.repos.nutrition.listLogs({ from: DATE, to: DATE });
+      expect(logs).toHaveLength(1);
+    });
+    const logs = await harness.db.repos.nutrition.listLogs({ from: DATE, to: DATE });
+    expect(logs[0].estimationStatus).toBe('pending');
+    expect(logs[0].rawText).toBe('two rotis and a bowl of dal');
+    expect(logs[0].items).toHaveLength(0);
+
+    const jobs = await harness.db.repos.aiJobs.listQueued();
+    expect(jobs).toHaveLength(1);
+    expect(jobs[0].kind).toBe('estimate_food');
+    // Idempotent by id, so re-queueing the same log never doubles the work.
+    expect(jobs[0].id).toBe(`estimate_food:${logs[0].id}`);
+    expect(jobs[0].payload).toMatchObject({ foodLogId: logs[0].id, region: 'IN' });
+
+    // The day totals still skip it until the estimate lands.
+    const day = await harness.db.repos.nutrition.getDay(DATE);
+    expect(day.consumed.kcal).toBe(0);
+  });
+
   it('falls back to manual entry when the coach is not connected', async () => {
     const user = userEvent.setup();
     renderWithProviders(<AddFood date={DATE} initialSlot="breakfast" onLogged={vi.fn()} />);
-
-    // The unavailable gateway is the default, so the degraded state is visible
-    // and the estimate button is disabled.
-    expect(screen.getByText(/coach is not connected/i)).toBeTruthy();
-    expect((screen.getByRole('button', { name: /estimate this/i }) as HTMLButtonElement).disabled).toBe(
-      true,
-    );
 
     await user.click(screen.getByRole('button', { name: /enter it by hand instead/i }));
 

@@ -145,6 +145,8 @@ export type MutationName =
   | 'saveWeeklyReview'
   | 'sendMessage'
   | 'enqueueAiJob'
+  /** A pass of the offline AI job queue finished work (DESIGN.md §8). */
+  | 'runAiJobs'
   | 'importBundle';
 
 /**
@@ -192,6 +194,17 @@ export const INVALIDATIONS: Record<MutationName, readonly QueryRoot[]> = {
   saveWeeklyReview: [QUERY_ROOTS.weeklyReviews, QUERY_ROOTS.insights],
   sendMessage: [QUERY_ROOTS.messages, QUERY_ROOTS.conversations],
   enqueueAiJob: [QUERY_ROOTS.aiJobs],
+  // The four job kinds between them write food items, weekly-review prose,
+  // insight text and recipes, so a finished pass refreshes all of it — this is
+  // what turns an Eat log's "estimating…" into its macros without a reload.
+  runAiJobs: [
+    QUERY_ROOTS.aiJobs,
+    QUERY_ROOTS.nutrition,
+    QUERY_ROOTS.insights,
+    QUERY_ROOTS.weeklyReviews,
+    QUERY_ROOTS.recipes,
+    QUERY_ROOTS.today,
+  ],
   importBundle: Object.values(QUERY_ROOTS),
 };
 

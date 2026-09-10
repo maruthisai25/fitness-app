@@ -6,6 +6,7 @@ import { View } from 'react-native';
 
 import { useRepos, usePlatform } from '../../../src/db/AppDataProvider';
 import { useInvalidate } from '../../../src/data/queries';
+import { useAiJobQueue, useAiJobRunner } from '../../../src/ai/AiJobRunnerProvider';
 import { AI_API_KEY_QUERY_KEY, useAiClient } from '../../../src/ai/useAiClient';
 import {
   Button,
@@ -45,6 +46,8 @@ export default function SettingsScreen() {
   const queryClient = useQueryClient();
   const invalidate = useInvalidate();
   const { client: aiClient } = useAiClient();
+  const jobQueue = useAiJobQueue();
+  const jobRunner = useAiJobRunner();
 
   const [settings, setSettings] = useState<Settings | null>(null);
   const [unitSystem, setUnitSystem] = useState<UnitSystem | null>(null);
@@ -98,6 +101,9 @@ export default function SettingsScreen() {
       setApiKeyDraft('');
       setTestResult(null);
       await queryClient.invalidateQueries({ queryKey: AI_API_KEY_QUERY_KEY });
+      // A rejected key parks jobs rather than burning their attempts
+      // (DESIGN.md §8), so a new key is what releases them.
+      await jobRunner.retryCredentials();
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : 'Could not save your API key.');
     } finally {
@@ -229,6 +235,39 @@ export default function SettingsScreen() {
           ) : null}
         </View>
       </Section>
+
+      {/* The offline queue — DESIGN.md §8: work that could not reach the API is
+          queued, not lost, and this is where it is visible. */}
+      {jobQueue.data && jobQueue.data.outstanding > 0 ? (
+        <Section title="Pending coach work">
+          <View style={{ padding: 16 }}>
+            <FieldLabel>
+              {jobQueue.data.queued + jobQueue.data.running} queued
+              {jobQueue.data.retrying + jobQueue.data.blocked + jobQueue.data.permanentlyFailed > 0
+                ? `, ${
+                    jobQueue.data.retrying +
+                    jobQueue.data.blocked +
+                    jobQueue.data.permanentlyFailed
+                  } failed`
+                : ''}
+            </FieldLabel>
+            <FieldHint>
+              {jobQueue.data.blocked > 0
+                ? 'Some of it stopped on a rejected API key — save a working key above and it goes back in the queue.'
+                : jobRunner.idle
+                  ? 'It runs as soon as there is a key and a connection.'
+                  : 'It runs on its own when the app opens; this pushes it along now.'}
+            </FieldHint>
+            <Button
+              label={jobRunner.running ? 'Running…' : 'Retry now'}
+              variant="secondary"
+              onPress={() => void jobRunner.runNow()}
+              loading={jobRunner.running}
+              disabled={jobRunner.idle}
+            />
+          </View>
+        </Section>
+      ) : null}
 
       <Section title="Notifications">
         <ToggleRow

@@ -3,7 +3,13 @@ import type { NetworkStatus } from '@vigor/platform';
 import { afterEach, describe, expect, it } from 'vitest';
 
 import { createAiClient, type AiClient, type AiMessagesApi } from './client';
-import { CREDENTIAL_PREFIX, createAiJobRunner, PERMANENT_PREFIX, backoffMs } from './jobs';
+import {
+  CREDENTIAL_PREFIX,
+  createAiJobRunner,
+  PERMANENT_PREFIX,
+  backoffMs,
+  summariseAiJobs,
+} from './jobs';
 import { createAiTestEnv, TEST_TODAY, type AiTestEnv } from './testFixtures';
 import { createFakeAiClient, jsonTurn, refusalTurn, type FakeTurn } from './testing';
 
@@ -51,6 +57,38 @@ describe('backoffMs', () => {
     expect(backoffMs(2)).toBe(60_000);
     expect(backoffMs(3)).toBe(120_000);
     expect(backoffMs(20)).toBe(30 * 60_000);
+  });
+});
+
+describe('summariseAiJobs', () => {
+  it('counts what is still owed, split by why it is stuck', async () => {
+    const scope = await setup();
+    const logId = await queueFoodLog(scope);
+    const jobs = scope.db.repos.aiJobs;
+
+    await jobs.enqueue({ id: 'waiting', kind: 'estimate_food', payload: { foodLogId: logId } });
+    await jobs.enqueue({ id: 'retrying', kind: 'recipe', payload: {} });
+    await jobs.markFailed('retrying', 'the connection dropped');
+    await jobs.enqueue({ id: 'blocked', kind: 'recipe', payload: {} });
+    await jobs.markFailed('blocked', `${CREDENTIAL_PREFIX}invalid x-api-key`);
+    await jobs.enqueue({ id: 'over', kind: 'recipe', payload: {} });
+    await jobs.markFailed('over', `${PERMANENT_PREFIX}food log no longer exists`);
+    await jobs.enqueue({ id: 'finished', kind: 'recipe', payload: {} });
+    await jobs.markDone('finished', null);
+
+    expect(summariseAiJobs(await jobs.list())).toEqual({
+      queued: 1,
+      running: 0,
+      retrying: 1,
+      blocked: 1,
+      permanentlyFailed: 1,
+      // A job that has already run is not work the coach still owes anyone.
+      outstanding: 4,
+    });
+  });
+
+  it('reads an empty queue as nothing outstanding', () => {
+    expect(summariseAiJobs([]).outstanding).toBe(0);
   });
 });
 

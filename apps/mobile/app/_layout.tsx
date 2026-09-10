@@ -7,6 +7,7 @@ import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { AiJobRunnerProvider } from '../src/ai/AiJobRunnerProvider';
 import { AiGatewayInstaller } from '../src/ai/useAiGateway';
 import { AppDataProvider, useAppData } from '../src/db/AppDataProvider';
 import { ProgressForegroundProvider } from '../src/progress/ProgressForegroundProvider';
@@ -77,21 +78,26 @@ export default function RootLayout() {
                 every route, so the detectors and the reminder sync happen once
                 per pass however many screens are mounted. */}
             <ProgressForegroundProvider>
-              <View style={{ flex: 1 }}>
-                <Stack
-                  screenOptions={{
-                    headerShown: false,
-                    contentStyle: { backgroundColor: color.bg },
-                  }}
-                >
-                  {/* Reachable from every screen (DESIGN.md §7.1) via `CoachLauncher`. */}
-                  <Stack.Screen
-                    name="coach"
-                    options={{ presentation: 'modal', headerShown: false }}
-                  />
-                </Stack>
-                <CoachLauncher />
-              </View>
+              {/* The offline `ai_jobs` queue (DESIGN.md §8): one runner for the
+                  whole app, draining on foreground, when the device comes back
+                  online, and after a new API key is saved. */}
+              <AiJobRunnerProvider>
+                <View style={{ flex: 1 }}>
+                  <Stack
+                    screenOptions={{
+                      headerShown: false,
+                      contentStyle: { backgroundColor: color.bg },
+                    }}
+                  >
+                    {/* Reachable from every screen (DESIGN.md §7.1) via `CoachLauncher`. */}
+                    <Stack.Screen
+                      name="coach"
+                      options={{ presentation: 'modal', headerShown: false }}
+                    />
+                  </Stack>
+                  <CoachLauncher />
+                </View>
+              </AiJobRunnerProvider>
             </ProgressForegroundProvider>
           </OnboardingGate>
         </AppDataProvider>

@@ -20,6 +20,7 @@ import type { ReactNode } from 'react';
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
 import { AiGatewayProvider } from '../ai/context';
+import { AiJobRunnerProvider } from '../ai/jobRunner';
 import { realGateway } from '../ai/realGateway';
 import { useProfile, useRepos } from '../data/hooks';
 import { useDb } from '../db/provider';
@@ -147,26 +148,30 @@ export function CoachProvider({ children }: { children: ReactNode }): ReactNode 
   return (
     <CoachContext.Provider value={value}>
       <AiGatewayProvider gateway={gateway}>
-        <CoachSlotProvider
-          renderers={{
-            todayPlan: () => <TodayPlanSlot />,
-            todayInsights: () => <TodayInsightsSlot />,
-            sessionCoach: () => <SessionCoachSlot />,
-          }}
-        >
-          {/*
-           * A real flex row, not just adjacent DOM nodes — DESIGN.md §7.1's
-           * right rail needs to reserve its own width next to whichever route
-           * is showing (`AppShell` or full-screen session mode), and the brief
-           * requires the page body never to scroll horizontally, which
-           * `minWidth: 0` on the content side guarantees even under a very
-           * wide table or chart.
-           */}
-          <div style={{ display: 'flex', minHeight: '100vh' }}>
-            <div style={{ flex: 1, minWidth: 0 }}>{children}</div>
-            <CoachDock />
-          </div>
-        </CoachSlotProvider>
+        {/* Inside the coach context because the queue needs the same client and
+            the same connectivity answer the coach uses (DESIGN.md §8). */}
+        <AiJobRunnerProvider>
+          <CoachSlotProvider
+            renderers={{
+              todayPlan: () => <TodayPlanSlot />,
+              todayInsights: () => <TodayInsightsSlot />,
+              sessionCoach: () => <SessionCoachSlot />,
+            }}
+          >
+            {/*
+             * A real flex row, not just adjacent DOM nodes — DESIGN.md §7.1's
+             * right rail needs to reserve its own width next to whichever route
+             * is showing (`AppShell` or full-screen session mode), and the brief
+             * requires the page body never to scroll horizontally, which
+             * `minWidth: 0` on the content side guarantees even under a very
+             * wide table or chart.
+             */}
+            <div style={{ display: 'flex', minHeight: '100vh' }}>
+              <div style={{ flex: 1, minWidth: 0 }}>{children}</div>
+              <CoachDock />
+            </div>
+          </CoachSlotProvider>
+        </AiJobRunnerProvider>
       </AiGatewayProvider>
     </CoachContext.Provider>
   );

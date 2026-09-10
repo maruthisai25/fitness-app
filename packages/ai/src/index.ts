@@ -134,6 +134,7 @@ export {
   CREDENTIAL_PREFIX,
   DEFAULT_AI_JOB_HANDLERS,
   DEFAULT_MAX_ATTEMPTS,
+  EMPTY_AI_JOB_QUEUE,
   estimateFoodHandler,
   estimateFoodPayloadSchema,
   insightPhrasingHandler,
@@ -142,6 +143,7 @@ export {
   PERMANENT_PREFIX,
   recipeHandler,
   recipePayloadSchema,
+  summariseAiJobs,
   weeklyReviewHandler,
   weeklyReviewPayloadSchema,
 } from './jobs';
@@ -152,6 +154,7 @@ export type {
   AiJobHandlers,
   AiJobOutcome,
   AiJobOutcomeStatus,
+  AiJobQueueSummary,
   AiJobRunner,
   AiJobRunnerConfig,
   AiJobRunSummary,

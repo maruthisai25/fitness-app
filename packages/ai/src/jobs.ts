@@ -315,6 +315,57 @@ export interface AiJobRunSummary {
   skipped: 'offline' | null;
 }
 
+/**
+ * What the queue looks like to a person — the numbers behind "Pending coach
+ * work" in You → Settings. Counted here rather than in each shell so both apps
+ * answer the question the same way.
+ */
+export interface AiJobQueueSummary {
+  /** Waiting for the next pass. */
+  queued: number;
+  /** Picked up by a pass that is still running. */
+  running: number;
+  /** Failed, and the queue will try again by itself. */
+  retrying: number;
+  /** Stopped on a rejected key — only a new key releases these. */
+  blocked: number;
+  /** Failed for a reason retrying cannot fix; a person has to intervene. */
+  permanentlyFailed: number;
+  /** Everything the coach still owes the user, however it is stuck. */
+  outstanding: number;
+}
+
+export const EMPTY_AI_JOB_QUEUE: AiJobQueueSummary = {
+  queued: 0,
+  running: 0,
+  retrying: 0,
+  blocked: 0,
+  permanentlyFailed: 0,
+  outstanding: 0,
+};
+
+export function summariseAiJobs(jobs: readonly AiJob[]): AiJobQueueSummary {
+  const summary = { ...EMPTY_AI_JOB_QUEUE };
+  for (const job of jobs) {
+    if (job.status === 'done') continue;
+    if (job.status === 'queued') summary.queued += 1;
+    else if (job.status === 'running') summary.running += 1;
+    else {
+      const lastError = job.lastError ?? '';
+      if (lastError.startsWith(PERMANENT_PREFIX)) summary.permanentlyFailed += 1;
+      else if (lastError.startsWith(CREDENTIAL_PREFIX)) summary.blocked += 1;
+      else summary.retrying += 1;
+    }
+  }
+  summary.outstanding =
+    summary.queued +
+    summary.running +
+    summary.retrying +
+    summary.blocked +
+    summary.permanentlyFailed;
+  return summary;
+}
+
 export interface AiJobRunnerConfig {
   deps: CoachDeps;
   client: AiClient;

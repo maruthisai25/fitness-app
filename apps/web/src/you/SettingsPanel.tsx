@@ -2,6 +2,7 @@ import { radius, space } from '@vigor/ui-tokens';
 import type { ReactNode } from 'react';
 import { useEffect, useState } from 'react';
 
+import { useAiJobQueue, useAiJobRunner } from '../ai/jobRunner';
 import { useCoach } from '../coach/CoachProvider';
 import { Field, PrimaryButton, SecondaryButton, TextInput } from '../components/form';
 import { useInvalidate } from '../data/hooks';
@@ -17,6 +18,7 @@ const MODEL_CHOICES = ['claude-opus-5', 'claude-sonnet-5', 'claude-haiku-4-5'] a
 export function SettingsPanel(): ReactNode {
   const { repos, settings, refreshSettings } = useDb();
   const { reloadKey, testConnection } = useCoach();
+  const jobRunner = useAiJobRunner();
   const invalidate = useInvalidate();
   const [hasKey, setHasKey] = useState(false);
   const [keyInput, setKeyInput] = useState('');
@@ -46,6 +48,9 @@ export function SettingsPanel(): ReactNode {
       setHasKey(Boolean(trimmed) || hasKey);
       setTestResult(null);
       setMessage('Saved.');
+      // A rejected key parks jobs rather than burning their attempts
+      // (DESIGN.md §8), so a new key is what releases them.
+      if (trimmed) void jobRunner.retryCredentials();
     } finally {
       setBusy(false);
     }
@@ -184,6 +189,8 @@ export function SettingsPanel(): ReactNode {
         </div>
       </section>
 
+      <PendingCoachWork />
+
       <section>
         <h2 style={sectionHeading}>Notifications</h2>
         <p style={{ color: themeColor.textMuted }}>
@@ -192,6 +199,58 @@ export function SettingsPanel(): ReactNode {
         </p>
       </section>
     </div>
+  );
+}
+
+/**
+ * The offline queue, in one row — DESIGN.md §8. Work that could not reach the
+ * API is not lost, and this is where the user can see that and push it along.
+ */
+function PendingCoachWork(): ReactNode {
+  const queue = useAiJobQueue();
+  const { running, idle, runNow } = useAiJobRunner();
+  const summary = queue.data;
+
+  if (summary == null || summary.outstanding === 0) return null;
+
+  const stuck = summary.blocked + summary.permanentlyFailed + summary.retrying;
+
+  return (
+    <section style={{ marginBottom: space.xxl }}>
+      <h2 style={sectionHeading}>Pending coach work</h2>
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: space.md,
+          flexWrap: 'wrap',
+          border: `1px solid ${themeColor.border}`,
+          borderRadius: radius.md,
+          padding: space.md,
+        }}
+      >
+        <p style={{ margin: 0, color: themeColor.text }}>
+          <strong className="tabular">{summary.queued + summary.running}</strong> queued
+          {stuck > 0 && (
+            <>
+              , <strong className="tabular">{stuck}</strong> failed
+            </>
+          )}
+          .{' '}
+          <span style={{ color: themeColor.textMuted }}>
+            {summary.blocked > 0
+              ? 'Some of it stopped on a rejected API key — save a working key above and it goes back in the queue.'
+              : idle
+                ? 'It runs as soon as there is a key and a connection.'
+                : 'It runs on its own when the app is open; this pushes it along now.'}
+          </span>
+        </p>
+        <SecondaryButton onClick={() => void runNow()} disabled={running || idle}>
+          {running ? 'Running…' : 'Retry now'}
+        </SecondaryButton>
+      </div>
+    </section>
   );
 }
 
